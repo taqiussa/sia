@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#nprogress .bar {
+    height: 7px !important; 
+    background: linear-gradient(to right, #a855f7, #34d399) !important;
+}

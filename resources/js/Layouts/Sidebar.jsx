@@ -2,16 +2,8 @@ import React from 'react';
 import SidebarLink from '@/Components/Sia/SidebarLink';
 import { Icon } from '@mdi/react';
 import { mdiAccountCircleOutline } from '@mdi/js';
-import SidebarAdmin from './Partials/SidebarAdmin';
 import SidebarBendahara from './Partials/SidebarBendahara';
-import SidebarKonseling from './Partials/SidebarKonseling';
-import SidebarKurikulum from './Partials/SidebarKurikulum';
 import SidebarGuru from './Partials/SidebarGuru';
-import SidebarTataUsaha from './Partials/SidebarTataUsaha';
-import SidebarKaryawan from './Partials/SidebarKaryawan';
-import SidebarKesiswaan from './Partials/SidebarKesiswaan';
-import SidebarSiswa from './Partials/SidebarSiswa';
-import SidebarKepalaSekolah from './Partials/SidebarKepalaSekolah';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
@@ -34,11 +26,11 @@ export default function Sidebar({ open, closeSide, auth }) {
                     {!auth.roles.includes('Siswa') ?
                         <>
 
-                            <SidebarLink closeSide={closeSide} href={route('profile-pengguna')} active={route().current('profile-pengguna')} label='profile pengguna' />
+                            {/* <SidebarLink closeSide={closeSide} href={route('profile-pengguna')} active={route().current('profile-pengguna')} label='profile pengguna' /> */}
 
-                            {auth.roles.includes('Admin') &&
+                            {/* {auth.roles.includes('Admin') &&
                                 <SidebarAdmin closeSide={closeSide} />
-                            }
+                            } */}
 
                             {auth.roles.includes('Bendahara') &&
                                 <SidebarBendahara closeSide={closeSide} />
@@ -48,7 +40,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarGuru closeSide={closeSide} />
                             }
 
-                            {auth.roles.includes('Karyawan') &&
+                            {/* {auth.roles.includes('Karyawan') &&
                                 <SidebarKaryawan closeSide={closeSide} />
                             }
 
@@ -70,16 +62,16 @@ export default function Sidebar({ open, closeSide, auth }) {
 
                             {auth.roles.includes('Tata Usaha') &&
                                 <SidebarTataUsaha closeSide={closeSide} />
-                            }
+                            } */}
 
 
                         </>
 
                         :
                         <>
-                            {auth.roles.includes('Siswa') &&
+                            {/* {auth.roles.includes('Siswa') &&
                                 <SidebarSiswa closeSide={closeSide} />
-                            }
+                            } */}
                         </>
                     }
 

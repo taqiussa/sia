@@ -24,6 +24,7 @@ function SearchableSelect({ id, name, options, value, onChange, label, message }
                     value={selectedOption}
                     onChange={(e) => handleChange(e)}
                     isSearchable={true}
+                    isClearable={true}
                     placeholder={`Pilih ${label}`}
                 />
             </div>

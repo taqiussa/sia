@@ -1,9 +1,23 @@
-export function hariTanggal(tanggal) {
-    return new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+export function arrayGunabayar() {
+    const bulan = [
+        { id: 1, nama: 'SPP Bulan Juli' },
+        { id: 2, nama: 'SPP Bulan Agustus' },
+        { id: 3, nama: 'SPP Bulan September' },
+        { id: 4, nama: 'SPP Bulan Oktober' },
+        { id: 5, nama: 'SPP Bulan November' },
+        { id: 6, nama: 'SPP Bulan Desember' },
+        { id: 7, nama: 'SPP Bulan Januari' },
+        { id: 8, nama: 'SPP Bulan Februari' },
+        { id: 9, nama: 'SPP Bulan Maret' },
+        { id: 10, nama: 'SPP Bulan April' },
+        { id: 11, nama: 'SPP Bulan Mei' },
+        { id: 12, nama: 'SPP Bulan Juni' }
+    ]
+    return bulan
 }
 
-export function tanggal(tanggal) {
-    return new Date(tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+export function hariTanggal(tanggal) {
+    return new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 export function maskRupiah(angka) {
@@ -24,4 +38,9 @@ export function rupiah(angka) {
     });
 
     return formatter.format(angka);
-} 
+}
+
+export function tanggal(tanggal) {
+    return new Date(tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+

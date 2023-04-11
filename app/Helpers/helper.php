@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 use Carbon\Carbon;
 
 function rupiah($angka)
@@ -112,56 +114,135 @@ function arrayBulan()
     ]), false);
 }
 
-// enum EnumBentukBimbingan: string
-// {
-//     case INDIVIDU = 'Individu';
-//     case KELOMPOK = 'Kelompok';
-//     case KLASIKAL = 'Klasikal';
-// }
+function arrayJenisIbadah()
+{
+    return json_decode(json_encode(
+        [
+            [
+                'id' => 1,
+                'nama' => 'Dhuha'
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Dhuhur'
+            ],
+            [
+                'id' => 3,
+                'nama' => 'Tadarus'
+            ]
+        ]
+    ), false);
+}
 
-// enum EnumBulan: int
-// {
-//     case JULI = 1;
-//     case AGUSTUS = 2;
-//     case SEPTEMBER = 3;
-//     case OKTOBER = 4;
-//     case NOVEMBER = 5;
-//     case DESEMBER = 6;
-//     case JANUARI = 7;
-//     case FEBRUARI = 8;
-//     case MARET = 9;
-//     case APRIL = 10;
-//     case MEI = 11;
-//     case JUNI = 12;
-// }
+function arrayKategoriPenilaianGuru()
+{
+    return json_decode(json_encode(
+        [
+            [
+                'id' => 1,
+                'nama' => 'Guru'
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Karyawan'
+            ]
+        ]
+    ), false);
+}
 
-// enum EnumKategoriNilai: int
-// {
-//     case PENGETAHUAN = 1;
-//     case KETERAMPILAN = 2;
-//     case SUMATIF = 3;
-//     case FORMATIF = 4;
-// }
+function arrayKehadiranIbadah()
+{
+    return json_decode(json_encode(
+        [
+            [
+                'id' => 1,
+                'nama' => 'Hadir'
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Izin'
+            ],
+            [
+                'id' => 3,
+                'nama' => 'Alpha'
+            ],
+        ]
+    ), false);
+}
 
-// enum EnumKategoriSikap: int
-// {
-//     case P5 = 1;
-//     case Spiritual = 2;
-//     case Sosial = 3;
-// }
+enum IndikatorAlquran: int
+{
+    case KEBENARAN = 1;
+    case KEINDAHAN = 2;
+    case KELANCARAN = 3;
+    case MAKHROJ = 4;
+    case TAJWID = 5;
+}
 
-// enum EnumKehadiran: int
-// {
-//     case HADIR = 1;
-//     case SAKIT = 2;
-//     case IZIN = 3;
-//     case ALPHA = 4;
-//     case BOLOS = 5;
-//     case IZIN_PULANG = 6;
-// }
+enum EnumKategoriPenilaian: int
+{
+    case PENGETAHUAN = 3;
+    case KETERAMPILAN = 4;
+    case FORMATIF = 5;
+    case SUMATIF = 6;
+}
 
-// enum EnumStatusSiswa: int
-// {
-//     case PINDAH = 1;
-//     case LULUS = 2;
-// }
+enum EnumKehadiran: int
+{
+    case HADIR = 1;
+    case SAKIT = 2;
+    case IZIN = 3;
+    case ALPHA = 4;
+    case BOLOS = 5;
+    case IZIN_PULANG = 6;
+}
+
+enum EnumKategoriSikap: int
+{
+    case SPIRITUAL = 1;
+    case SOSIAL = 2;
+    case PANCASILA = 3;
+}
+
+enum EnumBulan: int
+{
+    case JULI = 1;
+    case AGUSTUS = 2;
+    case SEPTEMBER = 3;
+    case OKTOBER = 4;
+    case NOVEMBER = 5;
+    case DESEMBER = 6;
+    case JANUARI = 7;
+    case FEBRUARI = 8;
+    case MARET = 9;
+    case APRIL = 10;
+    case MEI = 11;
+    case JUNI = 12;
+}
+
+enum EnumStatusSiswa: int
+{
+    case PINDAH = 1;
+    case LULUS = 2;
+}
+
+enum EnumKategoriGuru: int
+{
+    case Guru = 1;
+    case Karyawan = 2;
+    case WaliKelas = 3;
+}
+
+enum EnumJenisIbadah: int
+{
+    case Dhuha = 1;
+    case Dhuhur = 2;
+    case Tadarus = 3;
+}
+
+enum EnumKehadiranIbadah: int
+{
+    case Hadir = 1;
+    case Izin = 2;
+    case Alpha = 3;
+}

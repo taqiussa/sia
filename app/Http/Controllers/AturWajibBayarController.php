@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Traits\InitTrait;
 use App\Models\WajibBayar;
 
+use function App\Helpers\ambilAngka;
+
 class AturWajibBayarController extends Controller
 {
     use InitTrait;
@@ -30,7 +32,7 @@ class AturWajibBayarController extends Controller
         WajibBayar::create([
             'tahun' => request('tahun'),
             'tingkat' => request('tingkat'),
-            // 'jumlah' => ambilAngka(request('jumlah'))
+            'jumlah' => ambilAngka(request('jumlah'))
         ]);
 
         return to_route('atur-wajib-bayar');

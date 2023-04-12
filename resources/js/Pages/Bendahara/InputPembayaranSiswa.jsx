@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Head, useForm } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout'
 import Tahun from '@/Components/Sia/Tahun'
-import { arrayGunabayar, hariTanggal, rupiah } from '@/Functions/functions'
+import { arrayGunabayar, gunabayar, hariTanggal, rupiah } from '@/Functions/functions'
 import { trackPromise } from 'react-promise-tracker'
 import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
@@ -14,7 +14,7 @@ import getAllSiswa from '@/Functions/getAllSiswa'
 import getPembayaranSiswa from '@/Functions/getPembayaranSiswa'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { Icon } from '@mdi/react'
-import { mdiCheck, mdiCheckCircle } from '@mdi/js'
+import { mdiCheckCircle } from '@mdi/js'
 import Checkbox from '@/Components/Checkbox'
 
 const AturWajibBayar = ({ initTahun }) => {
@@ -34,11 +34,18 @@ const AturWajibBayar = ({ initTahun }) => {
     const [listTransaksi, setListTransaksi] = useState([])
     const [wajibBayar, setWajibBayar] = useState(0)
 
+    const jumlahPerBulan = wajibBayar / 12
     const listGunabayar = arrayGunabayar()
     const optionsSiswa = listSiswa.map((siswa) => ({
         value: siswa.nis,
         label: `${siswa.user?.name} - ${siswa.kelas?.nama}`
     }))
+
+    const checkboxRefs = useRef([])
+
+    checkboxRefs.current = listSiswa.map(
+        (_, index) => checkboxRefs.current[index] || React.createRef()
+    )
 
     async function getDataSiswa() {
         const response = await getAllSiswa(data.tahun)
@@ -56,6 +63,18 @@ const AturWajibBayar = ({ initTahun }) => {
         setData(event.target.name, event.target.value)
     }
 
+    const handleDynamic = (e, index) => {
+        const { value, checked } = e.target;
+        let updatedArrayInput = [...data.arrayInput];
+        if (checked) {
+            updatedArrayInput.push(value);
+        } else {
+            updatedArrayInput = updatedArrayInput.filter(item => item !== value);
+        }
+        setData({ ...data, arrayInput: updatedArrayInput });
+        setListTransaksi(updatedArrayInput)
+    }
+
     const submit = (e) => {
         e.preventDefault()
         post(
@@ -71,7 +90,11 @@ const AturWajibBayar = ({ initTahun }) => {
                         total: '',
                         arrayInput: []
                     })
+                    setListTransaksi([])
                     getDataPembayaranSiswa()
+                    checkboxRefs.current.forEach((check) => {
+                        check.current.checked = false
+                    })
                 },
                 onError: (error) => {
                     Sweet.fire({
@@ -109,6 +132,7 @@ const AturWajibBayar = ({ initTahun }) => {
                                     total: '',
                                     arrayInput: []
                                 })
+                                setListTransaksi([])
                                 getDataPembayaranSiswa()
                             }
                         }
@@ -260,26 +284,26 @@ const AturWajibBayar = ({ initTahun }) => {
                                     <th scope='col' className="py-3 px-2 text-left">
                                         Jumlah
                                     </th>
-                                    <th scope='col' className="py-3 px-2 text-left">
+                                    {/* <th scope='col' className="py-3 px-2 text-left">
                                         Aksi
-                                    </th>
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
-                                {listPembayaran && listPembayaran.map((bayar, index) => (
+                                {listTransaksi && listTransaksi.map((transaksi, index) => (
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                             {index + 1}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {bayar.tahun}
+                                            {gunabayar(transaksi)}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {rupiah(bayar.jumlah)}
+                                            {rupiah(jumlahPerBulan)}
                                         </td>
-                                        <td className="py-2 px-2 font-medium text-slate-600">
-                                            <Hapus onClick={() => handleDelete(bayar.id)} />
-                                        </td>
+                                        {/* <td className="py-2 px-2 font-medium text-slate-600">
+                                            <Hapus onClick={() => handleDelete(transaksi.id)} />
+                                        </td> */}
                                     </tr>
                                 ))}
                             </tbody>
@@ -318,7 +342,13 @@ const AturWajibBayar = ({ initTahun }) => {
                     </thead>
                     <tbody>
                         {listGunabayar && listGunabayar.map((gunabayar, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                            <tr
+                                key={index}
+                                onClick={() => {
+                                    const checkboxRef = checkboxRefs.current[index]
+                                    checkboxRef.current.click()
+                                }}
+                                className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}
                                 </td>
@@ -355,13 +385,13 @@ const AturWajibBayar = ({ initTahun }) => {
                                             </div>
                                         )
                                         :
-                                        (
+                                        data.nis && (
                                             <div>
                                                 <Checkbox
+                                                    refs={checkboxRefs.current[index]}
                                                     name={gunabayar.id}
                                                     value={gunabayar.id}
-
-                                                />
+                                                    onChange={(e) => handleDynamic(e, index)} />
                                             </div>
                                         )
                                     }

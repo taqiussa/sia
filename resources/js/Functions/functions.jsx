@@ -16,6 +16,37 @@ export function arrayGunabayar() {
     return bulan
 }
 
+export function gunabayar(id) {
+    switch (id) {
+        case '1':
+            return 'SPP Bulan Juli';
+        case '2':
+            return 'SPP Bulan Agustus';
+        case '3':
+            return 'SPP Bulan September';
+        case '4':
+            return 'SPP Bulan Oktober';
+        case '5':
+            return 'SPP Bulan November';
+        case '6':
+            return 'SPP Bulan Desember';
+        case '7':
+            return 'SPP Bulan Januari';
+        case '8':
+            return 'SPP Bulan Februari';
+        case '9':
+            return 'SPP Bulan Maret';
+        case '10':
+            return 'SPP Bulan April';
+        case '11':
+            return 'SPP Bulan Mei';
+        case '12':
+            return 'SPP Bulan Juni';
+        default:
+            return '';
+    }
+}
+
 export function hariTanggal(tanggal) {
     return new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 }

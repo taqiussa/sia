@@ -6,6 +6,7 @@ use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Bendahara
     Route::controller(GetDataBendaharaController::class)->group(function () {
+        Route::post('get-pemasukan', 'get_pemasukan')->name('get-pemasukan');
         Route::post('get-pembayaran-siswa', 'get_pembayaran_siswa')->name('get-pembayaran-siswa');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
@@ -74,6 +76,13 @@ Route::middleware([
         Route::get('atur-kategori-pengeluaran', 'index')->name('atur-kategori-pengeluaran');
         Route::post('atur-kategori-pengeluaran', 'simpan')->name('atur-kategori-pengeluaran.simpan');
         Route::delete('atur-kategori-pengeluaran', 'hapus')->name('atur-kategori-pengeluaran.hapus');
+    });
+
+    // Route Input Pemasukan
+    Route::controller(InputPemasukanController::class)->group(function () {
+        Route::get('input-pemasukan', 'index')->name('input-pemasukan');
+        Route::post('input-pemasukan', 'simpan')->name('input-pemasukan.simpan');
+        Route::delete('input-pemasukan', 'hapus')->name('input-pemasukan.hapus');
     });
 
     // Route Input Pembayaran Siswa

@@ -2,12 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pemasukan;
 use App\Models\Siswa;
 use App\Models\Transaksi;
 use App\Models\WajibBayar;
 
 class GetDataBendaharaController extends Controller
 {
+
+    public function get_pemasukan()
+    {
+        return response()->json([
+            'listPemasukan' => Pemasukan::whereTahun(request('tahun'))
+                ->with([
+                    'kategori' => fn ($q) => $q->select('id', 'nama'),
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->orderByDesc('created_at')
+                ->get()
+        ]);
+    }
 
     public function get_pembayaran_siswa()
     {

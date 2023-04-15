@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
-export default forwardRef(function KategoriPemasukan(
-    { name, id, value, message, className, required, isFocused, handleChange, listKategori },
+export default forwardRef(function Kategori(
+    { name, id, value, message, className, required, isFocused, handleChange, listKategori, label },
     ref
 ) {
 
@@ -20,7 +20,7 @@ export default forwardRef(function KategoriPemasukan(
     return (
         <div className='flex flex-col text-slate-600 capitalize'>
             <div>
-                Kategori Pemasukan
+                Kategori {label}
             </div>
             <div>
                 <select
@@ -28,7 +28,7 @@ export default forwardRef(function KategoriPemasukan(
                     id={id}
                     value={value}
                     className={
-                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ` +
+                        `border-gray-300 capitalize focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ` +
                         className
                     }
                     ref={input}
@@ -36,7 +36,7 @@ export default forwardRef(function KategoriPemasukan(
                     onChange={(e) => handleChange(e)}
                 >
 
-                    <option value="">Pilih Kategori Pemasukan</option>
+                    <option value="">Pilih Kategori {label}</option>
 
                     {listKategori.map((kategori, index) => (
                         <option key={index} value={kategori.id}>{kategori.nama}</option>

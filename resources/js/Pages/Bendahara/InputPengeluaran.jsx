@@ -1,46 +1,45 @@
+import React, { useEffect, useState } from 'react'
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
 import InputArea from '@/Components/Sia/InputArea'
 import InputText from '@/Components/Sia/InputText'
-import Kategori from '@/Components/Sia/Kategori'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
-import { hariTanggal, maskRupiah, rupiah } from '@/Functions/functions'
-import getPemasukan from '@/Functions/getPemasukan'
+import { hariTanggal, maskRupiah, rupiah, tanggal } from '@/Functions/functions'
+import getPengeluaran from '@/Functions/getPengeluaran'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
-import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
 import ReactPaginate from 'react-paginate'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
+import Kategori from '@/Components/Sia/Kategori'
 
-const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
+const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        kategoriPemasukanId: '',
+        tanggalNota: moment(new Date()).format('YYYY-MM-DD'),
+        kategoriPengeluaranId: '',
         keterangan: '',
         jumlah: 0,
         cari: ''
     })
 
-    const [listPemasukan, setListPemasukan] = useState([])
+    const [listPengeluaran, setListPengeluaran] = useState([])
 
     const [page, setPage] = useState(0);
     const postsPerPage = 10;
     const numberOfPostsVisited = page * postsPerPage;
-    const totalPages = Math.ceil(listPemasukan?.length / postsPerPage);
+    const totalPages = Math.ceil(listPengeluaran?.length / postsPerPage);
     const changePage = ({ selected }) => {
         setPage(selected);
     };
 
 
-    const filteredData = listPemasukan?.filter((list) => {
+    const filteredData = listPengeluaran?.filter((list) => {
         const searchTerm = data.cari.toLowerCase();
         const keterangan = list.keterangan.toLowerCase();
         return (
@@ -57,31 +56,31 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
         setData('jumlah', maskRupiah(value))
     }
 
-    async function getDataPemasukan() {
-        const response = await getPemasukan(data.tahun)
-        setListPemasukan(response.listPemasukan)
+    async function getDataPengeluaran() {
+        const response = await getPengeluaran(data.tahun)
+        setListPengeluaran(response.listPengeluaran)
     }
 
     const submit = (e) => {
         e.preventDefault()
-        post(route('input-pemasukan.simpan'),
+        post(route('input-pengeluaran.simpan'),
             {
                 onSuccess: () => {
-                    toast.success('Berhasil Simpan Pemasukan')
+                    toast.success('Berhasil Simpan pengeluaran')
                     setData({
                         tahun: data.tahun,
                         tanggal: data.tanggal,
-                        kategoriPemasukanId: '',
+                        kategoriPengeluaranId: '',
                         keterangan: '',
                         jumlah: 0,
                         cari: data.cari
                     })
-                    getDataPemasukan()
+                    getDataPengeluaran()
                 },
                 onError: (error) => {
                     Sweet.fire({
                         title: 'Gagal!',
-                        text: error,
+                        text: error.error,
                         icon: 'error',
                         confirmButtonText: 'Kembali'
                     })
@@ -93,7 +92,7 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
         Sweet
             .fire({
                 title: 'Anda Yakin Menghapus ?',
-                text: 'Hapus Pemasukan',
+                text: 'Hapus pengeluaran',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -102,21 +101,21 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
             .then((result) => {
                 if (result.isConfirmed) {
                     destroy(
-                        route('input-pemasukan.hapus', {
+                        route('input-pengeluaran.hapus', {
                             id: id
                         }),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus Pemasukan')
+                                toast.success('Berhasil Hapus pengeluaran')
                                 setData({
                                     tahun: data.tahun,
                                     tanggal: data.tanggal,
-                                    kategoriPemasukanId: '',
+                                    kategoriPengeluaranId: '',
                                     keterangan: '',
                                     jumlah: '',
                                     cari: data.cari
                                 })
-                                getDataPemasukan()
+                                getDataPengeluaran()
                             }
                         }
                     )
@@ -127,22 +126,22 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
     useEffect(() => {
         if (data.tahun)
             trackPromise(
-                getDataPemasukan()
+                getDataPengeluaran()
             )
     }, [])
 
     useEffect(() => {
         if (data.tahun)
             trackPromise(
-                getDataPemasukan()
+                getDataPengeluaran()
             )
     }, [data.tahun])
     return (
         <>
-            <Head title='Input Pemasukan' />
+            <Head title='Input pengeluaran' />
             <form onSubmit={submit} className='space-y-3 mb-3'>
 
-                <div className='lg:grid lg:grid-cols-3 lg:gap-2 lg:space-y-0 space-y-3'>
+                <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-3'>
 
                     <Tanggal
                         id='tanggal'
@@ -163,14 +162,25 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
                     />
 
                     <Kategori
-                        id='kategoriPemasukanId'
-                        name='kategoriPemasukanId'
-                        label='pemasukan'
-                        value={data.kategoriPemasukanId}
-                        message={errors.kategoriPemasukanId}
-                        listKategori={listKategoriPemasukan}
+                        id='kategoriPengeluaranId'
+                        name='kategoriPengeluaranId'
+                        label='pengeluaran'
+                        value={data.kategoriPengeluaranId}
+                        message={errors.kategoriPengeluaranId}
+                        listKategori={listKategoriPengeluaran}
                         handleChange={onHandleChange}
                     />
+
+                    <Tanggal
+                        id='tanggalNota'
+                        name='tanggalNota'
+                        label='tanggalNota'
+                        value={data.tanggalNota}
+                        message={errors.tanggalNota}
+                        handleChange={onHandleChange}
+                    />
+
+
                 </div>
 
                 <div className='lg:grid lg:grid-cols-2 lg:gap-2 lg:space-y-0 space-y-3'>
@@ -219,10 +229,13 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
                                 Tanggal
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Kategori Pemasukan
+                                Kategori Pengeluaran
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Keterangan
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Tanggal Nota
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Jumlah
@@ -236,7 +249,7 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listPemasukan &&
+                        {listPengeluaran &&
                             filteredData
                                 .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
                                 .map((list, index) => (
@@ -252,6 +265,9 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
                                             {list.keterangan}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {tanggal(list.tanggal_nota)}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
                                             {rupiah(list.jumlah)}
@@ -291,5 +307,5 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
     )
 }
 
-InputPemasukan.layout = page => <AppLayout children={page} />
-export default InputPemasukan
+InputPengeluaran.layout = page => <AppLayout children={page} />
+export default InputPengeluaran

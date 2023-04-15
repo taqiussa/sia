@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Traits\InitTrait;
 use App\Models\WajibBayar;
 
-use function App\Helpers\ambilAngka;
-
 class AturWajibBayarController extends Controller
 {
     use InitTrait;

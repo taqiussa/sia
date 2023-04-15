@@ -7,8 +7,6 @@ use App\Models\Siswa;
 use App\Models\Transaksi;
 use App\Traits\InitTrait;
 
-use function App\Helpers\ambilAngka;
-
 class InputPembayaranSiswaController extends Controller
 {
     use InitTrait;
@@ -42,7 +40,7 @@ class InputPembayaranSiswaController extends Controller
             'tingkat' => $siswa->tingkat,
             'nis' => request('nis'),
             'kelas_id' => $siswa->kelas_id,
-            'jumlah' => ambilAngka(request('total')),
+            'jumlah' => $this->ambilAngka(request('total')),
             'user_id' => auth()->user()->id
         ]);
 
@@ -55,8 +53,8 @@ class InputPembayaranSiswaController extends Controller
                 'nis' => request('nis'),
                 'kelas_id' => $siswa->kelas_id,
                 'kategori_pemasukan_id' => 1,
-                'gunabayar_id' => $input['id'],
-                'jumlah' => ambilAngka(request('jumlah')),
+                'gunabayar_id' => $input,
+                'jumlah' => $this->ambilAngka(request('jumlah')),
                 'user_id' => auth()->user()->id
             ]);
         }

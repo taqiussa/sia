@@ -16,14 +16,15 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import { Icon } from '@mdi/react'
 import { mdiCheckCircle } from '@mdi/js'
 import Checkbox from '@/Components/Checkbox'
+import PrintLink from '@/Components/Sia/PrintLink'
 
 const AturWajibBayar = ({ initTahun }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        jumlah: '',
-        total: '',
+        jumlah: 0,
+        total: 0,
         nis: '',
         arrayInput: []
     })
@@ -34,7 +35,6 @@ const AturWajibBayar = ({ initTahun }) => {
     const [listTransaksi, setListTransaksi] = useState([])
     const [wajibBayar, setWajibBayar] = useState(0)
 
-    const jumlahPerBulan = wajibBayar / 12
     const listGunabayar = arrayGunabayar()
     const optionsSiswa = listSiswa.map((siswa) => ({
         value: siswa.nis,
@@ -43,7 +43,7 @@ const AturWajibBayar = ({ initTahun }) => {
 
     const checkboxRefs = useRef([])
 
-    checkboxRefs.current = listSiswa.map(
+    checkboxRefs.current = listGunabayar.map(
         (_, index) => checkboxRefs.current[index] || React.createRef()
     )
 
@@ -93,7 +93,8 @@ const AturWajibBayar = ({ initTahun }) => {
                     setListTransaksi([])
                     getDataPembayaranSiswa()
                     checkboxRefs.current.forEach((check) => {
-                        check.current.checked = false
+                        if (check.current !== null)
+                            check.current.checked = false
                     })
                 },
                 onError: (error) => {
@@ -171,6 +172,16 @@ const AturWajibBayar = ({ initTahun }) => {
             setListTransaksi([])
         }
     }, [data.tahun, data.nis])
+
+    useEffect(() => {
+        if (wajibBayar)
+            setData('jumlah', wajibBayar / 12)
+    }, [wajibBayar])
+
+    useEffect(() => {
+        if (listTransaksi.length > 0)
+            setData('total', listTransaksi.length * data.jumlah)
+    }, [listTransaksi])
 
     return (
         <>
@@ -299,13 +310,21 @@ const AturWajibBayar = ({ initTahun }) => {
                                             {gunabayar(transaksi)}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {rupiah(jumlahPerBulan)}
+                                            {rupiah(data.jumlah)}
                                         </td>
                                         {/* <td className="py-2 px-2 font-medium text-slate-600">
                                             <Hapus onClick={() => handleDelete(transaksi.id)} />
                                         </td> */}
                                     </tr>
                                 ))}
+                                <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-bold text-lg text-slate-600" colSpan={2}>
+                                        Total
+                                    </td>
+                                    <td className="py-2 px-2 font-bold text-lg text-slate-600">
+                                        {rupiah(data.total)}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <PrimaryButton onClick={submit} disabled={processing}>Simpan</PrimaryButton>
@@ -388,10 +407,10 @@ const AturWajibBayar = ({ initTahun }) => {
                                         data.nis && (
                                             <div>
                                                 <Checkbox
-                                                    refs={checkboxRefs.current[index]}
+                                                    ref={checkboxRefs.current[index]}
                                                     name={gunabayar.id}
                                                     value={gunabayar.id}
-                                                    onChange={(e) => handleDynamic(e, index)} />
+                                                    handleChange={(e) => handleDynamic(e, index)} />
                                             </div>
                                         )
                                     }
@@ -441,7 +460,15 @@ const AturWajibBayar = ({ initTahun }) => {
                                     {bayar.user?.name}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus onClick={() => handleDelete(bayar.id)} />
+                                    <div className="flex space-x-3">
+                                        <PrintLink href={route('kwitansi',
+                                            {
+                                                id: bayar.id,
+                                                tahun: data.tahun,
+                                                nis: data.nis
+                                            })} label='print' />
+                                        <Hapus onClick={() => handleDelete(bayar.id)} />
+                                    </div>
                                 </td>
                             </tr>
                         ))}

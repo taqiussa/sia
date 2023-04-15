@@ -3,6 +3,7 @@
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
+use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPembayaranSiswaController;
@@ -31,6 +32,11 @@ Route::get('/dashboard', function () {
 
 // Group Data
 Route::middleware('auth')->group(function () {
+
+    // Route Bendahara Print Controller
+    Route::controller(BendaharaPrintController::class)->group(function () {
+        Route::get('kwitansi', 'kwitansi')->name('kwitansi');
+    });
 
     // Route Get Data Bendahara
     Route::controller(GetDataBendaharaController::class)->group(function () {

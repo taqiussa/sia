@@ -121,7 +121,7 @@ const AturWajibBayar = ({ initTahun }) => {
             .then((result) => {
                 if (result.isConfirmed)
                     destroy(
-                        route('input-pembayaran-siswa.hapus', { id: id }),
+                        route('input-pembayaran-siswa.hapus', { id: id, route: 'input-pembayaran-siswa' }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Data Pembayaran Siswa')

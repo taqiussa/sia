@@ -69,6 +69,6 @@ class InputPembayaranSiswaController extends Controller
         Pembayaran::whereTransaksiId(request('id'))
             ->delete();
 
-        return to_route('input-pembayaran-siswa');
+        return to_route(request('route'));
     }
 }

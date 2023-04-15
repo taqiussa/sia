@@ -24,18 +24,21 @@ class GetDataBendaharaController extends Controller
         ]);
     }
 
-    public function get_pengeluaran()
+    public function get_pembayaran()
     {
         return response()->json([
-            'listPengeluaran' => Pengeluaran::whereTahun(request('tahun'))
+            'listPembayaran' => Transaksi::whereTahun(request('tahun'))
                 ->with([
-                    'kategori' => fn ($q) => $q->select('id', 'nama'),
-                    'user' => fn ($q) => $q->select('id', 'name')
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'siswa' => fn ($q) => $q->select('nis', 'name'),
+                    'user' => fn ($q) => $q->select('id', 'name'),
                 ])
                 ->latest()
                 ->get()
         ]);
     }
+
+
     public function get_pembayaran_siswa()
     {
         $siswa =  Siswa::whereTahun(request('tahun'))
@@ -65,9 +68,22 @@ class GetDataBendaharaController extends Controller
                     'kelas' => fn ($q) => $q->select('id', 'nama'),
                     'user' => fn ($q) => $q->select('id', 'name')
                 ])
-                ->orderByDesc('created_at')
+                ->latest()
                 ->get(),
             'wajibBayar' => $wajibBayar
+        ]);
+    }
+
+    public function get_pengeluaran()
+    {
+        return response()->json([
+            'listPengeluaran' => Pengeluaran::whereTahun(request('tahun'))
+                ->with([
+                    'kategori' => fn ($q) => $q->select('id', 'nama'),
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->latest()
+                ->get()
         ]);
     }
 

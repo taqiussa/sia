@@ -4,6 +4,7 @@ use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
+use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPemasukanController;
@@ -44,12 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataBendaharaController::class)->group(function () {
         Route::post('get-pemasukan', 'get_pemasukan')->name('get-pemasukan');
         Route::post('get-pengeluaran', 'get_pengeluaran')->name('get-pengeluaran');
+        Route::post('get-pembayaran', 'get_pembayaran')->name('get-pembayaran');
         Route::post('get-pembayaran-siswa', 'get_pembayaran_siswa')->name('get-pembayaran-siswa');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
 
     // Route Get Data
-    Route::controller(GetDataController::class)->group(function() {
+    Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
     });
 });
@@ -80,6 +82,9 @@ Route::middleware([
         Route::delete('atur-kategori-pengeluaran', 'hapus')->name('atur-kategori-pengeluaran.hapus');
     });
 
+    // Route Data Pembayaran Siswa
+    Route::get('data-pembayaran-siswa', DataPembayaranSiswaController::class)->name('data-pembayaran-siswa');
+
     // Route Input Pemasukan
     Route::controller(InputPemasukanController::class)->group(function () {
         Route::get('input-pemasukan', 'index')->name('input-pemasukan');
@@ -96,7 +101,7 @@ Route::middleware([
 
     // Route Input Pembayaran Siswa
     Route::controller(InputPembayaranSiswaController::class)->group(function () {
-        Route::get('input-pembayaran-siswa' , 'index')->name('input-pembayaran-siswa');
+        Route::get('input-pembayaran-siswa', 'index')->name('input-pembayaran-siswa');
         Route::post('input-pembayaran-siswa', 'simpan')->name('input-pembayaran-siswa.simpan');
         Route::delete('input-pembayaran-siswa', 'hapus')->name('input-pembayaran-siswa.hapus');
     });

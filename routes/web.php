@@ -5,6 +5,7 @@ use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\DataPembayaranSiswaController;
+use App\Http\Controllers\DataPembayaranSiswaCustomController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPemasukanController;
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-pemasukan', 'get_pemasukan')->name('get-pemasukan');
         Route::post('get-pengeluaran', 'get_pengeluaran')->name('get-pengeluaran');
         Route::post('get-pembayaran', 'get_pembayaran')->name('get-pembayaran');
+        Route::post('get-pembayaran-custom', 'get_pembayaran_custom')->name('get-pembayaran-custom');
         Route::post('get-pembayaran-siswa', 'get_pembayaran_siswa')->name('get-pembayaran-siswa');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
@@ -84,6 +86,7 @@ Route::middleware([
 
     // Route Data Pembayaran Siswa
     Route::get('data-pembayaran-siswa', DataPembayaranSiswaController::class)->name('data-pembayaran-siswa');
+    Route::get('data-pembayaran-siswa-custom', DataPembayaranSiswaCustomController::class)->name('data-pembayaran-siswa-custom');
 
     // Route Input Pemasukan
     Route::controller(InputPemasukanController::class)->group(function () {

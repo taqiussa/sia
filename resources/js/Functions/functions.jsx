@@ -60,6 +60,15 @@ export function maskRupiah(angka) {
     return `Rp. ${formattedValue}`
 }
 
+export function penjumlahan(list, column) {
+
+    const totalJumlah = list.reduce((acc, curr) => {
+        return acc + toInteger(curr[column])
+    }, 0)
+
+    return totalJumlah
+}
+
 export function rupiah(angka) {
     const formatter = new Intl.NumberFormat('id-ID', {
         style: 'currency',

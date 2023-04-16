@@ -38,6 +38,20 @@ class GetDataBendaharaController extends Controller
         ]);
     }
 
+    public function get_pembayaran_custom()
+    {
+        return response()->json([
+            'listPembayaran' => Transaksi::whereTahun(request('tahun'))
+                ->with([
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'siswa' => fn ($q) => $q->select('nis', 'name'),
+                    'user' => fn ($q) => $q->select('id', 'name'),
+                ])
+                ->latest()
+                ->paginate(10)
+        ]);
+    }
+
 
     public function get_pembayaran_siswa()
     {

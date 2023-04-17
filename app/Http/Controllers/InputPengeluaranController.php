@@ -46,6 +46,6 @@ class InputPengeluaranController extends Controller
     {
         Pengeluaran::destroy(request('id'));
 
-        return to_route('input-pengeluaran');
+        return to_route(request('route'));
     }
 }

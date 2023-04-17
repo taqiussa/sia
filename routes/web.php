@@ -4,7 +4,9 @@ use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
+use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
+use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPemasukanController;
@@ -83,8 +85,14 @@ Route::middleware([
         Route::delete('atur-kategori-pengeluaran', 'hapus')->name('atur-kategori-pengeluaran.hapus');
     });
 
+    //Route Data Pemasukan
+    Route::get('data-pemasukan', DataPemasukanController::class)->name('data-pemasukan');
+
     // Route Data Pembayaran Siswa
     Route::get('data-pembayaran-siswa', DataPembayaranSiswaController::class)->name('data-pembayaran-siswa');
+
+    // Route Data Pengeluaran 
+    Route::get('data-pengeluaran', DataPengeluaranController::class)->name('data-pengeluaran');
 
     // Route Input Pemasukan
     Route::controller(InputPemasukanController::class)->group(function () {

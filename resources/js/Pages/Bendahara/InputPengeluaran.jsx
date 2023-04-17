@@ -102,7 +102,8 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
                 if (result.isConfirmed) {
                     destroy(
                         route('input-pengeluaran.hapus', {
-                            id: id
+                            id: id,
+                            route: 'input-pengeluaran'
                         }),
                         {
                             onSuccess: () => {

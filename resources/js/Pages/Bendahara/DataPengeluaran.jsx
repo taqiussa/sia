@@ -8,7 +8,8 @@ import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
-const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
+
+const DataPengeluaran = ({ initTahun, listPengeluaran, filters }) => {
 
     const { data, setData, errors, delete: destroy } = useForm({
         tahun: initTahun,
@@ -23,7 +24,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
         Sweet
             .fire({
                 title: 'Anda Yakin Menghapus ?',
-                text: 'Hapus pembayaran',
+                text: 'Hapus pengeluaran',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -32,13 +33,13 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
             .then((result) => {
                 if (result.isConfirmed) {
                     destroy(
-                        route('input-pembayaran-siswa.hapus', {
+                        route('input-pengeluaran.hapus', {
                             id: id,
-                            route: 'data-pembayaran-siswa'
+                            route: 'data-pengeluaran'
                         }),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus pembayaran')
+                                toast.success('Berhasil Hapus pengeluaran')
                                 setData({
                                     tahun: data.tahun,
                                     search: data.search
@@ -54,7 +55,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
         if (data.tahun)
             router.reload(
                 {
-                    only: ['listPembayaran'],
+                    only: ['listPengeluaran'],
                     data: {
                         tahun: data.tahun
                     },
@@ -68,7 +69,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
         const timerId = setTimeout(() => {
             router.reload(
                 {
-                    only: ['listPembayaran'],
+                    only: ['listPengeluaran'],
                     data: {
                         tahun: data.tahun,
                         search: data.search
@@ -85,7 +86,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
     }, [data.search])
     return (
         <>
-            <Head title='Data pembayaran Siswa' />
+            <Head title='Data Pengeluaran' />
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-3'>
 
                 <Tahun
@@ -117,7 +118,10 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
                                 Tanggal
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Siswa
+                                Kategori
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Keterangan
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Jumlah
@@ -131,17 +135,20 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listPembayaran &&
-                            listPembayaran.data.map((list, index) => (
+                        {listPengeluaran &&
+                            listPengeluaran.data.map((list, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                        {index + 1 + ((listPembayaran.current_page - 1) * listPembayaran.per_page)}
+                                        {index + 1 + ((listPengeluaran.current_page - 1) * listPengeluaran.per_page)}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         {hariTanggal(list.tanggal)}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.siswa?.name}
+                                        {list.kategori?.nama}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.keterangan}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         {rupiah(list.jumlah)}
@@ -159,10 +166,10 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
                     </tbody>
                 </table>
             </div>
-            <Paginator lists={listPembayaran} />
+            <Paginator lists={listPengeluaran} />
         </>
     )
 }
 
-DataPembayaranSiswa.layout = page => <AppLayout children={page} />
-export default DataPembayaranSiswa
+DataPengeluaran.layout = page => <AppLayout children={page} />
+export default DataPengeluaran

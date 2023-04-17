@@ -14,7 +14,9 @@ use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
+use App\Http\Controllers\RekapHarianPengeluaranController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
+use App\Http\Controllers\RekapTahunanPengeluaranController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -45,8 +47,12 @@ Route::middleware('auth')->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
         Route::get('rekap-harian-pemasukan-detail', 'rekap_harian_pemasukan_detail')->name('rekap-harian-pemasukan-detail');
         Route::get('rekap-harian-pemasukan-simple', 'rekap_harian_pemasukan_simple')->name('rekap-harian-pemasukan-simple');
+        Route::get('rekap-harian-pengeluaran-detail', 'rekap_harian_pengeluaran_detail')->name('rekap-harian-pengeluaran-detail');
+        Route::get('rekap-harian-pengeluaran-simple', 'rekap_harian_pengeluaran_simple')->name('rekap-harian-pengeluaran-simple');
         Route::get('rekap-tahunan-pemasukan-detail', 'rekap_tahunan_pemasukan_detail')->name('rekap-tahunan-pemasukan-detail');
         Route::get('rekap-tahunan-pemasukan-simple', 'rekap_tahunan_pemasukan_simple')->name('rekap-tahunan-pemasukan-simple');
+        Route::get('rekap-tahunan-pengeluaran-detail', 'rekap_tahunan_pengeluaran_detail')->name('rekap-tahunan-pengeluaran-detail');
+        Route::get('rekap-tahunan-pengeluaran-simple', 'rekap_tahunan_pengeluaran_simple')->name('rekap-tahunan-pengeluaran-simple');
     });
 
     // Route Get Data Bendahara
@@ -126,9 +132,18 @@ Route::middleware([
         Route::get('rekap-harian-pemasukan', 'index')->name('rekap-harian-pemasukan');
         Route::get('rekap-harian-pemasukan-download', 'download')->name('rekap-harian-pemasukan-download');
     });
+    
+    // Route Rekap Harian Pengeluaran
+    Route::controller(RekapHarianPengeluaranController::class)->group(function () {
+        Route::get('rekap-harian-pengeluaran', 'index')->name('rekap-harian-pengeluaran');
+        Route::get('rekap-harian-pengeluaran-download', 'download')->name('rekap-harian-pengeluaran-download');
+    });
 
     // Route Rekap Tahunan Pemasukan
     Route::get('rekap-tahunan-pemasukan', RekapTahunanPemasukanController::class)->name('rekap-tahunan-pemasukan');
+
+    // Route Rekap Tahunan Pengeluaran
+    Route::get('rekap-tahunan-pengeluaran', RekapTahunanPengeluaranController::class)->name('rekap-tahunan-pengeluaran');
 });
 
 Route::middleware('auth')->group(function () {

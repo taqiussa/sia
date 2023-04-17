@@ -81,7 +81,7 @@
             @foreach ($listPemasukan as $key => $pemasukan)
                 <tr align="center">
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ date('d M Y', strtotime($pemasukan->tanggal)) }}</td>
+                    <td>{{ tanggal($pemasukan->tanggal) }}</td>
                     <td align="left" style="padding-left: 5px">{{ $pemasukan->kategori->nama }}</td>
                     <td align="left" style="padding-left: 5px">{{ $pemasukan->keterangan }}</td>
                     <td align="right" style="padding-left: 5px;padding-right: 5px">

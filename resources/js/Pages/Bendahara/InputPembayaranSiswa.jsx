@@ -17,6 +17,7 @@ import { Icon } from '@mdi/react'
 import { mdiCheckCircle } from '@mdi/js'
 import Checkbox from '@/Components/Checkbox'
 import PrintLink from '@/Components/Sia/PrintLink'
+import PrintIcon from '@/Components/Sia/PrintIcon'
 
 const AturWajibBayar = ({ initTahun }) => {
 
@@ -295,9 +296,6 @@ const AturWajibBayar = ({ initTahun }) => {
                                     <th scope='col' className="py-3 px-2 text-left">
                                         Jumlah
                                     </th>
-                                    {/* <th scope='col' className="py-3 px-2 text-left">
-                                        Aksi
-                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -312,9 +310,6 @@ const AturWajibBayar = ({ initTahun }) => {
                                         <td className="py-2 px-2 font-medium text-slate-600">
                                             {rupiah(data.jumlah)}
                                         </td>
-                                        {/* <td className="py-2 px-2 font-medium text-slate-600">
-                                            <Hapus onClick={() => handleDelete(transaksi.id)} />
-                                        </td> */}
                                     </tr>
                                 ))}
                                 <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -461,12 +456,13 @@ const AturWajibBayar = ({ initTahun }) => {
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <div className="flex space-x-3">
-                                        <PrintLink href={route('kwitansi',
+                                        <PrintIcon href={route('kwitansi',
                                             {
                                                 id: bayar.id,
                                                 tahun: data.tahun,
                                                 nis: data.nis
-                                            })} label='print' />
+                                            })}
+                                        />
                                         <Hapus onClick={() => handleDelete(bayar.id)} />
                                     </div>
                                 </td>

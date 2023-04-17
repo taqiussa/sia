@@ -13,6 +13,7 @@ use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RekapHarianPemasukanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -113,6 +114,12 @@ Route::middleware([
         Route::get('input-pembayaran-siswa', 'index')->name('input-pembayaran-siswa');
         Route::post('input-pembayaran-siswa', 'simpan')->name('input-pembayaran-siswa.simpan');
         Route::delete('input-pembayaran-siswa', 'hapus')->name('input-pembayaran-siswa.hapus');
+    });
+
+    // Route Rekap Harian Pemasukan
+    Route::controller(RekapHarianPemasukanController::class)->group(function () {
+        Route::get('rekap-harian-pemasukan', 'index')->name('rekap-harian-pemasukan');
+        Route::get('rekap-harian-pemasukan-download', 'download')->name('rekap-harian-pemasukan-download');
     });
 });
 

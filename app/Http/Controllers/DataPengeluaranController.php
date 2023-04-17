@@ -27,6 +27,7 @@ class DataPengeluaranController extends Controller
                     ])
                     ->latest()
                     ->paginate(10)
+                    ->withQueryString()
                     ->through(fn ($q) => [
                         'id' => $q->id,
                         'jumlah' => $q->jumlah,

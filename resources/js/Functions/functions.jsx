@@ -1,3 +1,6 @@
+import { toInteger } from "lodash";
+
+
 export function arrayGunabayar() {
     const bulan = [
         { id: 1, nama: 'SPP Bulan Juli' },

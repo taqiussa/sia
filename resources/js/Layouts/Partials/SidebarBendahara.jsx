@@ -17,6 +17,7 @@ const SidebarBendahara = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('input-pemasukan')} active={route().current('input-pemasukan')} label='input pemasukan' />
                 <SidebarLink closeSide={closeSide} href={route('input-pembayaran-siswa')} active={route().current('input-pembayaran-siswa')} label='input pembayaran siswa' />
                 <SidebarLink closeSide={closeSide} href={route('input-pengeluaran')} active={route().current('input-pengeluaran')} label='input pengeluaran' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-harian-pemasukan')} active={route().current('rekap-harian-pemasukan')} label='rekap harian pemasukan' />
             </div>
         </div>
     )

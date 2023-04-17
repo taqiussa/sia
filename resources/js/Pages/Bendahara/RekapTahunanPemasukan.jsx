@@ -2,19 +2,17 @@ import DownloadLink from '@/Components/Sia/DownloadLink'
 import Paginator from '@/Components/Sia/Paginator'
 import PrintLink from '@/Components/Sia/PrintLink'
 import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
-import Tanggal from '@/Components/Sia/Tanggal'
+import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal, penjumlahan, rupiah, tanggal } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import { toInteger } from 'lodash'
-import moment from 'moment'
 import React, { useEffect } from 'react'
 
-const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayaran }) => {
+const RekapTahunanPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtotalPemasukan, subtotalPembayaran }) => {
 
     const { data, setData, errors } = useForm({
-        tanggalAwal: moment(new Date()).format('YYYY-MM-DD'),
-        tanggalAkhir: moment(new Date()).format('YYYY-MM-DD'),
+        tahun: initTahun
     })
 
     const onHandleChange = (event) => {
@@ -22,68 +20,44 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
     }
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
+        if (data.tahun) {
             router.reload(
                 {
-                    only: ['listPemasukan', 'listPembayaran', 'subtotalPembayaran'],
+                    only: ['listPemasukan', 'listPembayaran', 'subtotalPemasukan', 'subtotalPembayaran'],
                     data: {
-                        tanggalAwal: data.tanggalAwal,
-                        tanggalAkhir: data.tanggalAkhir,
+                        tahun: data.tahun
                     },
                     preserveState: true,
                     replace: true
                 },
             )
-        }, 1000)
-
-        return () => {
-            clearTimeout(timerId)
         }
 
-    }, [data.tanggalAwal, data.tanggalAkhir])
+    }, [data.tahun])
 
     return (
         <>
-            <Head title='Rekap Harian Pemasukan' />
+            <Head title='Rekap Tahunan Pemasukan' />
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 space-y-3'>
 
-                <Tanggal
-                    id='tanggalAwal'
-                    name='tanggalAwal'
-                    label='tanggal awal'
-                    value={data.tanggalAwal}
-                    messages={errors.tanggalAwal}
-                    handleChange={onHandleChange}
-                />
-
-                <Tanggal
-                    id='tanggalAkhir'
-                    name='tanggalAkhir'
-                    label='tanggal akhir'
-                    value={data.tanggalAkhir}
-                    messages={errors.tanggalAkhir}
+                <Tahun
+                    id='tahun'
+                    name='tahun'
+                    value={data.tahun}
+                    message={errors.tahun}
                     handleChange={onHandleChange}
                 />
 
                 <div className="flex items-end space-x-2">
-                    <DownloadLink
-                        href={route('rekap-harian-pemasukan-download', {
-                            tanggalAwal: data.tanggalAwal,
-                            tanggalAkhir: data.tanggalAkhir
-                        })}
-                        label='download'
-                    />
                     <PrintLink
-                        href={route('rekap-harian-pemasukan-simple', {
-                            tanggalAwal: data.tanggalAwal,
-                            tanggalAkhir: data.tanggalAkhir
+                        href={route('rekap-tahunan-pemasukan-simple', {
+                            tahun: data.tahun
                         })}
                         label='print'
                     />
                     <PrintLinkMerah
-                        href={route('rekap-harian-pemasukan-detail', {
-                            tanggalAwal: data.tanggalAwal,
-                            tanggalAkhir: data.tanggalAkhir
+                        href={route('rekap-tahunan-pemasukan-detail', {
+                            tahun: data.tahun
                         })}
                         label='print detail'
                     />
@@ -195,7 +169,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                     </thead>
                     <tbody>
                         {listPemasukan &&
-                            listPemasukan.map((list, index) => (
+                            listPemasukan.data.map((list, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                         {index + 1}
@@ -222,7 +196,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                                 Subtotal
                             </td>
                             <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-200">
-                                {rupiah(penjumlahan(listPemasukan, 'jumlah'))}
+                                {rupiah(subtotalPemasukan)}
                             </td>
                         </tr>
                         <tr>
@@ -230,15 +204,19 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                                 Total
                             </td>
                             <td className="py-2 px-2 font-bold text-xl text-slate-600 bg-slate-300">
-                                {rupiah(penjumlahan(listPemasukan, 'jumlah') + toInteger(subtotalPembayaran))}
+                                {rupiah(toInteger(subtotalPemasukan) + toInteger(subtotalPembayaran))}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            {
+                listPemasukan.data.length > 0 &&
+                <Paginator lists={listPemasukan} />
+            }
         </>
     )
 }
 
-RekapHarianPemasukan.layout = page => <AppLayout children={page} />
-export default RekapHarianPemasukan
+RekapTahunanPemasukan.layout = page => <AppLayout children={page} />
+export default RekapTahunanPemasukan

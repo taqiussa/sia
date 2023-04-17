@@ -19,6 +19,11 @@ function tanggal($tanggal)
     return Carbon::parse($tanggal)->translatedFormat('d F Y');
 }
 
+function tanggalSingkat($tanggal)
+{
+    return Carbon::parse($tanggal)->translatedFormat('d M Y');
+}
+
 function hariTanggal($tanggal)
 {
     return Carbon::parse($tanggal)->translatedFormat('l, d F Y');

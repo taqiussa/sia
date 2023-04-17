@@ -14,6 +14,7 @@ use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
+use App\Http\Controllers\RekapTahunanPemasukanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,6 +43,10 @@ Route::middleware('auth')->group(function () {
     // Route Bendahara Print Controller
     Route::controller(BendaharaPrintController::class)->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
+        Route::get('rekap-harian-pemasukan-detail', 'rekap_harian_pemasukan_detail')->name('rekap-harian-pemasukan-detail');
+        Route::get('rekap-harian-pemasukan-simple', 'rekap_harian_pemasukan_simple')->name('rekap-harian-pemasukan-simple');
+        Route::get('rekap-tahunan-pemasukan-detail', 'rekap_tahunan_pemasukan_detail')->name('rekap-tahunan-pemasukan-detail');
+        Route::get('rekap-tahunan-pemasukan-simple', 'rekap_tahunan_pemasukan_simple')->name('rekap-tahunan-pemasukan-simple');
     });
 
     // Route Get Data Bendahara
@@ -121,6 +126,9 @@ Route::middleware([
         Route::get('rekap-harian-pemasukan', 'index')->name('rekap-harian-pemasukan');
         Route::get('rekap-harian-pemasukan-download', 'download')->name('rekap-harian-pemasukan-download');
     });
+
+    // Route Rekap Tahunan Pemasukan
+    Route::get('rekap-tahunan-pemasukan', RekapTahunanPemasukanController::class)->name('rekap-tahunan-pemasukan');
 });
 
 Route::middleware('auth')->group(function () {

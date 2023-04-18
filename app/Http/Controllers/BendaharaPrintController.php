@@ -19,7 +19,7 @@ use App\Http\Controllers\Controller;
 class BendaharaPrintController extends Controller
 {
     use SwitchBulanTrait;
-    
+
     public $bulanLalu;
     public $saldo;
     public $saldoLalu;
@@ -63,7 +63,7 @@ class BendaharaPrintController extends Controller
     // Kas Print
     public function kas_bulanan_print()
     {
-// Inisialisasi Bulan Lalu
+        // Inisialisasi Bulan Lalu
 
         $currentMonth = Carbon::create(date('Y'), request('bulan'), 1, 0, 0, 0, 'Asia/Jakarta');
 
@@ -77,11 +77,11 @@ class BendaharaPrintController extends Controller
 
         $this->tahunAkhir = Str::substr(request('tahun'), 7, 4);
 
-        
+
         // Perhitungan
-        
+
         $this->switch_bulan();
-        
+
         $subtotalPemasukan = $this->subtotal_pemasukan();
 
         $totalPemasukanLalu = $this->total_pemasukan_lalu() + $this->total_pembayaran_lalu();
@@ -101,14 +101,14 @@ class BendaharaPrintController extends Controller
         } else {
             $this->saldoLalu = $totalPemasukanLalu - $totalPengeluaranLalu;
         }
-        
+
         $this->saldo = $this->saldoLalu + $totalSPP + $subtotalPemasukan - $totalPengeluaran;
 
         $data = [
             'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
             'bulanLalu' => $this->bulanLalu,
             'listPemasukan' => $pemasukan ?? [],
-            'listPengeluaran' => $pengeluaran,
+            'listPengeluaran' => $pengeluaran ?? [],
             'saldo' => $this->saldo,
             'saldoLalu' => $this->saldoLalu,
             'totalSPP' => $totalSPP,
@@ -116,7 +116,43 @@ class BendaharaPrintController extends Controller
             'totalPengeluaran' => $totalPengeluaran,
         ];
         return view('print.bendahara.kas-bulanan', $data);
-        
+    }
+
+    public function kas_tahunan_print()
+    {
+        $pemasukan = KategoriPemasukan::withWhereHas(
+            'pemasukan',
+            fn ($q) => $q->whereTahun(request('tahun'))
+                ->where('jumlah', '>', 0)
+        )
+            ->get();
+
+        $pengeluaran = KategoriPengeluaran::withWhereHas(
+            'pengeluaran',
+            fn ($q) => $q->whereTahun(request('tahun'))
+                ->where('jumlah', '>', 0)
+        )
+            ->get();
+
+        $totalSPP = Pembayaran::whereTahun(request('tahun'))
+            ->sum('jumlah');
+
+        $totalPemasukan = Pemasukan::whereTahun(request('tahun'))
+            ->sum('jumlah') + $totalSPP;
+
+        $totalPengeluaran = Pengeluaran::whereTahun(request('tahun'))
+            ->sum('jumlah');
+
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'listPemasukan' => $pemasukan ?? [],
+            'listPengeluaran' => $pengeluaran ?? [],
+            'saldo' => $totalPemasukan - $totalPengeluaran,
+            'totalSPP' => $totalSPP,
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran
+        ];
+        return view('print.bendahara.kas-tahunan', $data);
     }
 
     // Rekap Pemasukan

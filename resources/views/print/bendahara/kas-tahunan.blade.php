@@ -2,8 +2,7 @@
 @section('title', 'Rekap Harian Pemasukan -')
 @section('content')
     <div class="text-center font-bold text-md mb-2 capitalize">
-        laporan KAS <br>
-        bulan {{ namaBulan(request('bulan')) }} tahun {{ request('tahun') }}
+        laporan KAS tahun {{ request('tahun') }}
     </div>
     <div class="grid grid-cols-2 gap-2">
         <div>

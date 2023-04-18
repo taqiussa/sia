@@ -13,6 +13,7 @@ use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\KasBulananController;
+use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(BendaharaPrintController::class)->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
         Route::get('kas-bulanan-print', 'kas_bulanan_print')->name('kas-bulanan-print');
+        Route::get('kas-tahunan-print', 'kas_tahunan_print')->name('kas-tahunan-print');
         Route::get('rekap-harian-pemasukan-detail', 'rekap_harian_pemasukan_detail')->name('rekap-harian-pemasukan-detail');
         Route::get('rekap-harian-pemasukan-simple', 'rekap_harian_pemasukan_simple')->name('rekap-harian-pemasukan-simple');
         Route::get('rekap-harian-pengeluaran-detail', 'rekap_harian_pengeluaran_detail')->name('rekap-harian-pengeluaran-detail');
@@ -131,6 +133,9 @@ Route::middleware([
 
     // Route Kas Bulanan
     Route::get('kas-bulanan', KasBulananController::class)->name('kas-bulanan');
+
+    // Route Kas Bulanan
+    Route::get('kas-tahunan', KasTahunanController::class)->name('kas-tahunan');
 
     // Route Rekap Harian Pemasukan
     Route::controller(RekapHarianPemasukanController::class)->group(function () {

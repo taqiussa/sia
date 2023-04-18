@@ -1,18 +1,17 @@
-import Bulan from '@/Components/Sia/Bulan'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Tahun from '@/Components/Sia/Tahun'
-import { namaBulan, penjumlahan, rupiah } from '@/Functions/functions'
+import {  penjumlahan, rupiah } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 
-const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, saldo, saldoLalu, totalSPP, totalPemasukan, totalPengeluaran }) => {
+const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP, totalPemasukan, totalPengeluaran }) => {
+
+    console.log(listPemasukan)
 
     const { data, setData, errors, processing } = useForm({
         tahun: initTahun,
-        bulan: moment(new Date()).format('MM')
     })
 
     const onHandleChange = (e) => {
@@ -21,13 +20,12 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
 
     useEffect(() => {
 
-        if (data.tahun && data.bulan) {
+        if (data.tahun) {
             router.reload(
                 {
-                    only: ['bulanLalu', 'listPemasukan', 'listPengeluaran', 'saldo', 'saldoLalu', 'totalSPP', 'totalPemasukan', 'totalPengeluaran'],
+                    only: ['listPemasukan', 'listPengeluaran', 'saldo', 'totalSPP', 'totalPemasukan', 'totalPengeluaran'],
                     data: {
                         tahun: data.tahun,
-                        bulan: data.bulan
                     },
                     preserveState: true,
                     replace: true
@@ -35,10 +33,10 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
             )
         }
 
-    }, [data.tahun, data.bulan])
+    }, [data.tahun])
     return (
         <>
-            <Head title='Kas Bulanan' />
+            <Head title='Kas Tahunan' />
 
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-2'>
 
@@ -50,19 +48,10 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
                     handleChange={onHandleChange}
                 />
 
-                <Bulan
-                    id='bulan'
-                    name='bulan'
-                    value={data.bulan}
-                    message={errors.bulan}
-                    handleChange={onHandleChange}
-                />
-
                 <div className="flex items-end space-x-2">
                     <PrintLink
-                        href={route('kas-bulanan-print', {
+                        href={route('kas-tahunan-print', {
                             tahun: data.tahun,
-                            bulan: data.bulan
                         })}
                         label='print'
                     />
@@ -126,15 +115,7 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
                             </tr>
                             <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 text-slate-600 font-bold text-lg bg-slate-300 capitalize" colSpan={2}>
-                                    saldo akhir bulan {namaBulan(bulanLalu)} tahun {data.tahun}
-                                </td>
-                                <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
-                                    {rupiah(saldoLalu)}
-                                </td>
-                            </tr>
-                            <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 text-slate-600 font-bold text-lg bg-slate-300 capitalize" colSpan={2}>
-                                    total pemasukan {namaBulan(data.bulan)} tahun {data.tahun}
+                                    total pemasukan tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
                                     {rupiah(totalPemasukan)}
@@ -142,7 +123,7 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
                             </tr>
                             <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 text-slate-600 font-bold text-lg bg-slate-300 capitalize" colSpan={2}>
-                                    total pengeluaran {namaBulan(data.bulan)} tahun {data.tahun}
+                                    total pengeluaran tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
                                     {rupiah(totalPengeluaran)}
@@ -150,7 +131,7 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
                             </tr>
                             <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 text-slate-600 font-bold text-lg bg-slate-300 capitalize" colSpan={2}>
-                                    saldo akhir {namaBulan(data.bulan)} tahun {data.tahun}
+                                    saldo akhir tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
                                     {rupiah(saldo)}
@@ -205,5 +186,5 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
     )
 }
 
-KasBulanan.layout = page => <AppLayout children={page} />
-export default KasBulanan
+KasTahunan.layout = page => <AppLayout children={page} />
+export default KasTahunan

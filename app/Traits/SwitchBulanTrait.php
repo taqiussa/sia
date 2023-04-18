@@ -13,7 +13,7 @@ trait SwitchBulanTrait
 {
     public function pemasukan()
     {
-        KategoriPemasukan::withWhereHas(
+        return KategoriPemasukan::withWhereHas(
             'pemasukan',
             fn ($q) => $q->whereTahun(request('tahun'))
                 ->whereMonth('tanggal', request('bulan'))

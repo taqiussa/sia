@@ -40,7 +40,7 @@
             <tr>
                 <th>No.</th>
                 <th>Tanggal</th>
-                <th>Kategori Pemasukan</th>
+                <th>Kategori Pengeluaran</th>
                 <th>Keterangan</th>
                 <th>Tanggal Nota</th>
                 <th>Jumlah</th>

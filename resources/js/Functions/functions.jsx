@@ -63,6 +63,11 @@ export function maskRupiah(angka) {
     return `Rp. ${formattedValue}`
 }
 
+export function namaBulan(bulan) {
+    const bulanNumber = parseInt(bulan, 10) - 1; // subtract 1 since month index starts from 0
+    return new Date(0, bulanNumber).toLocaleDateString('id-ID', { month: 'long' });
+}
+
 export function penjumlahan(list, column) {
 
     const totalJumlah = list.reduce((acc, curr) => {

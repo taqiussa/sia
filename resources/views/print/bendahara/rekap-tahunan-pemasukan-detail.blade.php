@@ -2,7 +2,7 @@
 @section('title', 'Rekap Tahunan Pemasukan -')
 @section('content')
     <div class="text-center font-bold text-md mb-2">
-        LAPORAN HARIAN PEMASUKAN SEKOLAH <br>
+        LAPORAN TAHUNAN PEMASUKAN SEKOLAH <br>
         TAHUN {{ $tahun }}
     </div>
     <div class="mt-3 mb-2 font-bold text-lg">Pembayaran Siswa</div>

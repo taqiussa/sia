@@ -12,6 +12,7 @@ use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
+use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     // Route Bendahara Print Controller
     Route::controller(BendaharaPrintController::class)->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
+        Route::get('kas-bulanan-print', 'kas_bulanan_print')->name('kas-bulanan-print');
         Route::get('rekap-harian-pemasukan-detail', 'rekap_harian_pemasukan_detail')->name('rekap-harian-pemasukan-detail');
         Route::get('rekap-harian-pemasukan-simple', 'rekap_harian_pemasukan_simple')->name('rekap-harian-pemasukan-simple');
         Route::get('rekap-harian-pengeluaran-detail', 'rekap_harian_pengeluaran_detail')->name('rekap-harian-pengeluaran-detail');
@@ -127,12 +129,15 @@ Route::middleware([
         Route::delete('input-pembayaran-siswa', 'hapus')->name('input-pembayaran-siswa.hapus');
     });
 
+    // Route Kas Bulanan
+    Route::get('kas-bulanan', KasBulananController::class)->name('kas-bulanan');
+
     // Route Rekap Harian Pemasukan
     Route::controller(RekapHarianPemasukanController::class)->group(function () {
         Route::get('rekap-harian-pemasukan', 'index')->name('rekap-harian-pemasukan');
         Route::get('rekap-harian-pemasukan-download', 'download')->name('rekap-harian-pemasukan-download');
     });
-    
+
     // Route Rekap Harian Pengeluaran
     Route::controller(RekapHarianPengeluaranController::class)->group(function () {
         Route::get('rekap-harian-pengeluaran', 'index')->name('rekap-harian-pengeluaran');

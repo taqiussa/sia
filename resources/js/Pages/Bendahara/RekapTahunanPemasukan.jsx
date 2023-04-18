@@ -29,7 +29,7 @@ const RekapTahunanPemasukan = ({ initTahun, listPemasukan, listPembayaran, subto
                     },
                     preserveState: true,
                     replace: true
-                },
+                }
             )
         }
 

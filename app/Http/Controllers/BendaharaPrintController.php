@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Siswa;
 use App\Models\Pemasukan;
 use App\Models\Transaksi;
 use App\Models\Pembayaran;
 use App\Models\WajibBayar;
+use App\Models\Pengeluaran;
+use Illuminate\Support\Str;
+use App\Traits\SwitchBulanTrait;
 use App\Models\KategoriPemasukan;
+use App\Models\KategoriPengeluaran;
 use App\Http\Controllers\Controller;
 
 class BendaharaPrintController extends Controller
 {
+    use SwitchBulanTrait;
+    
+    public $bulanLalu;
+    public $saldo;
+    public $saldoLalu;
+    public $tahunAwal;
+    public $tahunAkhir;
+    public $tanggalAwal;
+    public $tanggalAkhir;
+
     public function kwitansi()
     {
         $id = request('id');
@@ -43,6 +58,65 @@ class BendaharaPrintController extends Controller
             'kurangbayar' => $kurangbayar
         ];
         return view('print.bendahara.kwitansi', $data);
+    }
+
+    // Kas Print
+    public function kas_bulanan_print()
+    {
+// Inisialisasi Bulan Lalu
+
+        $currentMonth = Carbon::create(date('Y'), request('bulan'), 1, 0, 0, 0, 'Asia/Jakarta');
+
+        $lastMonth = $currentMonth->subMonthNoOverflow()->format('m');
+
+        $this->bulanLalu = $lastMonth;
+
+        // Inisialisasi tahun dari tahun ajaran 
+
+        $this->tahunAwal = Str::substr(request('tahun'), 0, 4);
+
+        $this->tahunAkhir = Str::substr(request('tahun'), 7, 4);
+
+        
+        // Perhitungan
+        
+        $this->switch_bulan();
+        
+        $subtotalPemasukan = $this->subtotal_pemasukan();
+
+        $totalPemasukanLalu = $this->total_pemasukan_lalu() + $this->total_pembayaran_lalu();
+
+        $totalPengeluaran = $this->total_pengeluaran();
+
+        $totalPengeluaranLalu = $this->total_pengeluaran_lalu();
+
+        $totalSPP = $this->total_spp();
+
+        $pemasukan = $this->pemasukan();
+
+        $pengeluaran = $this->pengeluaran();
+
+        if (request('bulan') == '07') {
+            $this->saldoLalu = 0;
+        } else {
+            $this->saldoLalu = $totalPemasukanLalu - $totalPengeluaranLalu;
+        }
+        
+        $this->saldo = $this->saldoLalu + $totalSPP + $subtotalPemasukan - $totalPengeluaran;
+
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'bulanLalu' => $this->bulanLalu,
+            'listPemasukan' => $pemasukan ?? [],
+            'listPengeluaran' => $pengeluaran,
+            'saldo' => $this->saldo,
+            'saldoLalu' => $this->saldoLalu,
+            'totalSPP' => $totalSPP,
+            'totalPemasukan' => $totalSPP + $subtotalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+        ];
+        return view('print.bendahara.kas-bulanan', $data);
+        
     }
 
     // Rekap Pemasukan
@@ -139,5 +213,77 @@ class BendaharaPrintController extends Controller
             'total' => $total,
         ];
         return view('print.bendahara.rekap-tahunan-pemasukan-simple', $data);
+    }
+
+    // Rekap Pengeluaran
+    public function rekap_harian_pengeluaran_detail()
+    {
+        $pengeluaran =  Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+            ->with([
+                'kategori',
+                'user'
+            ])
+            ->get();
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'tanggalAwal' => request('tanggalAwal'),
+            'tanggalAkhir' => request('tanggalAkhir'),
+            'listPengeluaran' => $pengeluaran,
+            'total' => $pengeluaran->sum('jumlah'),
+        ];
+        return view('print.bendahara.rekap-harian-pengeluaran-detail', $data);
+    }
+
+    public function rekap_harian_pengeluaran_simple()
+    {
+        $pengeluaran = Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])->get();
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'tanggalAwal' => request('tanggalAwal'),
+            'tanggalAkhir' => request('tanggalAkhir'),
+            'listKategori' => KategoriPengeluaran::withWhereHas(
+                'pengeluaran',
+                fn ($q) => $q->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+                    ->where('jumlah', '>', 0)
+            )
+                ->get(),
+            'listPengeluaran' => $pengeluaran,
+            'total' => $pengeluaran->sum('jumlah'),
+        ];
+        return view('print.bendahara.rekap-harian-pengeluaran-simple', $data);
+    }
+
+    public function rekap_tahunan_pengeluaran_detail()
+    {
+        $total = Pengeluaran::whereTahun(request('tahun'))->sum('jumlah');
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'tahun' => request('tahun'),
+            'listPengeluaran' => Pengeluaran::whereTahun(request('tahun'))
+                ->with([
+                    'kategori',
+                    'user'
+                ])
+                ->get(),
+            'total' => $total,
+        ];
+        return view('print.bendahara.rekap-tahunan-pengeluaran-detail', $data);
+    }
+
+    public function rekap_tahunan_pengeluaran_simple()
+    {
+        $total = Pengeluaran::whereTahun(request('tahun'))->sum('jumlah');
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'tahun' => request('tahun'),
+            'listKategori' => KategoriPengeluaran::withWhereHas(
+                'pengeluaran',
+                fn ($q) => $q->whereTahun(request('tahun'))
+                    ->where('jumlah', '>', 0)
+            )
+                ->get(),
+            'total' => $total,
+        ];
+        return view('print.bendahara.rekap-tahunan-pengeluaran-simple', $data);
     }
 }

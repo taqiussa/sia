@@ -1,33 +1,26 @@
 @extends('print')
-@section('title', 'Rekap Tahunan Pemasukan -')
+@section('title', 'Rekap Tahunan Pengeluaran -')
 @section('content')
     <div class="text-center font-bold text-md mb-2">
-        LAPORAN TAHUNAN PEMASUKAN SEKOLAH <br>
+        LAPORAN TAHUNAN PENGELUARAN SEKOLAH <br>
         TAHUN {{ $tahun }}
     </div>
-    <div class="mt-3 mb-2 font-bold text-lg">Pemasukan</div>
+    <div class="mt-3 mb-2 font-bold text-lg">Pengeluaran</div>
     <table class="w-full border-2 border-collapse border-black">
         <thead>
             <tr class="border-2 border-collapse border-black">
                 <th>No.</th>
-                <th>Kategori Pemasukan</th>
+                <th>Kategori Pengeluaran</th>
                 <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="border-2 border-collapse border-black">
-                <td class="text-center">1</td>
-                <td>Pembayaran SPP Siswa</td>
-                <td>
-                    {{ rupiah($subtotalPembayaran) }}
-                </td>
-            </tr>
             @foreach ($listKategori as $key => $kategori)
                 <tr class="border-2 border-collapse border-black">
-                    <td class="text-center">{{ $loop->iteration + 1 }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $kategori->nama }}</td>
                     <td>
-                        {{ rupiah($kategori->pemasukan->sum('jumlah')) }}
+                        {{ rupiah($kategori->pengeluaran->sum('jumlah')) }}
                     </td>
                 </tr>
             @endforeach

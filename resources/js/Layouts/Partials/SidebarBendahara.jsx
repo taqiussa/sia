@@ -21,8 +21,10 @@ const SidebarBendahara = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('kas-tahunan')} active={route().current('kas-tahunan')} label='kas tahunan' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-harian-pemasukan')} active={route().current('rekap-harian-pemasukan')} label='rekap harian pemasukan' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-harian-pengeluaran')} active={route().current('rekap-harian-pengeluaran')} label='rekap harian pengeluaran' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-per-siswa')} active={route().current('rekap-per-siswa')} label='rekap per siswa' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-tahunan-pemasukan')} active={route().current('rekap-tahunan-pemasukan')} label='rekap tahunan pemasukan' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-tahunan-pengeluaran')} active={route().current('rekap-tahunan-pengeluaran')} label='rekap tahunan pengeluaran' />
+                <SidebarLink closeSide={closeSide} href={route('tagihan-per-kelas')} active={route().current('tagihan-per-kelas')} label='tagihan per kelas' />
             </div>
         </div>
     )

@@ -17,8 +17,10 @@ use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
+use App\Http\Controllers\RekapPerSiswaController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
+use App\Http\Controllers\TagihanPerKelasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -53,10 +55,12 @@ Route::middleware('auth')->group(function () {
         Route::get('rekap-harian-pemasukan-simple', 'rekap_harian_pemasukan_simple')->name('rekap-harian-pemasukan-simple');
         Route::get('rekap-harian-pengeluaran-detail', 'rekap_harian_pengeluaran_detail')->name('rekap-harian-pengeluaran-detail');
         Route::get('rekap-harian-pengeluaran-simple', 'rekap_harian_pengeluaran_simple')->name('rekap-harian-pengeluaran-simple');
+        Route::get('rekap-per-siswa-print', 'rekap_per_siswa_print')->name('rekap-per-siswa-print');
         Route::get('rekap-tahunan-pemasukan-detail', 'rekap_tahunan_pemasukan_detail')->name('rekap-tahunan-pemasukan-detail');
         Route::get('rekap-tahunan-pemasukan-simple', 'rekap_tahunan_pemasukan_simple')->name('rekap-tahunan-pemasukan-simple');
         Route::get('rekap-tahunan-pengeluaran-detail', 'rekap_tahunan_pengeluaran_detail')->name('rekap-tahunan-pengeluaran-detail');
         Route::get('rekap-tahunan-pengeluaran-simple', 'rekap_tahunan_pengeluaran_simple')->name('rekap-tahunan-pengeluaran-simple');
+        Route::get('tagihan-per-kelas-print', 'tagihan_per_kelas_print')->name('tagihan-per-kelas-print');
     });
 
     // Route Get Data Bendahara
@@ -149,11 +153,17 @@ Route::middleware([
         Route::get('rekap-harian-pengeluaran-download', 'download')->name('rekap-harian-pengeluaran-download');
     });
 
+    // Route Rekap Per Siswa
+    Route::get('rekap-per-siswa', RekapPerSiswaController::class)->name('rekap-per-siswa');
+
     // Route Rekap Tahunan Pemasukan
     Route::get('rekap-tahunan-pemasukan', RekapTahunanPemasukanController::class)->name('rekap-tahunan-pemasukan');
 
     // Route Rekap Tahunan Pengeluaran
     Route::get('rekap-tahunan-pengeluaran', RekapTahunanPengeluaranController::class)->name('rekap-tahunan-pengeluaran');
+
+    // Route Tagihan Per Kelas
+    Route::get('tagihan-per-kelas', TagihanPerKelasController::class)->name('tagihan-per-kelas');
 });
 
 Route::middleware('auth')->group(function () {

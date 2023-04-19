@@ -1,0 +1,114 @@
+import Kelas from '@/Components/Sia/Kelas'
+import PrintIcon from '@/Components/Sia/PrintIcon'
+import PrintLink from '@/Components/Sia/PrintLink'
+import Tahun from '@/Components/Sia/Tahun'
+import AppLayout from '@/Layouts/AppLayout'
+import { Head, router, useForm } from '@inertiajs/react'
+import React, { useEffect } from 'react'
+
+const TagihaPerKelas = ({ initTahun, listKelas, listSiswa }) => {
+
+    const { data, setData, errors } = useForm({
+        tahun: initTahun,
+        kelasId: '',
+    })
+
+
+    const onHandleChange = (event) => {
+        setData(event.target.name, event.target.value)
+    }
+
+    useEffect(() => {
+        if (data.tahun && data.kelasId)
+            router.reload(
+                {
+                    only: ['listSiswa'],
+                    data: {
+                        tahun: data.tahun,
+                        kelasId: data.kelasId
+                    },
+                    preserveState: true,
+                    replace: true
+                },
+            )
+    }, [data.tahun, data.kelasId])
+
+    return (
+        <>
+            <Head title='Rekap Per Siswa' />
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-3'>
+
+                <Tahun
+                    id='tahun'
+                    name='tahun'
+                    label='tahun'
+                    value={data.tahun}
+                    message={errors.tahun}
+                    handleChange={onHandleChange}
+                />
+
+                <Kelas
+                    id='kelasId'
+                    name='kelasId'
+                    value={data.kelasId}
+                    message={errors.kelasId}
+                    handleChange={onHandleChange}
+                    listKelas={listKelas}
+                />
+                <div className="flex items-end">
+                    <PrintLink
+                        href={route('tagihan-per-kelas-print', {
+                            tahun: data.tahun,
+                            kelasId: data.kelasId
+                        })}
+                        label='print'
+                    />
+                </div>
+            </div>
+
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm text-slate-600">
+                    <thead className="text-sm text-slate-600 bg-gray-50">
+                        <tr>
+                            <th scope='col' className="py-3 px-2">
+                                No
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Nis
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Nama
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listSiswa &&
+                            listSiswa.map((list, index) => (
+                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.nis}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.user?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
+
+
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
+        </>
+    )
+}
+
+TagihaPerKelas.layout = page => <AppLayout children={page} />
+export default TagihaPerKelas

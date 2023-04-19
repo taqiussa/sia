@@ -32,7 +32,6 @@ class Siswa extends Model
         return $this->belongsTo(Kelas::class)->withDefault();
     }
 
-
     /**
      * Get all of the pembayarans for the Siswa
      *
@@ -42,7 +41,7 @@ class Siswa extends Model
     {
         return $this->hasMany(Pembayaran::class, 'nis', 'nis');
     }
-    
+
     /**
      * Get all of the transaksi for the Siswa
      *

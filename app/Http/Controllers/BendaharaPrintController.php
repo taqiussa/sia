@@ -15,6 +15,8 @@ use App\Traits\SwitchBulanTrait;
 use App\Models\KategoriPemasukan;
 use App\Models\KategoriPengeluaran;
 use App\Http\Controllers\Controller;
+use App\Models\Gunabayar;
+use App\Models\WaliKelas;
 
 class BendaharaPrintController extends Controller
 {
@@ -321,5 +323,78 @@ class BendaharaPrintController extends Controller
             'total' => $total,
         ];
         return view('print.bendahara.rekap-tahunan-pengeluaran-simple', $data);
+    }
+
+    // Tagihan Siswa
+    public function rekap_per_siswa_print()
+    {
+        $gunabayar = Gunabayar::get();
+
+        $siswa = Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->whereNis(request('nis'))
+            ->with(
+                [
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'pembayarans' => fn ($q) => $q->whereTahun(request('tahun')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ]
+            )
+            ->first();
+
+        $wajibBayar = WajibBayar::whereTahun(request('tahun'))
+            ->whereTingkat($siswa->tingkat)
+            ->value('jumlah');
+
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'listGunabayar' => $gunabayar,
+            'siswa' => $siswa,
+            'tahun' => request('tahun'),
+            'wajibBayar' => $wajibBayar,
+            'jumlah' => $wajibBayar / 12
+        ];
+
+        return view('print.bendahara.rekap-per-siswa-print', $data);
+    }
+
+    public function tagihan_per_kelas_print()
+    {
+        $gunabayar = Gunabayar::orderBy('semester')
+            ->orderBy('id')
+            ->get();
+
+        $siswa = Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with(
+                [
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'pembayarans' => fn ($q) => $q->whereTahun(request('tahun')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ]
+            )
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+
+        $waliKelas = WaliKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->first();
+
+        $data = [
+            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'listGunabayar' => $gunabayar,
+            'listSiswa' => $siswa,
+            'namaKelas' => $waliKelas->kelas->nama,
+            'namaWaliKelas' => $waliKelas->user->name,
+            'siswa' => $siswa,
+            'tahun' => request('tahun'),
+        ];
+
+        return view('print.bendahara.tagihan-per-kelas-print', $data);
     }
 }

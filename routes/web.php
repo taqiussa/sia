@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
+use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputPemasukanController;
@@ -64,6 +66,12 @@ Route::middleware('auth')->group(function () {
         Route::get('rekap-tahunan-pengeluaran-detail', 'rekap_tahunan_pengeluaran_detail')->name('rekap-tahunan-pengeluaran-detail');
         Route::get('rekap-tahunan-pengeluaran-simple', 'rekap_tahunan_pengeluaran_simple')->name('rekap-tahunan-pengeluaran-simple');
         Route::get('tagihan-per-kelas-print', 'tagihan_per_kelas_print')->name('tagihan-per-kelas-print');
+    });
+
+    // Route Get Absensi
+    Route::controller(GetAbsensiController::class)->group(function () {
+        Route::post('get-absensi-siswa', 'get_absensi_siswa')->name('get-absensi-siswa');
+        Route::post('get-info-absensi', 'get_info_absensi')->name('get-info-absensi');
     });
 
     // Route Get Data Bendahara
@@ -178,6 +186,17 @@ Route::middleware([
     Route::controller(UploadPenggajianController::class)->group(function () {
         Route::get('upload-penggajian', 'index')->name('upload-penggajian');
         Route::post('upload-penggajian', 'upload')->name('upload-penggajian.upload');
+    });
+});
+
+// Group Guru dan Karyawan
+Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {
+
+    // Route Absensi
+    Route::controller(AbsensiController::class)->group(function () {
+        Route::get('absensi', 'index')->name('absensi');
+        Route::post('absensi/nihil', 'nihil')->name('absensi.nihil');
+        Route::post('absensi/simpan', 'simpan')->name('absensi.simpan');
     });
 });
 

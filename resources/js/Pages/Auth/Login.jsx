@@ -71,7 +71,7 @@ export default function Login({ status, canResetPassword }) {
                         <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
+                            handleChange={(e) => setData('remember', e.target.checked)}
                         />
                         <span className="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>

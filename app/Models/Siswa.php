@@ -13,6 +13,16 @@ class Siswa extends Model
     protected $guarded = [];
 
     /**
+     * Get the absensi that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function absensi(): BelongsTo
+    {
+        return $this->belongsTo(Absensi::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get the alamat that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

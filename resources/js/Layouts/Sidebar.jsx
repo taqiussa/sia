@@ -64,7 +64,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarTataUsaha closeSide={closeSide} />
                             } */}
 
-
+                            <SidebarLink closeSide={closeSide} href={route('slip-gaji')} active={route().current('slip-gaji')} label='slip gaji' />
                         </>
 
                         :

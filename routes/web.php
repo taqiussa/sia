@@ -21,6 +21,7 @@ use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
+use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadPenggajianController;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
     });
+
+    // Route Slip Gaji
+    Route::get('slip-gaji', SlipGajiController::class)->name('slip-gaji');
 });
 
 // Group Bendahara dan Kepala Sekolah

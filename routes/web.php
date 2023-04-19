@@ -17,10 +17,12 @@ use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
+use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
 use App\Http\Controllers\TagihanPerKelasController;
+use App\Http\Controllers\UploadPenggajianController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -153,6 +155,9 @@ Route::middleware([
         Route::get('rekap-harian-pengeluaran-download', 'download')->name('rekap-harian-pengeluaran-download');
     });
 
+    // Route Rekap Penggajian
+    Route::get('rekap-penggajian', RekapPenggajianController::class)->name('rekap-penggajian');
+
     // Route Rekap Per Siswa
     Route::get('rekap-per-siswa', RekapPerSiswaController::class)->name('rekap-per-siswa');
 
@@ -164,6 +169,12 @@ Route::middleware([
 
     // Route Tagihan Per Kelas
     Route::get('tagihan-per-kelas', TagihanPerKelasController::class)->name('tagihan-per-kelas');
+
+    // Route Upload Penggajian
+    Route::controller(UploadPenggajianController::class)->group(function () {
+        Route::get('upload-penggajian', 'index')->name('upload-penggajian');
+        Route::post('upload-penggajian', 'upload')->name('upload-penggajian.upload');
+    });
 });
 
 Route::middleware('auth')->group(function () {

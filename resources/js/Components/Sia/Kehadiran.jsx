@@ -20,15 +20,12 @@ export default forwardRef(function Kehadiran(
     return (
         <div className='flex flex-col text-slate-600 capitalize'>
             <div>
-                kehadiran
-            </div>
-            <div>
                 <select
                     name={name}
                     id={id}
                     value={value}
                     className={
-                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ` +
+                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-auto ` +
                         className
                     }
                     ref={input}

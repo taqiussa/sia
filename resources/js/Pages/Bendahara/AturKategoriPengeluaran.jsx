@@ -68,6 +68,7 @@ const AturKategoriPengeluaran = ({ listKategoriPengeluaran }) => {
     return (
         <>
             <Head title='Atur Kategori pengeluaran' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur kategori pengeluaran</div>
             <form onSubmit={submit} className='space-y-3 mb-3'>
                 <div className='grid grid-cols-3 gap-2'>
                     <InputText

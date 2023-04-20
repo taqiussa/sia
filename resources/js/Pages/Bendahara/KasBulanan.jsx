@@ -39,6 +39,7 @@ const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, sald
     return (
         <>
             <Head title='Kas Bulanan' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">kas bulanan</div>
 
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-2'>
 

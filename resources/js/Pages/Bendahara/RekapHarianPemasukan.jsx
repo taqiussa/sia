@@ -45,6 +45,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
     return (
         <>
             <Head title='Rekap Harian Pemasukan' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap harian pemasukan</div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 space-y-3'>
 
                 <Tanggal

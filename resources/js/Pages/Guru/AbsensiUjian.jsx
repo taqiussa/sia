@@ -1,11 +1,12 @@
 import PrimaryButton from '@/Components/PrimaryButton'
 import Jam from '@/Components/Sia/Jam'
+import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import Kehadiran from '@/Components/Sia/Kehadiran'
-import Kelas from '@/Components/Sia/Kelas'
+import Ruang from '@/Components/Sia/Ruang'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
-import getAbsensiSiswa from '@/Functions/getAbsensiSiswa'
-import getInfoAbsensi from '@/Functions/getInfoAbsensi'
+import Ujian from '@/Components/Sia/Ujian'
+import getAbsensiUjian from '@/Functions/getAbsensiUjian'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import axios from 'axios'
@@ -14,74 +15,76 @@ import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
+const AbsensiUjian = ({ initTahun, listKehadiran }) => {
 
     const { data, setData, errors, processing } = useForm({
         id: '',
         tahun: initTahun,
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
+        namaUjian: '',
+        namaRuang: '',
+        jenisKelamin: '',
         jam: '',
-        kelasId: '',
         nis: '',
         kehadiranId: ''
     })
 
     const [count, setCount] = useState(0)
-    const [listInfo, setListInfo] = useState([])
     const [listSiswa, setListSiswa] = useState([])
     const [message, setMessage] = useState([])
     const [show, setShow] = useState(false)
 
     async function getDataAbsensiSiswa() {
-        const response = await getAbsensiSiswa(data.tanggal, data.tahun, data.jam, data.kelasId)
+        const response = await getAbsensiUjian(data.tanggal, data.tahun, data.namaUjian, data.namaRuang, data.jam, data.jenisKelamin)
         setListSiswa(response.listSiswa)
-    }
-
-    async function getDataInfoAbsensi() {
-        const response = await getInfoAbsensi(data.tanggal, data.kelasId)
-        setListInfo(response.listInfo)
     }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, name, guruName) => {
+    const handleDynamic = (e, index, id, nis, name, guruName, namaKelas, kelasId) => {
 
         const newList = [...listSiswa]
         newList.splice(index, 1, {
             id: id ?? '',
             nis: nis,
-            user: {
-                name: name
-            },
+            kelas_id: kelasId,
             absensi: {
-                kehadiran_id: e.target.value,
                 guru: {
                     name: guruName
                 },
-            }
+                kehadiran_id: e.target.value,
+            },
+            kelas: {
+                nama: namaKelas
+            },
+            user: {
+                name: name
+            },
         })
 
         setListSiswa(newList)
         setCount(count + 1)
 
-        axios.post(route('absensi.simpan',
+        axios.post(route('absensi-ujian.simpan',
             {
                 id: id,
                 tanggal: data.tanggal,
                 tahun: data.tahun,
                 jam: data.jam,
-                kelasId: data.kelasId,
+                namaRuang: data.namaRuang,
+                namaUjian: data.namaUjian,
+                jenisKelamin: data.jenisKelamin,
+                kehadiranId: e.target.value,
+                kelasId: kelasId,
                 nis: nis,
-                kehadiranId: e.target.value
             }))
             .then(response => {
                 setMessage({
                     nis: response.data.nis,
                     message: response.data.message
                 })
-                getDataInfoAbsensi()
             })
             .catch(error => {
                 console.log(error)
@@ -93,12 +96,14 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
 
         trackPromise(
             axios.post(
-                route('absensi.nihil',
+                route('absensi-ujian.nihil',
                     {
                         tanggal: data.tanggal,
                         tahun: data.tahun,
                         jam: data.jam,
-                        kelasId: data.kelasId,
+                        namaRuang: data.namaRuang,
+                        namaUjian: data.namaUjian,
+                        jenisKelamin: data.jenisKelamin
                     })
             )
                 .then(e => {
@@ -113,18 +118,14 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
 
     useEffect(() => {
 
-        if (data.tanggal && data.kelasId) {
-            trackPromise(
-                getDataInfoAbsensi()
-            )
-        }
-
         setShow(false)
 
         if (data.tanggal
             && data.tahun
             && data.jam
-            && data.kelasId
+            && data.namaRuang
+            && data.namaUjian
+            && data.jenisKelamin
         ) {
             trackPromise(
                 getDataAbsensiSiswa()
@@ -132,7 +133,7 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
 
             setShow(true)
         }
-    }, [data.tanggal, data.tahun, data.jam, data.kelasId])
+    }, [data.tanggal, data.tahun, data.jam, data.namaUjian, data.namaRuang, data.jenisKelamin])
 
     useEffect(() => {
 
@@ -157,8 +158,8 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
     return (
         <>
             <Head title='Absensi' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">absensi</div>
-            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">absensi ujian</div>
+            <div className='lg:grid lg:grid-cols-6 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tanggal
                     id='tanggal'
                     name='tanggal'
@@ -176,6 +177,22 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                     handleChange={onHandleChange}
                 />
 
+                <Ujian
+                    id="namaUjian"
+                    name="namaUjian"
+                    value={data.namaUjian}
+                    message={errors.namaUjian}
+                    handleChange={onHandleChange}
+                />
+
+                <Ruang
+                    id="namaRuang"
+                    name="namaRuang"
+                    value={data.namaRuang}
+                    message={errors.namaRuang}
+                    handleChange={onHandleChange}
+                />
+
                 <Jam
                     id='jam'
                     name='jam'
@@ -184,14 +201,14 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                     handleChange={onHandleChange}
                 />
 
-                <Kelas
-                    id='kelasId'
-                    name='kelasId'
-                    value={data.kelasId}
-                    message={errors.kelasId}
-                    listKelas={listKelas}
+                <JenisKelamin
+                    id='jenisKelamin'
+                    name='jenisKelamin'
+                    value={data.jenisKelamin}
+                    message={errors.jenisKelamin}
                     handleChange={onHandleChange}
                 />
+
             </div>
 
             {
@@ -199,13 +216,6 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                     <PrimaryButton onClick={handleNihil} disabled={processing}>set hadir</PrimaryButton>
                 )
             }
-
-            <div className='text-slate-600 py-2'>
-                Informasi :
-                {listInfo && listInfo.map((info, index) => (
-                    <li>{index + 1}. {info.siswa?.name} - {info.kehadiran?.nama} - {info.jam}</li>
-                ))}
-            </div>
 
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
@@ -216,6 +226,9 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nama
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Kelas
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Kehadiran
@@ -232,7 +245,10 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.user.name}
+                                    {siswa.user?.name}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {siswa.kelas?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <div className='flex flex-col'>
@@ -242,7 +258,7 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                                             name='kehadiranId'
                                             message={errors.kehadiranId}
                                             value={siswa.absensi.kehadiran_id ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.absensi?.id, siswa.nis, siswa.user.name, siswa.absensi.guru?.name)}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.absensi?.id, siswa.nis, siswa.user.name, siswa.absensi.guru?.name, siswa.kelas?.nama, siswa.kelas_id)}
                                             listKehadiran={listKehadiran}
                                         />
 
@@ -265,5 +281,5 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
     )
 }
 
-Absensi.layout = page => <AppLayout children={page} />
-export default Absensi
+AbsensiUjian.layout = page => <AppLayout children={page} />
+export default AbsensiUjian

@@ -38,6 +38,7 @@ const RekapTahunanPemasukan = ({ initTahun, listPemasukan, listPembayaran, subto
     return (
         <>
             <Head title='Rekap Tahunan Pemasukan' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap tahunan pemasukan</div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 space-y-3'>
 
                 <Tahun

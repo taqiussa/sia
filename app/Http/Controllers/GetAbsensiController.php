@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\Absensi;
+use App\Models\RuangUjian;
+use App\Traits\InitTrait;
 use EnumKehadiran;
 
 class GetAbsensiController extends Controller
 {
+    use InitTrait;
+
     public function get_absensi_siswa()
     {
         return response()->json([
@@ -23,6 +27,30 @@ class GetAbsensiController extends Controller
                 ->get()
                 ->sortBy('user.name')
                 ->values()
+        ]);
+    }
+
+    public function get_absensi_ujian()
+    {
+        return response()->json([
+            'listSiswa' => RuangUjian::whereTahun(request('tahun'))
+                ->whereSemester($this->data_semester())
+                ->whereNamaRuang(request('namaRuang'))
+                ->whereNamaUjian(request('namaUjian'))
+                ->whereJenisKelamin(request('jenisKelamin'))
+                ->with(
+                    [
+                        'absensi' => fn ($q) => $q
+                            ->whereTanggal(request('tanggal'))
+                            ->whereJam(request('jam')),
+                        'absensi.guru' => fn ($q) => $q->select('id', 'name'),
+                        'kelas' => fn ($q) => $q->select('id', 'nama'),
+                        'user' => fn ($q) => $q->select('nis', 'name'),
+                    ]
+                )
+                ->get()
+                ->sortBy(['kelas.nama', 'user.name'])
+                ->values(),
         ]);
     }
 

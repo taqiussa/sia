@@ -185,6 +185,12 @@ enum IndikatorAlquran: int
     case TAJWID = 5;
 }
 
+enum EnumKategoriAlquran: int
+{
+    case BILGHOIB = 1;
+    case BINNADZOR = 2;
+}
+
 enum EnumKategoriPenilaian: int
 {
     case PENGETAHUAN = 3;

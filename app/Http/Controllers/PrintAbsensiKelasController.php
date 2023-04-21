@@ -74,5 +74,48 @@ class PrintAbsensiKelasController extends Controller
 
     public function per_semester()
     {
+        $kelas = Kelas::find(request('kelasId'));
+        $waliKelas = WaliKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'user' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->first();
+
+        $guruBk =  GuruKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'user' => fn ($q) => $q->select('id', 'name'),
+                'mapel'
+            ])
+            ->withWhereHas('mapel', fn ($q) => $q->whereNama('Konseling'))
+            ->first();
+
+        $siswa = Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'absensis' => fn ($q) => $q->whereSemester(request('semester')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->withCount([
+                'absensis as total' => fn ($q) => $q->whereSemester(request('semester')),
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+
+        $totalTertinggi = $siswa->max('total');
+
+        $data =
+            [
+                'guruBk' => $guruBk->user->name,
+                'listSiswa' => $siswa,
+                'namaKelas' => $kelas->nama,
+                'namaWaliKelas' => $waliKelas->user->name,
+                'semester' => request('semester'),
+                'tahun' => request('tahun'),
+                'totalTertinggi' => $totalTertinggi
+            ];
+        return view('print.guru.print-absensi-kelas-per-semester', $data);
     }
 }

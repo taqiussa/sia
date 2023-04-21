@@ -63,6 +63,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get the penilaianAlquran that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function penilaianAlquran(): BelongsTo
+    {
+        return $this->belongsTo(PenilaianAlquran::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get all of the transaksi for the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

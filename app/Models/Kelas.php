@@ -19,7 +19,7 @@ class Kelas extends Model
      */
     public function absensi(): BelongsTo
     {
-        return $this->belongsTo(Absensi::class, 'id', 'kelas_id')->withDefault();
+        return $this->belongsTo(Absensi::class)->withDefault();
     }
 
     /**
@@ -29,7 +29,17 @@ class Kelas extends Model
      */
     public function absensis(): HasMany
     {
-        return $this->hasMany(Absensi::class, 'id', 'kelas_id');
+        return $this->hasMany(Absensi::class);
+    }
+
+    /**
+     * Get all of the ruangs for the Kelas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ruangUjian(): HasMany
+    {
+        return $this->hasMany(RuangUjian::class);
     }
 
     /**
@@ -39,6 +49,6 @@ class Kelas extends Model
      */
     public function siswas(): HasMany
     {
-        return $this->hasMany(Siswa::class, 'id', 'kelas_id');
+        return $this->hasMany(Siswa::class);
     }
 }

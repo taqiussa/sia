@@ -12,7 +12,7 @@
     <meta http-equiv="refresh" content="{{ config('session.lifetime') * 60 }}">
 
     <!-- Logo -->
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png" sizes="16x16" />
+    <link rel="icon" href="{{ asset('images/logoalfa2.png') }}" type="image/png" sizes="16x16" />
 
     <!-- Fonts -->
     {{-- <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap"> --}}

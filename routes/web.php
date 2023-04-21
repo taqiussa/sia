@@ -17,6 +17,7 @@ use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
+use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -206,6 +207,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('absensi-ujian', 'index')->name('absensi-ujian');
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
+    });
+
+    // Route Print Absensi Ujian
+    Route::controller(PrintAbsensiUjianController::class)->group(function () {
+        Route::get('print-absensi-ujian', 'index')->name('print-absensi-ujian');
+        Route::get('print-absensi-ujian-print', 'print')->name('print-absensi-ujian-print');
     });
 });
 

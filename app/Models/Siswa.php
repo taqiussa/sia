@@ -23,6 +23,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get all of the absensis for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function absensis(): HasMany
+    {
+        return $this->hasMany(Absensi::class, 'nis', 'nis');
+    }
+
+    /**
      * Get the alamat that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

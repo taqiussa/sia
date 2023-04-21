@@ -59,13 +59,15 @@ const PrintAbsensiUjian = ({ initTahun }) => {
                     handleChange={onHandleChange}
                 />
 
+                <div className="flex justify-start items-end">
+                    <PrintLink href={route('print-absensi-ujian-print', {
+                        tanggal: data.tanggal,
+                        tahun: data.tahun,
+                        namaUjian: data.namaUjian,
+                        jenisKelamin: data.jenisKelamin
+                    })} label='print' />
+                </div>
             </div>
-            <PrintLink href={route('print-absensi-ujian-print', {
-                tanggal: data.tanggal,
-                tahun: data.tahun,
-                namaUjian: data.namaUjian,
-                jenisKelamin: data.jenisKelamin
-            })} label='print' />
         </>
     )
 }

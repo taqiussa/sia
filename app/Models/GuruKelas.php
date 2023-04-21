@@ -3,18 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class WaliKelas extends Model
+class GuruKelas extends Model
 {
     use HasFactory;
-    protected $table = 'kelas_wali_kelas';
     protected $guarded = [];
 
     /**
-     * Get the kelas that owns the WaliKelas
+     * Get the kelas that owns the GuruKelas
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -24,22 +22,22 @@ class WaliKelas extends Model
     }
 
     /**
-     * Get all of the penilaians for the WaliKelas
+     * Get the mape that owns the GuruKelas
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function penilaians(): HasMany
+    public function mapel(): BelongsTo
     {
-        return $this->hasMany(PenilaianGuru::class, 'user_id', 'user_id');
+        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id')->withDefault();
     }
 
     /**
-     * Get the user that owns the WaliKelas
+     * Get the user that owns the GuruKelas
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id')->withDefault();
+        return $this->belongsTo(User::class, 'guru_id')->withDefault();
     }
 }

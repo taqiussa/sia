@@ -12,6 +12,7 @@ use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\InputPemasukanController;
@@ -212,6 +213,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
     });
 
+    // Input Nilai Al Qur'an
+    Route::controller(InputNilaiAlquranController::class)->group(function () {
+        Route::get('input-nila-alquran', 'index')->name('input-nilai-alquran');
+        Route::post('input-nila-alquran', 'simpan')->name('input-nilai-alquran.simpan');
+        Route::put('input-nila-alquran', 'semua')->name('input-nilai-alquran.semua');
+        Route::delete('input-nila-alquran', 'hapus')->name('input-nilai-alquran.hapus');
+    });
+
     // Input Nilai Bilghoib Per Kelas
     Route::controller(InputNilaiBilghoibPerKelasController::class)->group(function () {
         Route::get('input-nilai-bilghoib-per-kelas', 'index')->name('input-nilai-bilghoib-per-kelas');
@@ -227,7 +236,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     });
 
     // Route Print Absensi Kelas
-    Route::controller(PrintAbsensiKelasController::class)->group(function() {
+    Route::controller(PrintAbsensiKelasController::class)->group(function () {
         Route::get('print-absensi-kelas', 'index')->name('print-absensi-kelas');
         Route::get('print-absensi-kelas/per-bulan', 'per_bulan')->name('print-absensi-kelas.per-bulan');
         Route::get('print-absensi-kelas/per-semester', 'per_semester')->name('print-absensi-kelas.per-semester');

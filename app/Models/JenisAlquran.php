@@ -18,6 +18,6 @@ class JenisAlquran extends Model
      */
     public function penilaian(): BelongsTo
     {
-        return $this->belongsTo(PenilaianAlquran::class)->withDefault();
+        return $this->belongsTo(PenilaianAlquran::class, 'id', 'jenis_alquran_id')->withDefault();
     }
 }

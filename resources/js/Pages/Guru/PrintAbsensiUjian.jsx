@@ -60,7 +60,7 @@ const PrintAbsensiUjian = ({ initTahun }) => {
                 />
 
                 <div className="flex justify-start items-end">
-                    <PrintLink href={route('print-absensi-ujian-print', {
+                    <PrintLink href={route('print-absensi-ujian.print', {
                         tanggal: data.tanggal,
                         tahun: data.tahun,
                         namaUjian: data.namaUjian,

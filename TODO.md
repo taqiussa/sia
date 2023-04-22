@@ -1,1 +1,1 @@
-input pembayaran siswa, kurang checkbox
+print nilai al quran binnadzor dan bilghoib per siswa

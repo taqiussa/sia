@@ -73,6 +73,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get all of the penilaianAlqurans for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaianAlqurans(): HasMany
+    {
+        return $this->hasMany(PenilaianAlquran::class, 'nis', 'nis');
+    }
+    
+    /**
      * Get all of the transaksi for the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

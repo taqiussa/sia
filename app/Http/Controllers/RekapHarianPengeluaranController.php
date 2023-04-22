@@ -24,6 +24,7 @@ class RekapHarianPengeluaranController extends Controller
         return inertia(
             'Bendahara/RekapHarianPengeluaran',
             [
+                'initTahun' => $this->data_tahun(),
                 'listPengeluaran' => $pengeluaran->paginate(10)
                     ->withQueryString()
                     ->through(fn ($q) => [

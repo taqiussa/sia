@@ -16,7 +16,6 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import { Icon } from '@mdi/react'
 import { mdiCheckCircle } from '@mdi/js'
 import Checkbox from '@/Components/Checkbox'
-import PrintLink from '@/Components/Sia/PrintLink'
 import PrintIcon from '@/Components/Sia/PrintIcon'
 
 const AturWajibBayar = ({ initTahun }) => {

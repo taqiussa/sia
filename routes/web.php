@@ -22,6 +22,7 @@ use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
+use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -245,7 +246,18 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     // Route Print Absensi Ujian
     Route::controller(PrintAbsensiUjianController::class)->group(function () {
         Route::get('print-absensi-ujian', 'index')->name('print-absensi-ujian');
-        Route::get('print-absensi-ujian-print', 'print')->name('print-absensi-ujian-print');
+        Route::get('print-absensi-ujian/print', 'print')->name('print-absensi-ujian.print');
+    });
+
+    // Route Print Nilai Al Qur'an
+    Route::controller(PrintNilaiAlquranController::class)->group(function () {
+        Route::get('print-nilai-alquran', 'index')->name('print-nilai-alquran');
+        Route::get('print-nilai-alquran/bilghoib', 'bilghoib')->name('print-nilai-alquran.bilghoib');
+        Route::get('print-nilai-alquran/bilghoib-horizontal', 'bilghoib_horizontal')->name('print-nilai-alquran.bilghoib-horizontal');
+        Route::get('print-nilai-alquran/bilghoib-per-siswa', 'bilghoib_per_siswa')->name('print-nilai-alquran.bilghoib-per-siswa');
+        Route::get('print-nilai-alquran/binnadzor', 'binnadzor')->name('print-nilai-alquran.binnadzor');
+        Route::get('print-nilai-alquran/binnadzor-horizontal', 'binnadzor_horizontal')->name('print-nilai-alquran.binnadzor-horizontal');
+        Route::get('print-nilai-alquran/binnadzor-per-siswa', 'binnadzor_per_siswa')->name('print-nilai-alquran.binnadzor-per-siswa');
     });
 });
 

@@ -1,5 +1,4 @@
 import Kelas from '@/Components/Sia/Kelas'
-import PrintIcon from '@/Components/Sia/PrintIcon'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Tahun from '@/Components/Sia/Tahun'
 import AppLayout from '@/Layouts/AppLayout'

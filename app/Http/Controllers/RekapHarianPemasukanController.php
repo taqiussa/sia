@@ -25,6 +25,7 @@ class RekapHarianPemasukanController extends Controller
         return inertia(
             'Bendahara/RekapHarianPemasukan',
             [
+                'initTahun' => $this->data_tahun(),
                 'listPemasukan' => Pemasukan::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
                     ->with([
                         'kategori' => fn ($q) => $q->select('id', 'nama'),

@@ -16,6 +16,7 @@ use App\Models\KategoriPemasukan;
 use App\Models\KategoriPengeluaran;
 use App\Http\Controllers\Controller;
 use App\Models\Gunabayar;
+use App\Models\KepalaSekolah;
 use App\Models\WaliKelas;
 
 class BendaharaPrintController extends Controller
@@ -107,7 +108,11 @@ class BendaharaPrintController extends Controller
         $this->saldo = $this->saldoLalu + $totalSPP + $subtotalPemasukan - $totalPengeluaran;
 
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'bulanLalu' => $this->bulanLalu,
             'listPemasukan' => $pemasukan ?? [],
             'listPengeluaran' => $pengeluaran ?? [],
@@ -146,7 +151,11 @@ class BendaharaPrintController extends Controller
             ->sum('jumlah');
 
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'listPemasukan' => $pemasukan ?? [],
             'listPengeluaran' => $pengeluaran ?? [],
             'saldo' => $totalPemasukan - $totalPengeluaran,
@@ -165,7 +174,11 @@ class BendaharaPrintController extends Controller
         $subtotalPembayaran = Pembayaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])->sum('jumlah');
         $total = $subtotalPembayaran + $subtotalPemasukan;
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tanggalAwal' => request('tanggalAwal'),
             'tanggalAkhir' => request('tanggalAkhir'),
             'listPembayaran' => Pembayaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
@@ -195,7 +208,11 @@ class BendaharaPrintController extends Controller
         $subtotalPembayaran = Pembayaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])->sum('jumlah');
         $total = $subtotalPembayaran + $subtotalPemasukan;
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tanggalAwal' => request('tanggalAwal'),
             'tanggalAkhir' => request('tanggalAkhir'),
             'subtotalPembayaran' => $subtotalPembayaran,
@@ -213,7 +230,11 @@ class BendaharaPrintController extends Controller
         $subtotalPembayaran = Pembayaran::whereTahun(request('tahun'))->sum('jumlah');
         $total = $subtotalPembayaran + $subtotalPemasukan;
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tahun' => request('tahun'),
             'listPembayaran' => Pembayaran::whereTahun(request('tahun'))
                 ->with([
@@ -242,7 +263,11 @@ class BendaharaPrintController extends Controller
         $subtotalPembayaran = Pembayaran::whereTahun(request('tahun'))->sum('jumlah');
         $total = $subtotalPembayaran + $subtotalPemasukan;
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tahun' => request('tahun'),
             'subtotalPembayaran' => $subtotalPembayaran,
             'listKategori' => KategoriPemasukan::where('nama', '!=', 'SPP')
@@ -263,7 +288,11 @@ class BendaharaPrintController extends Controller
             ])
             ->get();
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tanggalAwal' => request('tanggalAwal'),
             'tanggalAkhir' => request('tanggalAkhir'),
             'listPengeluaran' => $pengeluaran,
@@ -276,7 +305,11 @@ class BendaharaPrintController extends Controller
     {
         $pengeluaran = Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])->get();
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tanggalAwal' => request('tanggalAwal'),
             'tanggalAkhir' => request('tanggalAkhir'),
             'listKategori' => KategoriPengeluaran::withWhereHas(
@@ -295,7 +328,11 @@ class BendaharaPrintController extends Controller
     {
         $total = Pengeluaran::whereTahun(request('tahun'))->sum('jumlah');
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tahun' => request('tahun'),
             'listPengeluaran' => Pengeluaran::whereTahun(request('tahun'))
                 ->with([
@@ -312,7 +349,11 @@ class BendaharaPrintController extends Controller
     {
         $total = Pengeluaran::whereTahun(request('tahun'))->sum('jumlah');
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'tahun' => request('tahun'),
             'listKategori' => KategoriPengeluaran::withWhereHas(
                 'pengeluaran',
@@ -347,7 +388,11 @@ class BendaharaPrintController extends Controller
             ->value('jumlah');
 
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'listGunabayar' => $gunabayar,
             'siswa' => $siswa,
             'tahun' => request('tahun'),
@@ -386,7 +431,11 @@ class BendaharaPrintController extends Controller
             ->first();
 
         $data = [
-            'kepalaSekolah' => User::role('Kepala Sekolah')->first()->name,
+            'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
+                ->with(['user' => fn ($q) => $q->select('id', 'name')])
+                ->first()
+                ->user
+                ->name,
             'listGunabayar' => $gunabayar,
             'listSiswa' => $siswa,
             'namaKelas' => $waliKelas->kelas->nama,

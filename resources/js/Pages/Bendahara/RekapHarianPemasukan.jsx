@@ -2,6 +2,7 @@ import DownloadLink from '@/Components/Sia/DownloadLink'
 import Paginator from '@/Components/Sia/Paginator'
 import PrintLink from '@/Components/Sia/PrintLink'
 import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
+import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal, penjumlahan, rupiah, tanggal } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
@@ -10,9 +11,10 @@ import { toInteger } from 'lodash'
 import moment from 'moment'
 import React, { useEffect } from 'react'
 
-const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayaran }) => {
+const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtotalPembayaran }) => {
 
     const { data, setData, errors } = useForm({
+        tahun: initTahun,
         tanggalAwal: moment(new Date()).format('YYYY-MM-DD'),
         tanggalAkhir: moment(new Date()).format('YYYY-MM-DD'),
     })
@@ -48,6 +50,14 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
             <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap harian pemasukan</div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 space-y-3'>
 
+                <Tahun
+                    id='tahun'
+                    name='tahun'
+                    value={data.tahun}
+                    messages={errors.tahun}
+                    handleChange={onHandleChange}
+                />
+
                 <Tanggal
                     id='tanggalAwal'
                     name='tanggalAwal'
@@ -69,6 +79,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                 <div className="flex items-end space-x-2">
                     <DownloadLink
                         href={route('rekap-harian-pemasukan-download', {
+                            tahun: data.tahun,
                             tanggalAwal: data.tanggalAwal,
                             tanggalAkhir: data.tanggalAkhir
                         })}
@@ -76,6 +87,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                     />
                     <PrintLink
                         href={route('rekap-harian-pemasukan-simple', {
+                            tahun: data.tahun,
                             tanggalAwal: data.tanggalAwal,
                             tanggalAkhir: data.tanggalAkhir
                         })}
@@ -83,6 +95,7 @@ const RekapHarianPemasukan = ({ listPemasukan, listPembayaran, subtotalPembayara
                     />
                     <PrintLinkMerah
                         href={route('rekap-harian-pemasukan-detail', {
+                            tahun: data.tahun,
                             tanggalAwal: data.tanggalAwal,
                             tanggalAkhir: data.tanggalAkhir
                         })}

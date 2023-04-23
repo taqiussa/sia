@@ -97,6 +97,35 @@ class PrintNilaiAlquranController extends Controller
 
     public function bilghoib_per_siswa()
     {
+        $bilghoib = JenisAlquran::whereKategoriAlquranId(EnumKategoriAlquran::BILGHOIB)
+            ->get();
+
+        $namaGuru = GuruKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'mapel',
+                'user' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->withWhereHas('mapel', fn ($q) => $q->whereNama("Al Qur'an"))
+            ->get();
+
+        $siswa = Siswa::whereTahun(request('tahun'))
+            ->whereNis(request('nis'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'penilaianAlqurans' => fn ($q) => $q->whereKategoriAlquranId(EnumKategoriAlquran::BILGHOIB),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->first();
+
+        $data = [
+            'siswa' => $siswa,
+            'listJenis' => $bilghoib,
+            'namaGuru' => $namaGuru,
+            'tahun' => request('tahun')
+        ];
+
+        return view('print.guru.print-nilai-alquran-bilghoib-per-siswa', $data);
     }
 
     public function binnadzor()
@@ -156,5 +185,34 @@ class PrintNilaiAlquranController extends Controller
 
     public function binnadzor_per_siswa()
     {
+        $binnadzor = JenisAlquran::whereKategoriAlquranId(EnumKategoriAlquran::BINNADZOR)
+            ->get();
+
+        $namaGuru = GuruKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'mapel',
+                'user' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->withWhereHas('mapel', fn ($q) => $q->whereNama("Al Qur'an"))
+            ->get();
+
+        $siswa = Siswa::whereTahun(request('tahun'))
+            ->whereNis(request('nis'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'penilaianAlqurans' => fn ($q) => $q->whereKategoriAlquranId(EnumKategoriAlquran::BINNADZOR),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->first();
+
+        $data = [
+            'siswa' => $siswa,
+            'listJenis' => $binnadzor,
+            'namaGuru' => $namaGuru,
+            'tahun' => request('tahun')
+        ];
+
+        return view('print.guru.print-nilai-alquran-binnadzor-per-siswa', $data);
     }
 }

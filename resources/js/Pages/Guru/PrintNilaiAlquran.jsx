@@ -21,15 +21,15 @@ const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
 
     useEffect(() => {
 
-            router.reload({
-                only: ['listKelas', 'listSiswa'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
+        router.reload({
+            only: ['listKelas', 'listSiswa'],
+            data: {
+                tahun: data.tahun,
+                kelasId: data.kelasId
+            },
+            replace: true,
+            preserveState: true
+        })
 
     }, [data.tahun, data.kelasId])
 
@@ -116,17 +116,15 @@ const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
                                     <div className="inline-flex space-x-2">
 
                                         <PrintLink href={route('print-nilai-alquran.bilghoib-per-siswa', {
-                                            tanggalAwal: data.tanggalAwal,
-                                            tanggalAkhir: data.tanggalAkhir,
+                                            tahun: data.tahun,
                                             kelasId: data.kelasId,
-                                            tahun: data.tahun
+                                            nis: siswa.nis
                                         })} label='bilghoib' />
 
                                         <PrintLinkMerah href={route('print-nilai-alquran.binnadzor-per-siswa', {
-                                            tanggalAwal: data.tanggalAwal,
-                                            tanggalAkhir: data.tanggalAkhir,
+                                            tahun: data.tahun,
                                             kelasId: data.kelasId,
-                                            tahun: data.tahun
+                                            nis: siswa.nis
                                         })} label='binnadzor' />
                                     </div>
                                 </td>

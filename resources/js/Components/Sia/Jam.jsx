@@ -44,6 +44,8 @@ export default forwardRef(function Jam(
 
                     <option value="5-6">5-6</option>
 
+                    <option value="7-8">7-8</option>
+
                 </select>
             </div>
             {message ?

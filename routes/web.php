@@ -9,6 +9,7 @@ use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
+use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
@@ -213,6 +214,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('absensi-ujian', 'index')->name('absensi-ujian');
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
+    });
+
+    // Route Form Tugas
+    Route::controller(FormTugasController::class)->group(function () {
+        Route::get('form-tugas', 'index')->name('form-tugas');
+        Route::post('form-tugas', 'simpan')->name('form-tugas.simpan');
+        Route::delete('form-tugas', 'hapus')->name('form-tugas.hapus');
     });
 
     // Input Nilai Al Qur'an

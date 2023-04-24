@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\GuruKelas;
+use App\Models\GuruMapel;
 use App\Models\Kelas;
 use App\Models\PenilaianRapor;
 
@@ -22,6 +24,28 @@ trait InitTrait
         return PenilaianRapor::whereTahun(request('tahun'))
             ->whereTingkat($tingkat?->tingkat)
             ->pluck('kategori_nilai_id');
+    }
+
+    public function data_kelas()
+    {
+        return GuruKelas::whereTahun(request('tahun'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereGuruId(auth()->user()->id)
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama')
+            ])
+            ->get()
+            ->sortBy('kelas.nama')
+            ->values();
+    }
+
+    public function data_mapel()
+    {
+        return GuruMapel::whereUserId(auth()->user()->id)
+            ->with([
+                'mapel' => fn ($q) => $q->select('id', 'nama')
+            ])
+            ->get();
     }
 
     public function data_semester()

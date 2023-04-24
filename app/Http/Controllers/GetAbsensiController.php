@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use App\Models\Absensi;
 use App\Models\RuangUjian;
+use App\Models\SiswaEkstra;
 use App\Traits\InitTrait;
+use App\Traits\SiswaTrait;
 use EnumKehadiran;
 
 class GetAbsensiController extends Controller
 {
     use InitTrait;
+    use SiswaTrait;
+
+    public function get_absensi_ekstrakurikuler()
+    {
+        return response()->json(['listSiswa' => $this->data_siswa_ekstra_with_absensi()]);
+    }
 
     public function get_absensi_siswa()
     {

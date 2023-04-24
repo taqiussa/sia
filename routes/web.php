@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\AbsensiEkstrakurikulerController;
 use App\Http\Controllers\AbsensiUjianController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
@@ -79,6 +80,7 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Absensi
     Route::controller(GetAbsensiController::class)->group(function () {
+        Route::post('get-absensi-ekstrakurikuler', 'get_absensi_ekstrakurikuler')->name('get-absensi-ekstrakurikuler');
         Route::post('get-absensi-siswa', 'get_absensi_siswa')->name('get-absensi-siswa');
         Route::post('get-absensi-ujian', 'get_absensi_ujian')->name('get-absensi-ujian');
         Route::post('get-info-absensi', 'get_info_absensi')->name('get-info-absensi');
@@ -207,6 +209,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('absensi', 'index')->name('absensi');
         Route::post('absensi/nihil', 'nihil')->name('absensi.nihil');
         Route::post('absensi/simpan', 'simpan')->name('absensi.simpan');
+    });
+
+    // Route Absensi Ekstrakurikuler
+    Route::controller(AbsensiEkstrakurikulerController::class)->group(function () {
+        Route::get('absensi-ekstrakurikuler', 'index')->name('absensi-ekstrakurikuler');
+        Route::post('absensi-ekstrakurikuler/nihil', 'nihil')->name('absensi-ekstrakurikuler.nihil');
+        Route::post('absensi-ekstrakurikuler/simpan', 'simpan')->name('absensi-ekstrakurikuler.simpan');
     });
 
     // Route Absensi Ujian

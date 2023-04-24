@@ -9,6 +9,7 @@ const SidebarGuru = ({closeSide}) => {
             </div>
             <div>
                 <SidebarLink closeSide={closeSide} href={route('absensi')} active={route().current('absensi')} label='absensi' />
+                <SidebarLink closeSide={closeSide} href={route('absensi-ekstrakurikuler')} active={route().current('absensi-ekstrakurikuler')} label='absensi ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('absensi-ujian')} active={route().current('absensi-ujian')} label='absensi ujian' />
                 <SidebarLink closeSide={closeSide} href={route('form-tugas')} active={route().current('form-tugas')} label='form tugas' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-alquran')} active={route().current('input-nilai-alquran')} label="input nilai al qur'an" />

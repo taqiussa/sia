@@ -1,1 +1,1 @@
-print nilai al quran binnadzor dan bilghoib per siswa
+ubah absensi ujian controller dan absensi sesuaikan nihil sama dengan absensi ekstrakurikuler

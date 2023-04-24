@@ -22,6 +22,7 @@ use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
+use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\PrintNilaiAlquranController;
@@ -252,6 +253,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-nilai-binnadzor-per-kelas', 'index')->name('input-nilai-binnadzor-per-kelas');
         Route::post('input-nilai-binnadzor-per-kelas', 'simpan')->name('input-nilai-binnadzor-per-kelas.simpan');
         Route::delete('input-nilai-binnadzor-per-kelas', 'hapus')->name('input-nilai-binnadzor-per-kelas.hapus');
+    });
+
+    // Route Print Absensi Ekstrakurikuler
+    Route::controller(PrintAbsensiEkstrakurikulerController::class)->group(function () {
+        Route::get('print-absensi-ekstrakurikuler', 'index')->name('print-absensi-ekstrakurikuler');
+        Route::get('print-absensi-ekstrakurikuler/download', 'download')->name('print-absensi-ekstrakurikuler.download');
     });
 
     // Route Print Absensi Kelas

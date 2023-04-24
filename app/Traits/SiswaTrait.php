@@ -62,8 +62,8 @@ trait SiswaTrait
             ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
             ->with([
                 'absensi' => fn ($q) => $q->whereTanggal(request('tanggal')),
-                'absensi.guru',
-                'absensi.kehadiran',
+                'absensi.guru' => fn ($q) => $q->select('id', 'name'),
+                'absensi.kehadiran' => fn ($q) => $q->select('id', 'nama'),
                 'kelas' => fn ($q) => $q->select('id', 'nama'),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])

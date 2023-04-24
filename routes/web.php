@@ -32,6 +32,7 @@ use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
+use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadPenggajianController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -258,6 +259,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-nilai-alquran/binnadzor', 'binnadzor')->name('print-nilai-alquran.binnadzor');
         Route::get('print-nilai-alquran/binnadzor-horizontal', 'binnadzor_horizontal')->name('print-nilai-alquran.binnadzor-horizontal');
         Route::get('print-nilai-alquran/binnadzor-per-siswa', 'binnadzor_per_siswa')->name('print-nilai-alquran.binnadzor-per-siswa');
+    });
+
+    // Route Upload Analisis Al Qur'an
+    Route::controller(UploadAnalisisAlquranController::class)->group(function () {
+        Route::get('upload-analisis-alquran', 'index')->name('upload-analisis-alquran');
+        Route::get('upload-analisis-alquran/download', 'download')->name('upload-analisis-alquran.download');
+        Route::post('upload-analisis-alquran', 'upload')->name('upload-analisis-alquran.upload');
     });
 });
 

@@ -2,8 +2,28 @@
 
 namespace App\Traits;
 
+use App\Models\Kelas;
+use App\Models\PenilaianRapor;
+
 trait InitTrait
 {
+
+    public function data_jenis_penilaian()
+    {
+        return PenilaianRapor::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->pluck('jenis_penilaian_id');
+    }
+
+    public function data_kategori_nilai()
+    {
+        $tingkat = Kelas::find(request('kelasId'));
+
+        return PenilaianRapor::whereTahun(request('tahun'))
+            ->whereTingkat($tingkat?->tingkat)
+            ->pluck('kategori_nilai_id');
+    }
+
     public function data_semester()
     {
         $bulanIni = date('m');
@@ -38,5 +58,4 @@ trait InitTrait
         }
         return $tahunAjaran;
     }
-
 }

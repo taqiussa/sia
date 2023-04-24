@@ -43,6 +43,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get the analisisAlquran that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function analisisAlqurans(): HasMany
+    {
+        return $this->hasMany(AnalisisAlquran::class, 'nis', 'nis');
+    }
+
+    /**
      * Get the kelas that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -60,6 +70,26 @@ class Siswa extends Model
     public function pembayarans(): HasMany
     {
         return $this->hasMany(Pembayaran::class, 'nis', 'nis');
+    }
+
+    /**
+     * Get the penilaian that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function penilaian(): BelongsTo
+    {
+        return $this->belongsTo(Penilaian::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
+     * Get all of the penilaians for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaians(): HasMany
+    {
+        return $this->hasMany(Penilaian::class, 'nis', 'nis');
     }
 
     /**
@@ -81,7 +111,7 @@ class Siswa extends Model
     {
         return $this->hasMany(PenilaianAlquran::class, 'nis', 'nis');
     }
-    
+
     /**
      * Get all of the transaksi for the Siswa
      *

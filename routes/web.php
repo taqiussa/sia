@@ -10,6 +10,7 @@ use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
+use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
@@ -226,6 +227,9 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
     });
 
+    // Route Data Siswa Ekstrakurikuler
+    Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');
+
     // Route Form Tugas
     Route::controller(FormTugasController::class)->group(function () {
         Route::get('form-tugas', 'index')->name('form-tugas');
@@ -233,7 +237,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('form-tugas', 'hapus')->name('form-tugas.hapus');
     });
 
-    // Input Nilai Al Qur'an
+    // Route Input Nilai Al Qur'an
     Route::controller(InputNilaiAlquranController::class)->group(function () {
         Route::get('input-nila-alquran', 'index')->name('input-nilai-alquran');
         Route::post('input-nila-alquran', 'simpan')->name('input-nilai-alquran.simpan');
@@ -241,14 +245,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('input-nila-alquran', 'hapus')->name('input-nilai-alquran.hapus');
     });
 
-    // Input Nilai Bilghoib Per Kelas
+    // Route Input Nilai Bilghoib Per Kelas
     Route::controller(InputNilaiBilghoibPerKelasController::class)->group(function () {
         Route::get('input-nilai-bilghoib-per-kelas', 'index')->name('input-nilai-bilghoib-per-kelas');
         Route::post('input-nilai-bilghoib-per-kelas', 'simpan')->name('input-nilai-bilghoib-per-kelas.simpan');
         Route::delete('input-nilai-bilghoib-per-kelas', 'hapus')->name('input-nilai-bilghoib-per-kelas.hapus');
     });
 
-    // Input Nilai Binnadzor Per Kelas
+    // Route Input Nilai Binnadzor Per Kelas
     Route::controller(InputNilaiBinnadzorPerKelasController::class)->group(function () {
         Route::get('input-nilai-binnadzor-per-kelas', 'index')->name('input-nilai-binnadzor-per-kelas');
         Route::post('input-nilai-binnadzor-per-kelas', 'simpan')->name('input-nilai-binnadzor-per-kelas.simpan');

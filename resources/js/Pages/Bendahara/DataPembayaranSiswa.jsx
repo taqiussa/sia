@@ -12,7 +12,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
 
     const { data, setData, errors, delete: destroy } = useForm({
         tahun: initTahun,
-        cari: filters.search ?? ''
+        search: filters.search ?? ''
     })
 
     const onHandleChange = (event) => {

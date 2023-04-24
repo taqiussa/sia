@@ -42,6 +42,7 @@ const PrintAbsensiEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa
     return (
         <>
             <Head title='Print Absensi Ekstrakurikuler' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">print absensi ekstrakurikuler</div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
 
                 <Tanggal

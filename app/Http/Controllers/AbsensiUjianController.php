@@ -7,11 +7,13 @@ use App\Models\Kehadiran;
 use App\Models\RuangUjian;
 use App\Models\Siswa;
 use App\Traits\InitTrait;
+use App\Traits\SiswaTrait;
 use EnumKehadiran;
 
 class AbsensiUjianController extends Controller
 {
     use InitTrait;
+    use SiswaTrait;
 
     public function index()
     {
@@ -26,28 +28,16 @@ class AbsensiUjianController extends Controller
 
     public function nihil()
     {
-        $siswaRuang = RuangUjian::whereTahun(request('tahun'))
+        $siswaBelumTerabsen = RuangUjian::whereTahun(request('tahun'))
             ->whereSemester($this->data_semester())
             ->whereNamaRuang(request('namaRuang'))
             ->whereNamaUjian(request('namaUjian'))
             ->whereJenisKelamin(request('jenisKelamin'))
-            ->pluck('nis');
-
-        $siswaTidakHadir = Absensi::whereTanggal(request('tanggal'))
-            ->whereJam(request('jam'))
-            ->whereIn('nis', $siswaRuang)
-            ->where('kehadiran_id', '!=', EnumKehadiran::HADIR)
-            ->pluck('nis');
-
-        $siswaHadir = RuangUjian::whereTahun(request('tahun'))
-            ->whereSemester($this->data_semester())
-            ->whereNamaRuang(request('namaRuang'))
-            ->whereNamaUjian(request('namaUjian'))
-            ->whereJenisKelamin(request('jenisKelamin'))
-            ->whereNotIn('nis', $siswaTidakHadir)
+            ->whereDoesntHave('absensi', fn ($q) => $q->whereTanggal(request('tanggal'))
+                ->whereJam(request('jam')))
             ->get();
 
-        foreach ($siswaHadir as $siswa) {
+        foreach ($siswaBelumTerabsen as $siswa) {
             Absensi::insert([
                 'nis' => $siswa->nis,
                 'kelas_id' => $siswa->kelas_id,
@@ -61,21 +51,7 @@ class AbsensiUjianController extends Controller
         }
 
         return response()->json([
-            'listSiswa' => RuangUjian::whereTahun(request('tahun'))
-                ->whereSemester($this->data_semester())
-                ->whereNamaRuang(request('namaRuang'))
-                ->whereNamaUjian(request('namaUjian'))
-                ->whereJenisKelamin(request('jenisKelamin'))
-                ->with([
-                    'absensi' => fn ($q) => $q->whereTanggal(request('tanggal'))
-                        ->whereJam(request('jam')),
-                    'absensi.guru' => fn ($q) => $q->select('id', 'name'),
-                    'kelas' => fn ($q) => $q->select('id', 'nama'),
-                    'user' => fn ($q) => $q->select('nis', 'name'),
-                ])
-                ->get()
-                ->sortBy(['kelas.nama', 'user.name'])
-                ->values()
+            'listSiswa' => $this->data_siswa_ujian_with_absensi()
         ]);
     }
 

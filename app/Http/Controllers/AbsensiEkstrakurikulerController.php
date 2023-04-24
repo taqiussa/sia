@@ -36,14 +36,14 @@ class AbsensiEkstrakurikulerController extends Controller
             'jenisKelamin' => 'required'
         ]);
 
-        $siswaSudahTerabsen = SiswaEkstra::whereTahun(request('tahun'))
+        $siswaBelumTerabsen = SiswaEkstra::whereTahun(request('tahun'))
             ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
             ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
             ->whereDoesntHave('absensi', fn ($q) => $q->whereTanggal(request('tanggal')))
             ->get();
 
 
-        foreach ($siswaSudahTerabsen as $siswa) {
+        foreach ($siswaBelumTerabsen as $siswa) {
             AbsensiEkstra::create([
                 'tanggal' => request('tanggal'),
                 'tahun' => request('tahun'),

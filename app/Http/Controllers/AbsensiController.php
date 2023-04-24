@@ -8,10 +8,12 @@ use App\Models\Siswa;
 use App\Models\Absensi;
 use App\Models\Kehadiran;
 use App\Traits\InitTrait;
+use App\Traits\SiswaTrait;
 
 class AbsensiController extends Controller
 {
     use InitTrait;
+    use SiswaTrait;
 
     public function index()
     {
@@ -32,18 +34,7 @@ class AbsensiController extends Controller
                     ->values(),
                 'listKelas' => Kelas::orderBy('nama')->get(),
                 'listKehadiran' => Kehadiran::get(),
-                'listSiswa' => Siswa::whereTahun(request('tahun'))
-                    ->whereKelasId(request('kelasId'))
-                    ->with([
-                        'user' => fn ($q) => $q->select('nis', 'name'),
-                        'absensi' => fn ($q) => $q
-                            ->whereTanggal(request('tanggal'))
-                            ->whereJam(request('jam')),
-                        'absensi.guru' => fn ($q) => $q->select('id', 'name'),
-                    ])
-                    ->get()
-                    ->sortBy('user.name')
-                    ->values()
+                'listSiswa' => $this->data_siswa_with_absensi()
             ]
         );
     }
@@ -57,21 +48,16 @@ class AbsensiController extends Controller
             'kelasId' => 'required'
         ]);
 
-        $siswaTidakHadir = Absensi::whereTanggal(request('tanggal'))
+        $siswaBelumTerabsen = Siswa::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
-            ->whereJam(request('jam'))
-            ->where('kehadiran_id', '!=', EnumKehadiran::HADIR)
-            ->pluck('nis');
-
-        $siswa = Siswa::whereTahun(request('tahun'))
-            ->whereKelasId(request('kelasId'))
-            ->whereNotIn('nis', $siswaTidakHadir)
+            ->whereDoesntHave('absensi', fn ($q) => $q->whereTanggal(request('tanggal'))
+                ->whereJam(request('jam')))
             ->get();
 
-        foreach ($siswa as $absensi) {
-            Absensi::insert([
-                'nis' => $absensi->nis,
-                'kelas_id' => $absensi->kelas_id,
+        foreach ($siswaBelumTerabsen as $siswa) {
+            Absensi::create([
+                'nis' => $siswa->nis,
+                'kelas_id' => $siswa->kelas_id,
                 'kehadiran_id' => EnumKehadiran::HADIR,
                 'tahun' => request('tahun'),
                 'semester' => $this->data_semester(),
@@ -82,20 +68,7 @@ class AbsensiController extends Controller
         }
 
         return response()->json([
-            'listSiswa' => Siswa::whereTahun(request('tahun'))
-                ->whereKelasId(request('kelasId'))
-                ->with(
-                    [
-                        'user' => fn ($q) => $q->select('nis', 'name'),
-                        'absensi' => fn ($q) => $q
-                            ->whereTanggal(request('tanggal'))
-                            ->whereJam(request('jam')),
-                        'absensi.guru' => fn ($q) => $q->select('id', 'name'),
-                    ]
-                )
-                ->get()
-                ->sortBy('user.name')
-                ->values()
+            'listSiswa' => $this->data_siswa_with_absensi()
         ]);
     }
 

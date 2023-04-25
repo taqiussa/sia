@@ -18,6 +18,6 @@ class Ekstrakurikuler extends Model
      */
     public function deskripsi(): BelongsTo
     {
-        return $this->belongsTo(DeskripsiEkstra::class, 'ekstra_id', 'id')->withDefault();
+        return $this->belongsTo(DeskripsiEkstra::class, 'id', 'ekstra_id')->withDefault();
     }
 }

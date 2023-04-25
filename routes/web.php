@@ -15,6 +15,7 @@ use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
@@ -235,6 +236,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('form-tugas', 'index')->name('form-tugas');
         Route::post('form-tugas', 'simpan')->name('form-tugas.simpan');
         Route::delete('form-tugas', 'hapus')->name('form-tugas.hapus');
+    });
+
+    // Route Input Deskripsi Ekstrakurikuler
+    Route::controller(InputDeskripsiEkstrakurikulerController::class)->group(function () {
+        Route::get('input-deskripsi-ekstrakurikuler', 'index')->name('input-deskripsi-ekstrakurikuler');
+        Route::post('input-deskripsi-ekstrakurikuler', 'simpan')->name('input-deskripsi-ekstrakurikuler.simpan');
+        Route::delete('input-deskripsi-ekstrakurikuler', 'hapus')->name('input-deskripsi-ekstrakurikuler.hapus');
     });
 
     // Route Input Nilai Al Qur'an

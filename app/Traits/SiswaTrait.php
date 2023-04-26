@@ -72,6 +72,23 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_siswa_ekstra_with_nilai()
+    {
+        return SiswaEkstra::whereTahun(request('tahun'))
+            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
+            ->with([
+                'biodata' => fn ($q) => $q->select('nis', 'jenis_kelamin'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
     public function data_siswa_ujian_with_absensi()
     {
         return RuangUjian::whereTahun(request('tahun'))

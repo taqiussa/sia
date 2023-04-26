@@ -19,6 +19,7 @@ use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
+use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
@@ -102,6 +103,7 @@ Route::middleware('auth')->group(function () {
     // Route Get Data
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
     });
 
     // Route Slip Gaji
@@ -265,6 +267,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-nilai-binnadzor-per-kelas', 'index')->name('input-nilai-binnadzor-per-kelas');
         Route::post('input-nilai-binnadzor-per-kelas', 'simpan')->name('input-nilai-binnadzor-per-kelas.simpan');
         Route::delete('input-nilai-binnadzor-per-kelas', 'hapus')->name('input-nilai-binnadzor-per-kelas.hapus');
+    });
+
+    // Route Input Nilai Ekstrakurikuler
+    Route::controller(InputNilaiEkstrakurikulerController::class)->group(function () {
+        Route::get('input-nilai-ekstrakurikuler', 'index')->name('input-nilai-ekstrakurikuler');
+        Route::post('input-nilai-ekstrakurikuler', 'simpan')->name('input-nilai-ekstrakurikuler.simpan');
     });
 
     // Route Print Absensi Ekstrakurikuler

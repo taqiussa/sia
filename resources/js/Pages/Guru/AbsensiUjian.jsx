@@ -81,6 +81,9 @@ const AbsensiUjian = ({ initTahun, listKehadiran }) => {
                 nis: nis,
             }))
             .then(response => {
+
+                setListSiswa(response.data.listSiswa)
+
                 setMessage({
                     nis: response.data.nis,
                     message: response.data.message

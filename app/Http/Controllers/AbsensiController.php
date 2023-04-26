@@ -96,6 +96,7 @@ class AbsensiController extends Controller
         );
 
         return response()->json([
+            'listSiswa' => $this->data_siswa_with_absensi(),
             'message' => 'Tersimpan',
             'nis' => request('nis')
         ]);

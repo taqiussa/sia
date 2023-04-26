@@ -77,6 +77,9 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
                 kehadiranId: e.target.value
             }))
             .then(response => {
+
+                setListSiswa(response.data.listSiswa)
+
                 setMessage({
                     nis: response.data.nis,
                     message: response.data.message
@@ -203,7 +206,7 @@ const Absensi = ({ initTahun, listKehadiran, listKelas }) => {
             <div className='text-slate-600 py-2'>
                 Informasi :
                 {listInfo && listInfo.map((info, index) => (
-                    <li>{index + 1}. {info.siswa?.name} - {info.kehadiran?.nama} - {info.jam}</li>
+                    <li key={index}>{index + 1}. {info.siswa?.name} - {info.kehadiran?.nama} - {info.jam}</li>
                 ))}
             </div>
 

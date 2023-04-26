@@ -45,10 +45,27 @@ trait SiswaTrait
             ->sortBy('user.name');
     }
 
+    public function data_siswa_belum_ekstra()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereNotIn('tingkat', [9])
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->whereDoesntHave('siswaEkstra', fn ($q) => $q->whereTahun(request('tahun')))
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
     public function data_siswa_ekstra()
     {
         return SiswaEkstra::whereTahun(request('tahun'))
             ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
             ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
             ->get()
             ->sortBy(['kelas.nama', 'user.name'])

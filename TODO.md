@@ -1,1 +1,1 @@
-input nilai ekstrakurikuler
+pendaftaran ekstra

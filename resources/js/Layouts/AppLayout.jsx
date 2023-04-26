@@ -40,7 +40,7 @@ export default function AppLayout({ children }) {
                     </main>
                 </div>
                 <footer className='py-1 px-2 text-slate-600 bottom-0 fixed bg-white/30 backdrop-blur w-full'>
-                    &copy; SMP Miftahul Huda {moment(new Date()).format('YYYY')} | Developed By Kendali Koding
+                    &copy; SMP Al Musyaffa 2022 - {moment(new Date()).format('YYYY')} | Developed By Kendali Koding
                 </footer>
                 {/* End Main Content */}
             </div>

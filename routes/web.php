@@ -25,6 +25,7 @@ use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
+use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
@@ -273,6 +274,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiEkstrakurikulerController::class)->group(function () {
         Route::get('input-nilai-ekstrakurikuler', 'index')->name('input-nilai-ekstrakurikuler');
         Route::post('input-nilai-ekstrakurikuler', 'simpan')->name('input-nilai-ekstrakurikuler.simpan');
+    });
+
+    // Route Pendaftaran Siswa Ekstrakurikuler
+    Route::controller(PendaftaranSiswaEkstrakurikulerController::class)->group(function () {
+        Route::get('pendaftaran-siswa-ekstrakurikuler', 'index')->name('pendaftaran-siswa-ekstrakurikuler');
+        Route::post('pendaftaran-siswa-ekstrakurikuler', 'simpan')->name('pendaftaran-siswa-ekstrakurikuler.simpan');
+        Route::delete('pendaftaran-siswa-ekstrakurikuler', 'hapus')->name('pendaftaran-siswa-ekstrakurikuler.hapus');
     });
 
     // Route Print Absensi Ekstrakurikuler

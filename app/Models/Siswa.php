@@ -112,6 +112,17 @@ class Siswa extends Model
         return $this->hasMany(PenilaianAlquran::class, 'nis', 'nis');
     }
 
+
+    /**
+     * Get the siswaEkstra that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function siswaEkstra(): BelongsTo
+    {
+        return $this->belongsTo(SiswaEkstra::class, 'nis', 'nis')->withDefault();
+    }
+
     /**
      * Get all of the transaksi for the Siswa
      *

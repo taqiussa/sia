@@ -1,1 +1,1 @@
-pendaftaran ekstra
+print nilai ekstra

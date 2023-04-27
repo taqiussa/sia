@@ -1,7 +1,7 @@
 import SidebarLink from '@/Components/Sia/SidebarLink'
 import React from 'react'
 
-const SidebarGuru = ({closeSide}) => {
+const SidebarGuru = ({ closeSide }) => {
     return (
         <div className='py-1'>
             <div className="text-slate-600 font-bold">
@@ -23,6 +23,7 @@ const SidebarGuru = ({closeSide}) => {
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-kelas')} active={route().current('print-absensi-kelas')} label='print absensi kelas' />
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-ujian')} active={route().current('print-absensi-ujian')} label='print absensi ujian' />
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-alquran')} active={route().current('print-nilai-alquran')} label="print nilai al qur'an" />
+                <SidebarLink closeSide={closeSide} href={route('print-nilai-ekstrakurikuler')} active={route().current('print-nilai-ekstrakurikuler')} label="print nilai ekstrakurikuler" />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-alquran')} active={route().current('upload-analisis-alquran')} label="upload analisis al qur'an" />
             </div>
         </div>

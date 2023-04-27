@@ -45,6 +45,21 @@ trait SiswaTrait
             ->sortBy('user.name');
     }
 
+    public function data_siswa_with_nilai_ekstra()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
+                'penilaianEkstrakurikuler.ekstrakurikuler',
+                'user' => fn ($q) => $q->select('nis', 'name'),
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
     public function data_siswa_belum_ekstra()
     {
         return Siswa::whereTahun(request('tahun'))
@@ -58,6 +73,7 @@ trait SiswaTrait
             ->sortBy(['kelas.nama', 'user.name'])
             ->values();
     }
+
     public function data_siswa_ekstra()
     {
         return SiswaEkstra::whereTahun(request('tahun'))

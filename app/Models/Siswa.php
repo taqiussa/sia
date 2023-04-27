@@ -83,6 +83,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get the penilaianEkstra that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function penilaianEkstrakurikuler(): BelongsTo
+    {
+        return $this->belongsTo(PenilaianEkstrakurikuler::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get all of the penilaians for the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

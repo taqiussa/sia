@@ -29,7 +29,7 @@ export default function AppLayout({ children }) {
             {/* End Left Col */}
 
             {/*  Right Col  */}
-            <div className="max-w-full ml-0 transition lg:ml-[264px] lg:max-w-7xl xl:max-w-full">
+            <div className="max-w-full ml-0 transition lg:ml-[310px] lg:max-w-7xl xl:max-w-full">
                 {/*  NavBar  */}
                 <Navbar openSide={openSide} />
                 {/* End Navbar */}

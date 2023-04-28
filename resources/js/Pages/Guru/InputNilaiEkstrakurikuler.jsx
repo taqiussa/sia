@@ -69,7 +69,6 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
     const onHandleBlur = (e, id, nis, kelasId) => {
         e.preventDefault()
 
-        console.log(id)
         axios.post(route('input-nilai-ekstrakurikuler.simpan', {
             id: id,
             tahun: data.tahun,

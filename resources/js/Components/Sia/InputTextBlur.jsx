@@ -29,8 +29,10 @@ export default forwardRef(function InputTextBlur(
                     id={id}
                     value={value}
                     className={
-                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ` +
-                        className
+                        className ?
+                            `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm ` + className
+                            :
+                            `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full `
                     }
                     ref={input}
                     required={required}

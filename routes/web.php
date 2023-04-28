@@ -17,6 +17,7 @@ use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputAnalisisNilaiController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
+use App\Http\Controllers\InputKdController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
@@ -255,6 +256,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputAnalisisNilaiController::class)->group(function () {
         Route::get('input-analisis-nilai', 'index')->name('input-analisis-nilai');
         Route::post('input-analisis-nilai', 'simpan')->name('input-analisis-nilai.simpan');
+    });
+
+    // Route Input Kd
+    Route::controller(InputKdController::class)->group(function () {
+        Route::get('input-kd', 'index')->name('input-kd');
+        Route::post('input-kd', 'simpan')->name('input-kd.simpan');
+        Route::delete('input-kd', 'hapus')->name('input-kd.hapus');
     });
 
     // Route Input Nilai Al Qur'an

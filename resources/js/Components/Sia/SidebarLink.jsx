@@ -17,6 +17,7 @@ export default function SidebarLink({ href, active, label, method, as, closeSide
             method={method}
             as={as}
             onClick={handleClick}
+            preserveScroll={true}
         >
             {label}
         </Link >

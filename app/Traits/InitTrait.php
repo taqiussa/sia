@@ -26,6 +26,13 @@ trait InitTrait
             ->pluck('kategori_nilai_id');
     }
 
+    public function data_kategori_nilai_per_tingkat()
+    {
+        return PenilaianRapor::whereTahun(request('tahun'))
+            ->whereTingkat(request('tingkat'))
+            ->pluck('kategori_nilai_id');
+    }
+
     public function data_kelas()
     {
         return GuruKelas::whereTahun(request('tahun'))

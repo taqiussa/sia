@@ -6,8 +6,7 @@ import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import { toInteger } from 'lodash'
 import moment from 'moment'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const RekapPenggajian = ({ initTahun, listPenggajian, total }) => {
 

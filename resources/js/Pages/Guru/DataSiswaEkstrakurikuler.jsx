@@ -3,8 +3,7 @@ import Paginator from '@/Components/Sia/Paginator'
 import Tahun from '@/Components/Sia/Tahun'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const DataSiswaEkstrakurikuler = ({ initTahun, listSiswa, filters }) => {
 

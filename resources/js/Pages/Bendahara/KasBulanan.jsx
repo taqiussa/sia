@@ -5,8 +5,7 @@ import { namaBulan, penjumlahan, rupiah } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const KasBulanan = ({ bulanLalu, initTahun, listPemasukan, listPengeluaran, saldo, saldoLalu, totalSPP, totalPemasukan, totalPengeluaran }) => {
 

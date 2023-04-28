@@ -11,9 +11,7 @@ import getPemasukan from '@/Functions/getPemasukan'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
-import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactPaginate from 'react-paginate'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
@@ -198,7 +196,7 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
 
                 </div>
 
-                <PrimaryButton type='submit' children='simpan' disabled={processing}/>
+                <PrimaryButton type='submit' children='simpan' disabled={processing} />
             </form>
             <div className='lg:grid lg:grid-cols-3'>
                 <InputText

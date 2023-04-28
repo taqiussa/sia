@@ -7,8 +7,7 @@ import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa, listSiswaBelum }) => {

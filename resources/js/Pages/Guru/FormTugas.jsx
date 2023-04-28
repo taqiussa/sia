@@ -10,8 +10,7 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {

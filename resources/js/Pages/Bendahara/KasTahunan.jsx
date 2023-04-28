@@ -1,10 +1,9 @@
 import PrintLink from '@/Components/Sia/PrintLink'
 import Tahun from '@/Components/Sia/Tahun'
-import {  penjumlahan, rupiah } from '@/Functions/functions'
+import { penjumlahan, rupiah } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP, totalPemasukan, totalPengeluaran }) => {
 

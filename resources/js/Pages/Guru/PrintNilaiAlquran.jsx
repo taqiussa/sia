@@ -4,7 +4,6 @@ import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
 import Tahun from '@/Components/Sia/Tahun'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import { isEmpty } from 'lodash'
 import React, { useEffect } from 'react'
 
 const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {

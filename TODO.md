@@ -1,1 +1,1 @@
-input kd penilaian
+input Nilai

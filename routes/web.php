@@ -21,6 +21,7 @@ use App\Http\Controllers\InputKdController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
+use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
@@ -109,6 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
+        Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
     });
 
     // Route Slip Gaji
@@ -263,6 +265,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-kd', 'index')->name('input-kd');
         Route::post('input-kd', 'simpan')->name('input-kd.simpan');
         Route::delete('input-kd', 'hapus')->name('input-kd.hapus');
+    });
+
+    // Route Input Nilai
+    Route::controller(InputNilaiController::class)->group(function () {
+        Route::get('input-nilai', 'index')->name('input-nilai');
+        Route::post('input-nilai', 'simpan')->name('input-nilai.simpan');
     });
 
     // Route Input Nilai Al Qur'an

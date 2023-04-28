@@ -378,6 +378,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                                                             key={no}
                                                             id={`no${no}`}
                                                             name={`no${no}`}
+                                                            label={`no ${no}`}
                                                             value={siswa.analisis_penilaian?.[`no_${no}`]}
                                                             className='w-auto max-w-[60px]'
                                                             handleChange={(e) => handleDynamicPengetahuan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian.id,
@@ -427,6 +428,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                                                             key={no}
                                                             id={`no${no}`}
                                                             name={`no${no}`}
+                                                            label={`no ${no}`}
                                                             value={siswa.analisis_penilaian?.[`no_${no}`]}
                                                             className='w-auto max-w-[60px]'
                                                             handleChange={(e) => handleDynamicKeterampilan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian.id,

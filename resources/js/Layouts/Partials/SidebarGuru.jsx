@@ -16,6 +16,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('input-analisis-nilai')} active={route().current('input-analisis-nilai')} label='input analisis nilai' />
                 <SidebarLink closeSide={closeSide} href={route('input-deskripsi-ekstrakurikuler')} active={route().current('input-deskripsi-ekstrakurikuler')} label="input KD ekstrakurikuler" />
                 <SidebarLink closeSide={closeSide} href={route('input-kd')} active={route().current('input-kd')} label='input KD / TP penilaian' />
+                <SidebarLink closeSide={closeSide} href={route('input-nilai')} active={route().current('input-nilai')} label="input nilai" />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-alquran')} active={route().current('input-nilai-alquran')} label="input nilai al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-bilghoib-per-kelas')} active={route().current('input-nilai-bilghoib-per-kelas')} label='input nilai bilghoib per kelas' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-binnadzor-per-kelas')} active={route().current('input-nilai-binnadzor-per-kelas')} label='input nilai binnadzor per kelas' />

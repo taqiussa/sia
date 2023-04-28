@@ -10,8 +10,7 @@ import Tahun from '@/Components/Sia/Tahun'
 import Tingkat from '@/Components/Sia/Tingkat'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
-import { result } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, listKd }) => {

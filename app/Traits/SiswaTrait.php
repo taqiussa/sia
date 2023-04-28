@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\Siswa;
 use App\Models\RuangUjian;
 use App\Models\SiswaEkstra;
+use PhpParser\Node\Expr\FuncCall;
 
 trait SiswaTrait
 {
@@ -60,6 +61,23 @@ trait SiswaTrait
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
                     ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
+    public function data_siswa_with_nilai()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereMataPelajaranId(request('mataPelajaranId')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
             ->get()

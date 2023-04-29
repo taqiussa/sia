@@ -83,6 +83,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get the pengayaan that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pengayaan(): BelongsTo
+    {
+        return $this->belongsTo(PengayaanDetail::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get the penilaian that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

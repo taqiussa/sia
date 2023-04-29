@@ -1,1 +1,1 @@
-input Nilai
+Input Pengayaan

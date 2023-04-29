@@ -23,6 +23,7 @@ use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
 use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
+use App\Http\Controllers\InputNilaiPengayaanController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
@@ -45,6 +46,7 @@ use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadPenggajianController;
+use App\Models\Pengayaan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -109,6 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
+        Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
     });
@@ -299,6 +302,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiEkstrakurikulerController::class)->group(function () {
         Route::get('input-nilai-ekstrakurikuler', 'index')->name('input-nilai-ekstrakurikuler');
         Route::post('input-nilai-ekstrakurikuler', 'simpan')->name('input-nilai-ekstrakurikuler.simpan');
+    });
+
+    // Route Input Nilai Pengayaan
+    Route::controller(InputNilaiPengayaanController::class)->group(function () {
+        Route::get('input-nilai-pengayaan', 'index')->name('input-nilai-pengayaan');
+        Route::post('input-nilai-pengayaan', 'simpan')->name('input-nilai-pengayaan.simpan');
+        Route::put('input-nilai-pengayaan', 'update')->name('input-nilai-pengayaan.update');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

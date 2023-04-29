@@ -368,6 +368,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
             <PrimaryButton
                 children='simpan'
                 onClick={submit}
+                disabled={processing}
             />
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">

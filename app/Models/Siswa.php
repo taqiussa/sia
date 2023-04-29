@@ -144,6 +144,16 @@ class Siswa extends Model
 
 
     /**
+     * Get the remidi that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function remidi(): BelongsTo
+    {
+        return $this->belongsTo(Remidi::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get the siswaEkstra that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

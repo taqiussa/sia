@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengayaan;
+use App\Models\Remidi;
 use App\Models\Siswa;
 use App\Models\SiswaEkstra;
 
@@ -73,6 +74,48 @@ class GetDataController extends Controller
                     ->whereJenisPenilaianId(request('jenisPenilaianId'))
                     ->where('nilai', '>', 75))
                 ->orWhereHas('pengayaan', fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId')))
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+    
+    public function get_siswa_Remidi()
+    {
+        return response()->json([
+            'remidi' => Remidi::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                ->first() ?? '',
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'remidi' => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester'))
+                        ->whereMataPelajaranId(request('mataPelajaranId'))
+                        ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                        ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    'penilaian'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester'))
+                        ->whereMataPelajaranId(request('mataPelajaranId'))
+                        ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                        ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                        ->where('nilai', '>', 75),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->where('nilai', '<', 75))
+                ->orWhereHas('remidi', fn ($q) => $q->whereTahun(request('tahun'))
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))

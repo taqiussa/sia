@@ -24,6 +24,7 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiPengayaanController;
+use App\Http\Controllers\InputNilaiRemidiControlle;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
@@ -112,6 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
+        Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
     });
@@ -309,6 +311,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-nilai-pengayaan', 'index')->name('input-nilai-pengayaan');
         Route::post('input-nilai-pengayaan', 'simpan')->name('input-nilai-pengayaan.simpan');
         Route::put('input-nilai-pengayaan', 'update')->name('input-nilai-pengayaan.update');
+    });
+
+    // Route Input Nilai Remidi
+    Route::controller(InputNilaiRemidiControlle::class)->group(function() {
+        Route::get('input-nilai-remidi', 'index')->name('input-nilai-remidi');
+        Route::post('input-nilai-remidi', 'simpan')->name('input-nilai-remidi.simpan');
+        Route::put('input-nilai-remidi', 'update')->name('input-nilai-remidi.update');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

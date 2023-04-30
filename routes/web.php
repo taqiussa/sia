@@ -24,7 +24,7 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiPengayaanController;
-use App\Http\Controllers\InputNilaiRemidiControlle;
+use App\Http\Controllers\InputNilaiRemidiController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
@@ -314,7 +314,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     });
 
     // Route Input Nilai Remidi
-    Route::controller(InputNilaiRemidiControlle::class)->group(function() {
+    Route::controller(InputNilaiRemidiController::class)->group(function() {
         Route::get('input-nilai-remidi', 'index')->name('input-nilai-remidi');
         Route::post('input-nilai-remidi', 'simpan')->name('input-nilai-remidi.simpan');
         Route::put('input-nilai-remidi', 'update')->name('input-nilai-remidi.update');

@@ -16,6 +16,7 @@ import InputArea from '@/Components/Sia/InputArea'
 import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
+import axios from 'axios'
 
 const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
     const { data, setData, post, errors, processing } = useForm({
@@ -69,7 +70,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 kelasId: data.kelasId,
                 kategoriNilaiId: data.kategoriNilaiId,
                 jenisPenilaianId: data.jenisPenilaianId,
-                tanggal: response.pengayaan.tanggal,
+                tanggal: data.tanggal,
                 ki: '',
                 kd: '',
                 indikator: '',
@@ -159,6 +160,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
             onSuccess: () => {
                 toast.success('Berhasil Simpan Data Pengayaan')
                 setData({ ...data })
+                trackPromise(
+                    getDataSiswa()
+                )
             }
         })
     }

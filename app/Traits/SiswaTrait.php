@@ -94,7 +94,8 @@ trait SiswaTrait
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereKelasId(request('kelasId')),
                 'penilaian'  => fn ($q) => $q->whereTahun(request('tahun'))
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId'))
@@ -113,7 +114,43 @@ trait SiswaTrait
                 ->whereSemester(request('semester'))
                 ->whereMataPelajaranId(request('mataPelajaranId'))
                 ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                ->whereJenisPenilaianId(request('jenisPenilaianId')))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                ->whereKelasId(request('kelasId')))
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+    public function data_siswa_with_nilai_remidi()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'remidi' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereKelasId(request('kelasId')),
+                'penilaian'  => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->where('nilai', '<', 75),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                ->where('nilai', '<', 75))
+            ->orWhereHas('remidi', fn ($q) => $q->whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                ->whereKelasId(request('kelasId')))
             ->get()
             ->sortBy('user.name')
             ->values();

@@ -150,7 +150,7 @@ class Siswa extends Model
      */
     public function remidi(): BelongsTo
     {
-        return $this->belongsTo(Remidi::class, 'nis', 'nis')->withDefault();
+        return $this->belongsTo(RemidiDetail::class, 'nis', 'nis')->withDefault();
     }
 
     /**

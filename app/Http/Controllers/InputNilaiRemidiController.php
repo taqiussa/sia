@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisPenilaian;
 use App\Models\KategoriNilai;
+use App\Models\Kelas;
+use App\Models\Kkm;
+use App\Models\Penilaian;
 use App\Models\Remidi;
 use App\Models\RemidiDetail;
 use App\Traits\InitTrait;
@@ -89,6 +92,13 @@ class InputNilaiRemidiController extends Controller
             ]
         );
 
+        $kelas = Kelas::find(request('kelasId'));
+
+        $kkm = Kkm::whereTahun(request('tahun'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereTingkat($kelas->tingkat)
+            ->value('kkm');
+
         RemidiDetail::updateOrCreate(
             ['id' => request('id')],
             [
@@ -102,12 +112,18 @@ class InputNilaiRemidiController extends Controller
                 'jenis_penilaian_id' => request('jenisPenilaianId'),
                 'nis' => request('nis'),
                 'nilai_awal' => request('nilaiAwal'),
-                'nilai_akhir' => request('nilaiAkhir'),
+                'nilai_akhir' => $kkm,
                 'nilai_remidi' => request('nilaiRemidi'),
             ]
         );
 
+        Penilaian::find(request('penilaianId'))
+            ->update([
+                'nilai' => $kkm
+            ]);
+
         return response()->json([
+            'listSiswa' => $this->data_siswa_with_nilai_remidi(),
             'message' => 'Tersimpan',
             'nis' => request('nis')
         ]);

@@ -117,7 +117,13 @@ class InputNilaiRemidiController extends Controller
             ]
         );
 
-        Penilaian::find(request('penilaianId'))
+        Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->whereNis(request('nis'))
             ->update([
                 'nilai' => $kkm
             ]);
@@ -126,6 +132,33 @@ class InputNilaiRemidiController extends Controller
             'listSiswa' => $this->data_siswa_with_nilai_remidi(),
             'message' => 'Tersimpan',
             'nis' => request('nis')
+        ]);
+    }
+
+    public function hapus()
+    {
+        Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->whereNis(request('nis'))
+            ->update([
+                'nilai' =>  request('nilaiAwal')
+            ]);
+
+
+        RemidiDetail::destroy(request('remidiId'));
+
+        return to_route('input-nilai-remidi', [
+            'tahun' => request('tahun'),
+            'semester' => request('semester'),
+            'tanggal' => request('tanggal'),
+            'kelasId' => request('kelasId'),
+            'mataPelajaranId' => request('mataPelajaranId'),
+            'kategoriNilaiId' => request('kategoriNilaiId'),
+            'jenisPenilaianId' => request('jenisPenilaianId'),
         ]);
     }
 }

@@ -318,6 +318,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-nilai-remidi', 'index')->name('input-nilai-remidi');
         Route::post('input-nilai-remidi', 'simpan')->name('input-nilai-remidi.simpan');
         Route::put('input-nilai-remidi', 'update')->name('input-nilai-remidi.update');
+        Route::delete('input-nilai-remidi', 'hapus')->name('input-nilai-remidi.hapus');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

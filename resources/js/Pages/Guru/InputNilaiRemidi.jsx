@@ -17,9 +17,10 @@ import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
 import axios from 'axios'
 import getSiswaRemidi from '@/Functions/getSiswaRemidi'
+import Hapus from '@/Components/Sia/Hapus'
 
 const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
-    const { data, setData, post, errors, processing } = useForm({
+    const { data, setData, post, errors, processing, delete: destroy } = useForm({
         id: '',
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
         tahun: initTahun,
@@ -78,7 +79,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianId, penilaianNilai, nilaiAwal, nilaiAkhir) => {
+    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir) => {
 
         const newList = [...listSiswa]
         newList.splice(index, 1, {
@@ -89,7 +90,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             },
             penilaian:
             {
-                id: penilaianId,
                 nilai: penilaianNilai
             },
             remidi: {
@@ -108,7 +108,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
 
     }
 
-    const onHandleBlur = (e, id, nis, kelasId, penilaianId, nilaiAwal, remidiId, nilaiAkhir) => {
+    const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, remidiId, nilaiAkhir) => {
         e.preventDefault()
 
         axios.put(route('input-nilai-remidi.update', {
@@ -125,7 +125,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             nis: nis,
             kelasId: kelasId,
             remidiId: remidiId,
-            penilaianId: penilaianId,
             nilaiAwal: nilaiAwal,
             nilaiAkhir: nilaiAkhir,
             nilaiRemidi: e.target.value,
@@ -161,6 +160,47 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                 )
             }
         })
+    }
+
+    const handleDelete = (remidiId, nilaiAwal, nis, kelasId) => {
+
+        Sweet
+            .fire({
+                title: 'Menghapus Nilai Remidi',
+                text: 'Anda akan menghapus nilai remidi dan mengembalikan nilai PH ke nilai awal ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            })
+            .then(result => {
+                if (result.isConfirmed)
+                    destroy(
+                        route('input-nilai-remidi.hapus', {
+                            remidiId: remidiId,
+                            nilaiAwal: nilaiAwal,
+                            nis: nis,
+                            kelasId: kelasId,
+                            tanggal: data.tanggal,
+                            tahun: data.tahun,
+                            semester: data.semester,
+                            mataPelajaranId: data.mataPelajaranId,
+                            kategoriNilaiId: data.kategoriNilaiId,
+                            jenisPenilaianId: data.jenisPenilaianId,
+                        }),
+                        {
+                            onSuccess: () => {
+                                toast.success('Berhasil Menghapus nilai remidi')
+                                setData({ ...data })
+                                trackPromise(
+                                    getDataSiswa()
+                                )
+                            }
+                        }
+                    )
+            })
+
+
     }
 
     useEffect(() => {
@@ -371,6 +411,9 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nilai Akhir
                             </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -393,8 +436,8 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                                             name='remidi'
                                             className='w-auto max-w-[60px]'
                                             value={siswa.remidi?.nilai_remidi ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian?.id, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.penilaian?.id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.remidi_id, siswa.remidi?.nilai_akhir)}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir)}
+                                            handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.remidi_id, siswa.remidi?.nilai_akhir)}
                                         />
 
                                         {message && message.nis == siswa.nis &&
@@ -410,6 +453,11 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {siswa.remidi?.nilai_akhir}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {siswa.remidi?.nilai_awal &&
+                                        <Hapus onClick={() => handleDelete(siswa.remidi.id, siswa.remidi.nilai_awal, siswa.nis, siswa.kelas_id)} />
+                                    }
                                 </td>
                             </tr>
                         ))}

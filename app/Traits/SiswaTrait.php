@@ -10,6 +10,18 @@ use PhpParser\Node\Expr\FuncCall;
 trait SiswaTrait
 {
 
+    public function data_all_siswa()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
     public function data_siswa_with_absensi()
     {
         return Siswa::whereTahun(request('tahun'))

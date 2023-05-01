@@ -142,6 +142,25 @@ class Siswa extends Model
         return $this->hasMany(PenilaianAlquran::class, 'nis', 'nis');
     }
 
+    /**
+     * Get the penilaianSikap that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function penilaianSikap(): BelongsTo
+    {
+        return $this->belongsTo(PenilaianSikap::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
+     * Get all of the penilaianSikaps for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaianSikaps(): HasMany
+    {
+        return $this->hasMany(PenilaianSikap::class, 'nis', 'nis');
+    }
 
     /**
      * Get the remidi that owns the Siswa

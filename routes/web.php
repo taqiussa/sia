@@ -25,6 +25,7 @@ use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiPengayaanController;
 use App\Http\Controllers\InputNilaiRemidiController;
+use App\Http\Controllers\InputNilaiSikapController;
 use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
@@ -319,6 +320,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('input-nilai-remidi', 'simpan')->name('input-nilai-remidi.simpan');
         Route::put('input-nilai-remidi', 'update')->name('input-nilai-remidi.update');
         Route::delete('input-nilai-remidi', 'hapus')->name('input-nilai-remidi.hapus');
+    });
+
+    // Route Input Nilai Sikap
+    Route::controller(InputNilaiSikapController::class)->group(function () {
+        Route::get('input-nilai-sikap', 'index')->name('input-nilai-sikap');
+        Route::post('input-nilai-sikap', 'simpan')->name('input-nilai-sikap.simpan');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

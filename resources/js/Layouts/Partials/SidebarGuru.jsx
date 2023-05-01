@@ -23,6 +23,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-ekstrakurikuler')} active={route().current('input-nilai-ekstrakurikuler')} label='input nilai ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-pengayaan')} active={route().current('input-nilai-pengayaan')} label='input nilai pengayaan' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-remidi')} active={route().current('input-nilai-remidi')} label='input nilai remidi' />
+                <SidebarLink closeSide={closeSide} href={route('input-nilai-sikap')} active={route().current('input-nilai-sikap')} label='input nilai sikap' />
                 <SidebarLink closeSide={closeSide} href={route('pendaftaran-siswa-ekstrakurikuler')} active={route().current('pendaftaran-siswa-ekstrakurikuler')} label='pendaftaran siswa ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-ekstrakurikuler')} active={route().current('print-absensi-ekstrakurikuler')} label='print absensi ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-kelas')} active={route().current('print-absensi-kelas')} label='print absensi kelas' />

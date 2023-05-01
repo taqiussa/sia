@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
+        Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
     });
 
     // Route Slip Gaji

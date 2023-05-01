@@ -174,4 +174,23 @@ class GetDataController extends Controller
                 ->values()
         ]);
     }
+
+    public function get_siswa_with_nilai_sikap()
+    {
+        return response()->json([
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'penilaianSikap'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester'))
+                        ->whereMataPelajaranId(request('mataPelajaranId'))
+                        ->whereKategoriSikapId(request('kategoriSikapId'))
+                        ->whereJenisSikapId(request('jenisSikapId')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
 }

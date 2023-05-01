@@ -85,6 +85,21 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_siswa_with_nilai_ekstra()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
+                'penilaianEkstrakurikuler.ekstrakurikuler',
+                'user' => fn ($q) => $q->select('nis', 'name'),
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
     public function data_siswa_with_nilai_pengayaan()
     {
         return Siswa::whereTahun(request('tahun'))
@@ -120,6 +135,7 @@ trait SiswaTrait
             ->sortBy('user.name')
             ->values();
     }
+
     public function data_siswa_with_nilai_remidi()
     {
         return Siswa::whereTahun(request('tahun'))
@@ -156,15 +172,17 @@ trait SiswaTrait
             ->values();
     }
 
-    public function data_siswa_with_nilai_ekstra()
+    public function data_siswa_with_nilai_sikap()
     {
         return Siswa::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
             ->with([
-                'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereSemester(request('semester')),
-                'penilaianEkstrakurikuler.ekstrakurikuler',
-                'user' => fn ($q) => $q->select('nis', 'name'),
+                'penilaianSikap' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriSikapId(request('kategoriSikapId'))
+                    ->whereJenisSikapId(request('jenisSikapId')),
+                'user' => fn ($q) => $q->select('nis', 'name')
             ])
             ->get()
             ->sortBy('user.name')

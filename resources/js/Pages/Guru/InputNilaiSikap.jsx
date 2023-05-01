@@ -25,7 +25,7 @@ const InputNilaiSikap = ({ initTahun, initSemester, listKelas, listMapel, listKa
     const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, tindakLanjut) => {
 
         const newList = [...listSiswa]
-        newList.splice(index, 1 {
+        newList.splice(index, 1, {
             nis: nis,
             kelas_id: kelasId,
             user: {
@@ -41,13 +41,13 @@ const InputNilaiSikap = ({ initTahun, initSemester, listKelas, listMapel, listKa
         setMessage([])
 
         setListSiswa(newList)
-        
+
         setCount(count + 1)
     }
 
-    const onHandleBlur = (e, id, nis, kelasId) => {
-        
-    }
+    // const onHandleBlur = (e, id, nis, kelasId) => {
+
+    // }
 
     return (
         <>

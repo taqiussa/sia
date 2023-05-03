@@ -37,6 +37,7 @@ use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\PrintAnalisisController;
+use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\ProfileController;
@@ -368,6 +369,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintAnalisisController::class)->group(function () {
         Route::get('print-analisis', 'index')->name('print-analisis');
         Route::get('print-analisis/print', 'print')->name('print-analisis.print');
+    });
+
+    // Route Print Daftar Nilai
+    Route::controller(PrintDaftarNilaiController::class)->group(function () {
+        Route::get('print-daftar-nilai', 'index')->name('print-daftar-nilai');
+        Route::get('print-daftar-nilai/print', 'print')->name('print-daftar-nilai.print');
     });
 
     // Route Print Nilai Al Qur'an

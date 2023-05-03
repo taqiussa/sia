@@ -77,25 +77,52 @@
     <tbody>
         <tr>
             <td class="py-1 px-2 w-2">1</td>
-            <td class="py-1 px-2 w-80">a. Ketuntasan belajar rata-rata yaitu nomor</td>
+            <td class="py-1 px-2 w-80">
+                @if ($namaKurikulum == 'K13')
+                    a. Ketuntasan belajar rata-rata yaitu nomor
+                @else
+                    a. Ketercapaian belajar rata-rata yaitu nomor
+                @endif
+            </td>
             <td class="py-1 px-2 w-2">:</td>
             <td class="py-1 px-2 border-b border-collapse border-black"></td>
         </tr>
         <tr>
             <td class="py-1 px-2">&nbsp;</td>
-            <td class="py-1 px-2">b. Ketidaktuntasan belajar rata-rata yaitu nomor</td>
+            <td class="py-1 px-2">
+                @if ($namaKurikulum == 'K13')
+                    b. Ketidaktuntasan belajar rata-rata yaitu nomor
+                @else
+                    b. Ketidaktercapaian belajar rata-rata yaitu nomor
+                @endif
+
+            </td>
             <td class="py-1 px-2">:</td>
             <td class="py-1 px-2 border-b border-collapse border-black"></td>
         </tr>
         <tr>
             <td class="py-1 px-2">2</td>
-            <td class="py-1 px-2">a. Jumlah siswa yang tuntas yaitu</td>
+            <td class="py-1 px-2">
+                @if ($namaKurikulum == 'K13')
+                    a. Jumlah siswa yang tuntas yaitu
+                @else
+                    a. Jumlah siswa yang tercapai yaitu
+                @endif
+
+            </td>
             <td class="py-1 px-2">:</td>
             <td class="py-1 px-2 border-b border-collapse border-black"></td>
         </tr>
         <tr>
             <td class="py-1 px-2">&nbsp;</td>
-            <td class="py-1 px-2">b. Jumlah siswa yang tidak tuntas yaitu</td>
+            <td class="py-1 px-2">
+                @if ($namaKurikulum == 'K13')
+                    b. Jumlah siswa yang tidak tuntas yaitu
+                @else
+                    b. Jumlah siswa yang tidak tercapai yaitu
+                @endif
+
+            </td>
             <td class="py-1 px-2">:</td>
             <td class="py-1 px-2 border-b border-collapse border-black"></td>
         </tr>
@@ -112,7 +139,13 @@
     <tbody>
         <tr>
             <td class="py-1 px-2 w-2">1</td>
-            <td class="py-1 px-2 w-80">Persentase siswa yang tuntas</td>
+            <td class="py-1 px-2 w-80">
+                @if ($namaKurikulum == 'K13')
+                    Persentase siswa yang tuntas
+                @else
+                    Persentase siswa yang tercapai
+                @endif
+            </td>
             <td class="py-1 px-2 w-2">:</td>
             <td class="py-1 px-2">
                 <u>

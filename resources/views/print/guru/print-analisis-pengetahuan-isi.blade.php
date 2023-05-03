@@ -38,7 +38,13 @@
                 <th class="border border-collapse border-black" rowspan="2">Nama</th>
                 <th class="border border-collapse border-black" colspan="10">Nomor Soal</th>
                 <th class="border border-collapse border-black" rowspan="2">Nilai</th>
-                <th class="border border-collapse border-black" colspan="2">Tuntas</th>
+                <th class="border border-collapse border-black" colspan="2">
+                    @if ($namaKurikulum == 'K13')
+                        Tuntas
+                    @else
+                        Keterangan
+                    @endif
+                </th>
             </tr>
             <tr>
                 <th class="border border-collapse border-black">1</th>
@@ -51,8 +57,20 @@
                 <th class="border border-collapse border-black">8</th>
                 <th class="border border-collapse border-black">9</th>
                 <th class="border border-collapse border-black">10</th>
-                <th class="border border-collapse border-black">ya</th>
-                <th class="border border-collapse border-black">tidak</th>
+                <th class="border border-collapse border-black">
+                    @if ($namaKurikulum == 'K13')
+                        Ya
+                    @else
+                        TC
+                    @endif
+                </th>
+                <th class="border border-collapse border-black">
+                    @if ($namaKurikulum == 'K13')
+                        Tidak
+                    @else
+                        BTC
+                    @endif
+                </th>
             </tr>
         </thead>
         <tbody>

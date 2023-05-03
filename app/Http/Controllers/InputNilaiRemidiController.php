@@ -129,7 +129,7 @@ class InputNilaiRemidiController extends Controller
             ]);
 
         return response()->json([
-            'listSiswa' => $this->data_siswa_with_nilai_remidi(),
+            // 'listSiswa' => $this->data_siswa_with_nilai_remidi(),
             'message' => 'Tersimpan',
             'nis' => request('nis')
         ]);

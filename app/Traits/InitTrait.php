@@ -5,7 +5,9 @@ namespace App\Traits;
 use App\Models\GuruKelas;
 use App\Models\GuruMapel;
 use App\Models\Kelas;
+use App\Models\KepalaSekolah;
 use App\Models\PenilaianRapor;
+use App\Models\WaliKelas;
 
 trait InitTrait
 {
@@ -53,6 +55,26 @@ trait InitTrait
                 'mapel' => fn ($q) => $q->select('id', 'nama')
             ])
             ->get();
+    }
+
+    public function data_nama_kepala_sekolah()
+    {
+        return KepalaSekolah::whereTahun(request('tahun'))
+            ->with(['user' => fn ($q) => $q->select('id', 'name')])
+            ->first()
+            ?->user
+            ->name ?? 'Kepala Sekolah Belum di Pilih';
+    }
+
+    public function data_nama_wali_kelas()
+    {
+        return WaliKelas::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with(['user' => fn ($q) => $q->select('id', 'name')])
+            ->first()
+            ?->user
+            ->name
+            ?? 'Belum Ada Wali Kelas';
     }
 
     public function data_semester()

@@ -131,7 +131,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         }))
             .then(response => {
 
-                setListSiswa(response.data.listSiswa)
+                // setListSiswa(response.data.listSiswa)
 
                 setMessage({
                     nis: response.data.nis,

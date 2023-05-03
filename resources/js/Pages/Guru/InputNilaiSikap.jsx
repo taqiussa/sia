@@ -155,7 +155,7 @@ const InputNilaiSikap = ({ initTahun, initSemester, listKelas, listMapel, listKa
     return (
         <>
             <Head title='Input Nilai Sikap' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 font-bold uppercase">input nilai sikap</div>
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 font-bold uppercase mb-2">input nilai sikap</div>
             <div className="grid grid-cols-2 gap-2 space-y-2 lg:grid lg:grid-cols-4  lg:gap-2 lg:space-y-0">
 
                 <Tahun

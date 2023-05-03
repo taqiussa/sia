@@ -67,12 +67,14 @@ trait SiswaTrait
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereKelasId(request('kelasId')),
                 'penilaian'  => fn ($q) => $q->whereTahun(request('tahun'))
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereKelasId(request('kelasId')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
             ->get()

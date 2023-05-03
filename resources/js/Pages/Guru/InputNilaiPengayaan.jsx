@@ -412,8 +412,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                                             name='pengayaan'
                                             className='w-auto max-w-[60px]'
                                             value={siswa.pengayaan.nilai_pengayaan ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.pengayaan.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.pengayaan.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan.pengayaan_id)}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai)}
+                                            handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id)}
                                         />
 
                                         {message && message.nis == siswa.nis &&

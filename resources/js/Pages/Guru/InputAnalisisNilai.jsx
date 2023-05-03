@@ -254,7 +254,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
             ...data,
             arrayInput: [...listSiswa],
         })
-        console.log(listSiswa)
     }, [count])
 
     useEffect(() => {

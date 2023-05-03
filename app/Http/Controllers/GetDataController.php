@@ -59,11 +59,13 @@ class GetDataController extends Controller
                         ->whereSemester(request('semester'))
                         ->whereMataPelajaranId(request('mataPelajaranId'))
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                        ->whereKelasId(request('kelasId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId')),
                     'penilaian'  => fn ($q) => $q->whereTahun(request('tahun'))
                         ->whereSemester(request('semester'))
                         ->whereMataPelajaranId(request('mataPelajaranId'))
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                        ->whereKelasId(request('kelasId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId'))
                         ->where('nilai', '>', 75),
                     'user' => fn ($q) => $q->select('nis', 'name')
@@ -86,7 +88,7 @@ class GetDataController extends Controller
                 ->values()
         ]);
     }
-    
+
     public function get_siswa_Remidi()
     {
         return response()->json([

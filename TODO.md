@@ -1,1 +1,1 @@
-input prestasi
+print analisis

@@ -101,7 +101,7 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
     return (
         <>
             <Head title='Input Prestasi' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-lg text-center text-slate-600 font-bold uppercase">input prestasi</div>
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-lg text-center text-slate-600 font-bold uppercase mb-2">input prestasi</div>
             <div className="lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 space-y-2">
                 <Tahun
                     id='tahun'

@@ -40,6 +40,7 @@ use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
+use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
@@ -320,7 +321,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     });
 
     // Route Input Nilai Remidi
-    Route::controller(InputNilaiRemidiController::class)->group(function() {
+    Route::controller(InputNilaiRemidiController::class)->group(function () {
         Route::get('input-nilai-remidi', 'index')->name('input-nilai-remidi');
         Route::post('input-nilai-remidi', 'simpan')->name('input-nilai-remidi.simpan');
         Route::put('input-nilai-remidi', 'update')->name('input-nilai-remidi.update');
@@ -394,6 +395,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-nilai-ekstrakurikuler', 'index')->name('print-nilai-ekstrakurikuler');
         Route::get('print-nilai-ekstrakurikuler/per-kelas', 'per_kelas')->name('print-nilai-ekstrakurikuler.per-kelas');
         Route::get('print-nilai-ekstrakurikuler/per-ekstrakurikuler', 'per_ekstrakurikuler')->name('print-nilai-ekstrakurikuler.per-ekstrakurikuler');
+    });
+
+    // Route Print Nilai Sikap
+    Route::controller(PrintNilaiSikapController::class)->group(function () {
+        Route::get('print-nilai-sikap', 'index')->name('print-nilai-sikap');
+        Route::get('print-nilai-sikap/print', 'print')->name('print-nilai-sikap.print');
     });
 
     // Route Print Pencapaian Kompetensi

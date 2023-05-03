@@ -36,6 +36,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
     })
 
     const [listSiswa, setListSiswa] = useState([])
+    const [remidi, setRemidi] = useState([])
     const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
@@ -43,6 +44,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         const response = await getSiswaRemidi(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
         if (response.remidi !== '') {
+            setRemidi(response.remidi)
             setData({
                 id: response.remidi.id,
                 tahun: data.tahun,
@@ -58,6 +60,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                 arrayInput: []
             })
         } else {
+            setRemidi([])
             setData({
                 id: '',
                 tahun: data.tahun,
@@ -79,7 +82,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir) => {
+    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir, remidiId) => {
 
         const newList = [...listSiswa]
         newList.splice(index, 1, {
@@ -94,6 +97,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             },
             remidi: {
                 id: id,
+                remidi_id: remidiId,
                 nilai_awal: nilaiAwal,
                 nilai_akhir: nilaiAkhir,
                 nilai_remidi: e.target.value
@@ -108,7 +112,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
 
     }
 
-    const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, remidiId, nilaiAkhir) => {
+    const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, nilaiAkhir, remidiId) => {
         e.preventDefault()
 
         axios.put(route('input-nilai-remidi.update', {
@@ -277,6 +281,8 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             arrayInput: [...listSiswa],
         })
 
+        console.log(listSiswa)
+
     }, [count])
 
     useEffect(() => {
@@ -438,8 +444,8 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                                             name='remidi'
                                             className='w-auto max-w-[60px]'
                                             value={siswa.remidi?.nilai_remidi ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.remidi_id, siswa.remidi?.nilai_akhir)}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id,siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
+                                            handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
                                         />
 
                                         {message && message.nis == siswa.nis &&

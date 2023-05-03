@@ -37,14 +37,15 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
     })
 
     const [listSiswa, setListSiswa] = useState([])
+    const [pengayaan, setPengayaan] = useState([])
     const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
         const response = await getSiswaPengayaan(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
-        if(response.pengayaan !== '')
-        {
+        if (response.pengayaan !== '') {
+            setPengayaan(response.pengayaan)
             setData({
                 id: response.pengayaan.id,
                 tahun: data.tahun,
@@ -61,7 +62,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 banyakSoal: response.pengayaan.banyak_soal,
                 arrayInput: []
             })
-        }else{
+        } else {
+            setPengayaan([])
             setData({
                 id: '',
                 tahun: data.tahun,
@@ -85,7 +87,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, nilai) => {
+    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, nilai, pengayaanId) => {
 
         const newList = [...listSiswa]
         newList.splice(index, 1, {
@@ -100,6 +102,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
             },
             pengayaan: {
                 id: id,
+                pengayaan_id: pengayaanId,
                 nilai_pengayaan: e.target.value
             }
         })
@@ -394,43 +397,43 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     </thead>
                     <tbody>
                         {listSiswa && listSiswa
-                        .filter(siswa => siswa.penilaian.nilai > 75)
-                        .map((siswa, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.user?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.penilaian?.nilai}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    <div className='flex flex-col'>
+                            .filter(siswa => siswa.penilaian.nilai > 75)
+                            .map((siswa, index) => (
+                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.user?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.penilaian?.nilai}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        <div className='flex flex-col'>
 
-                                        <InputTextBlur
-                                            id='pengayaan'
-                                            name='pengayaan'
-                                            className='w-auto max-w-[60px]'
-                                            value={siswa.pengayaan.nilai_pengayaan ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id)}
-                                        />
+                                            <InputTextBlur
+                                                id='pengayaan'
+                                                name='pengayaan'
+                                                className='w-auto max-w-[60px]'
+                                                value={siswa.pengayaan.nilai_pengayaan ?? ''}
+                                                handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
+                                                handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
+                                            />
 
-                                        {message && message.nis == siswa.nis &&
-                                            (
-                                                <span className='text-emerald-500'>{message.message}</span>
+                                            {message && message.nis == siswa.nis &&
+                                                (
+                                                    <span className='text-emerald-500'>{message.message}</span>
+                                                )}
+
+                                            {data.arrayInput.length > 0 && data.arrayInput[index]?.pengayaan.nilai_pengayaan > 100 && (
+                                                <span className='text-red-500'>Nilai Maksimal 100</span>
                                             )}
 
-                                        {data.arrayInput.length > 0 && data.arrayInput[index]?.pengayaan.nilai_pengayaan > 100 && (
-                                            <span className='text-red-500'>Nilai Maksimal 100</span>
-                                        )}
-
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>

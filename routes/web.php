@@ -40,6 +40,7 @@ use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
+use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -393,6 +394,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-nilai-ekstrakurikuler', 'index')->name('print-nilai-ekstrakurikuler');
         Route::get('print-nilai-ekstrakurikuler/per-kelas', 'per_kelas')->name('print-nilai-ekstrakurikuler.per-kelas');
         Route::get('print-nilai-ekstrakurikuler/per-ekstrakurikuler', 'per_ekstrakurikuler')->name('print-nilai-ekstrakurikuler.per-ekstrakurikuler');
+    });
+
+    // Route Print Pencapaian Kompetensi
+    Route::controller(PrintPencapaianKompetensiController::class)->group(function () {
+        Route::get('print-pencapaian-kompetensi', 'index')->name('print-pencapaian-kompetensi');
+        Route::get('print-pencapaian-kompetensi/print', 'print')->name('print-pencapaian-kompetensi.print');
     });
 
     // Route Upload Analisis Al Qur'an

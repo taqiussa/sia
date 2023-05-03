@@ -136,7 +136,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         }))
             .then(response => {
 
-                // setListSiswa(response.data.listSiswa)
+                setListSiswa(response.data.listSiswa)
 
                 setMessage({
                     nis: response.data.nis,
@@ -393,7 +393,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {listSiswa && listSiswa
+                        .filter(siswa => siswa.penilaian.nilai > 75)
+                        .map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

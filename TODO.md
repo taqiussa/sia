@@ -1,1 +1,1 @@
-print analisis
+print daftar nilai

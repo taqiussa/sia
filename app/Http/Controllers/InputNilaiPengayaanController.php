@@ -113,7 +113,7 @@ class InputNilaiPengayaanController extends Controller
         );
 
         return response()->json([
-            // 'listSiswa' => $this->data_siswa_with_nilai_pengayaan(),
+            'listSiswa' => $this->data_siswa_with_nilai_pengayaan(),
             'message' => 'Tersimpan',
             'nis' => request('nis')
         ]);

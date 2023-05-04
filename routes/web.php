@@ -40,6 +40,7 @@ use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
+use App\Http\Controllers\PrintNilaiPengayaanController;
 use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\ProfileController;
@@ -395,6 +396,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-nilai-ekstrakurikuler', 'index')->name('print-nilai-ekstrakurikuler');
         Route::get('print-nilai-ekstrakurikuler/per-kelas', 'per_kelas')->name('print-nilai-ekstrakurikuler.per-kelas');
         Route::get('print-nilai-ekstrakurikuler/per-ekstrakurikuler', 'per_ekstrakurikuler')->name('print-nilai-ekstrakurikuler.per-ekstrakurikuler');
+    });
+
+    // Route Print Nilai Pengayaan
+    Route::controller(PrintNilaiPengayaanController::class)->group(function () {
+        Route::get('print-nilai-pengayaan', 'index')->name('print-nilai-pengayaan');
+        Route::get('print-nilai-pengayaan/print', 'print')->name('print-nilai-pengayaan.print');
     });
 
     // Route Print Nilai Sikap

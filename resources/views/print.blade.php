@@ -138,7 +138,9 @@
 </head>
 
 <body>
-    @include('header')
+    <div class="pl-16 pr-10 pt-7 pb-2">
+        @include('header')
+    </div>
     <div class="px-7">
         @yield('content')
     </div>

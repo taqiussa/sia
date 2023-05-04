@@ -14,7 +14,13 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            listStyleType: {
+                alpha: 'lower-alpha',
+            },
         },
+    },
+    variants: {
+        listStyleType: ['responsive'],
     },
 
     plugins: [require('@tailwindcss/forms')],

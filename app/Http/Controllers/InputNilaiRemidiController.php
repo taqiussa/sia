@@ -45,6 +45,7 @@ class InputNilaiRemidiController extends Controller
             'kelasId' => 'required',
             'kategoriNilaiId' => 'required',
             'jenisPenilaianId' => 'required',
+            'nilaiRemidi' => 'numeric|max:100'
         ]);
 
         Remidi::updateOrCreate(

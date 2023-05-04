@@ -82,17 +82,16 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir, remidiId) => {
-
-        const newList = [...listSiswa]
-        newList.splice(index, 1, {
+    const handleDynamic = (e, nis, id, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir, remidiId) => {
+        const index = listSiswa.findIndex(siswa => siswa.nis === nis);
+        const newList = [...listSiswa];
+        newList[index] = {
             nis: nis,
             kelas_id: kelasId,
             user: {
                 name: namaSiswa
             },
-            penilaian:
-            {
+            penilaian: {
                 nilai: penilaianNilai
             },
             remidi: {
@@ -102,14 +101,10 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                 nilai_akhir: nilaiAkhir,
                 nilai_remidi: e.target.value
             }
-        })
-
-        setMessage([])
-
-        setListSiswa(newList)
-
-        setCount(count + 1)
-
+        };
+        setMessage([]);
+        setListSiswa(newList);
+        setCount(count + 1);
     }
 
     const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, nilaiAkhir, remidiId) => {
@@ -281,8 +276,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             arrayInput: [...listSiswa],
         })
 
-        console.log(listSiswa)
-
     }, [count])
 
     useEffect(() => {
@@ -370,7 +363,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     id='ki'
                     name='ki'
                     label='K.I. (di isi jika perlu)'
-                    value={data.ki}
+                    value={data.ki ?? ''}
                     message={errors.ki}
                     handleChange={onHandleChange}
                 />
@@ -378,7 +371,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     id='materi'
                     name='materi'
                     label='materi (di isi jika perlu)'
-                    value={data.materi}
+                    value={data.materi ?? ''}
                     message={errors.materi}
                     handleChange={onHandleChange}
                 />
@@ -388,7 +381,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     id='catatan'
                     name='catatan'
                     label='catatan (di isi jika perlu)'
-                    value={data.catatan}
+                    value={data.catatan ?? ''}
                     message={errors.catatan}
                     handleChange={onHandleChange}
                 />
@@ -424,51 +417,47 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     </thead>
                     <tbody>
                         {listSiswa && listSiswa
-                        .filter(siswa => siswa.penilaian.nilai < 75 || siswa.remidi.nilai_remidi != null)
-                        .map((siswa, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.user?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    <div className='flex flex-col'>
-
-                                        <InputTextBlur
-                                            id='remidi'
-                                            name='remidi'
-                                            className='w-auto max-w-[60px]'
-                                            value={siswa.remidi?.nilai_remidi ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id,siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
-                                        />
-
-                                        {message && message.nis == siswa.nis &&
-                                            (
+                            .filter(siswa => siswa.penilaian.nilai < 75 || siswa.remidi.nilai_remidi != null)
+                            .map((siswa, index) => (
+                                <tr key={siswa.nis} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.user?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        <div className='flex flex-col'>
+                                            <InputTextBlur
+                                                id='remidi'
+                                                name='remidi'
+                                                className='w-auto max-w-[60px]'
+                                                value={siswa.remidi?.nilai_remidi ?? ''}
+                                                handleChange={(e) => handleDynamic(e, siswa.nis, siswa.remidi?.id, siswa.user.name, siswa.kelas_id, siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
+                                                handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
+                                            />
+                                            {message && message.nis === siswa.nis && (
                                                 <span className='text-emerald-500'>{message.message}</span>
                                             )}
-
-                                        {data.arrayInput.length > 0 && data.arrayInput[index]?.remidi?.nilai_remidi > 100 && (
-                                            <span className='text-red-500'>Nilai Maksimal 100</span>
+                                            {data.arrayInput.length > 0 && data.arrayInput[index]?.remidi?.nilai_remidi > 100 && (
+                                                <span className='text-red-500'>Nilai Maksimal 100</span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.remidi?.nilai_akhir}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.remidi?.nilai_awal && (
+                                            <Hapus onClick={() => handleDelete(siswa.remidi.id, siswa.remidi.nilai_awal, siswa.nis, siswa.kelas_id)} />
                                         )}
-
-                                    </div>
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.remidi?.nilai_akhir}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.remidi?.nilai_awal &&
-                                        <Hapus onClick={() => handleDelete(siswa.remidi.id, siswa.remidi.nilai_awal, siswa.nis, siswa.kelas_id)} />
-                                    }
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </div>

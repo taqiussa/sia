@@ -41,6 +41,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
     const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
+    const uniqueNis = new Set()
+
     async function getDataSiswa() {
         const response = await getSiswaPengayaan(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
@@ -87,32 +89,32 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, nilai, pengayaanId) => {
+    const handleDynamic = (e, nis, id, namaSiswa, kelasId, nilai, pengayaanId) => {
 
-        const newList = [...listSiswa]
-        newList.splice(index, 1, {
-            nis: nis,
-            kelas_id: kelasId,
-            user: {
-                name: namaSiswa
-            },
-            penilaian:
-            {
-                nilai
-            },
-            pengayaan: {
-                id: id,
-                pengayaan_id: pengayaanId,
-                nilai_pengayaan: e.target.value
-            }
-        })
+        const siswaIndex = listSiswa.findIndex(siswa => siswa.nis === nis);
 
-        setMessage([])
-
-        setListSiswa(newList)
-
-        setCount(count + 1)
-
+        if (siswaIndex !== -1) {
+            const newList = [...listSiswa];
+            newList[siswaIndex] = {
+                nis,
+                kelas_id: kelasId,
+                user: {
+                    name: namaSiswa
+                },
+                penilaian:
+                {
+                    nilai
+                },
+                pengayaan: {
+                    id: id,
+                    pengayaan_id: pengayaanId,
+                    nilai_pengayaan: e.target.value
+                }
+            };
+            setMessage([]);
+            setListSiswa(newList);
+            setCount(count + 1);
+        }
     }
 
     const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, pengayaanId) => {
@@ -243,6 +245,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
             ...data,
             arrayInput: [...listSiswa],
         })
+
 
     }, [count])
 
@@ -411,13 +414,12 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         <div className='flex flex-col'>
-
                                             <InputTextBlur
                                                 id='pengayaan'
                                                 name='pengayaan'
                                                 className='w-auto max-w-[60px]'
                                                 value={siswa.pengayaan.nilai_pengayaan ?? ''}
-                                                handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
+                                                handleChange={(e) => handleDynamic(e, siswa.nis, siswa.pengayaan?.id, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
                                                 handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
                                             />
 

@@ -136,7 +136,28 @@
                 </tr>
             </tbody>
         </table>
-
+        <div class="font-bold my-5 capitalize">program pengayaan</div>
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th class="border border-collapse border-black">No</th>
+                    <th class="border border-collapse border-black">Nama</th>
+                    <th class="border border-collapse border-black">Nilai {{ $jenisPenilaian }}</th>
+                    <th class="border border-collapse border-black">Bentuk Pelaksanaan</th>
+                    <th class="border border-collapse border-black">Banyak Soal</th>
+                    <th class="border border-collapse border-black">Nilai Pengayaan</th>
+                    <th class="border border-collapse border-black">Tanda Tangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($pengayaan->detail->sortBy('user.name')->values() as $siswa)
+                    <tr>
+                        <td class="px-2 py-1 border border-collapse border-black text-center">{{ $loop->iteration }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->user->name }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
     {{-- <div class="font-bold text-center text-md capitalize mb-2 border-b-2 border-black">daftar kumpulan nilai

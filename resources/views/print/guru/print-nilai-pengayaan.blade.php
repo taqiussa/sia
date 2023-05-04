@@ -71,6 +71,72 @@
                 penugasan, dan dihargai dengan nilai tambah (lebih) dari peserta yang remidial.
             @endif
         </p>
+
+        <div class="[page-break-before:always]"></div>
+
+        <div class="flex justify-between border-b-2 border-black pb-2 pt-5">
+            <div class="flex flex-col">
+                <img src="{{ asset('images/logoalfahp.png') }}" alt="logohp" class="h-20">
+            </div>
+            <div class="font-bold text-md flex flex-col justify-center uppercase text-center">
+                <div>program pengayaan</div>
+                <div>smp al musyaffa kendal</div>
+            </div>
+            <div class="font-bold text-xs flex flex-col justify-center capitalize w-[280px]">
+                <div class="grid grid-cols-2">
+                    <div>kelas</div>
+                    <div>: {{ $namaKelas }}</div>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div>semester</div>
+                    <div>: {{ $semester }}</div>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div>mata pelajaran</div>
+                    <div>: {{ $namaMapel }}</div>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div>wali kelas</div>
+                    <div>: {{ $namaWaliKelas }}</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="w-full text-md capitalize mt-5">
+            <tbody>
+                <tr>
+                    <td>sekolah</td>
+                    <td>: SMP al musyaffa</td>
+                    <td>penilaian harian</td>
+                    <td>: {{ $jenisPenilaian }}</td>
+                </tr>
+                <tr>
+                    <td>kelas / semester</td>
+                    <td>: {{ $namaKelas }} / {{ $semester }}</td>
+                    <td>tanggal</td>
+                    <td>: {{ tanggal($pengayaan->tanggal) }}</td>
+                </tr>
+                <tr>
+                    <td>mata pelajaran / KBM</td>
+                    <td>: {{ $namaMapel }} / {{ $kkm }}</td>
+                    <td>tanggal</td>
+                    <td>: {{ $pengayaan->bentuk_pelaksanaan }}</td>
+                </tr>
+                <tr>
+                    <td class="py-2">kompetensi inti</td>
+                    <td class="py-2 border-b border-black" colspan="3">: {{ $pengayaan->ki }}</td>
+                </tr>
+                <tr>
+                    <td class="py-2">kompetensi dasar</td>
+                    <td class="py-2 border-b border-black" colspan="3">: {{ $pengayaan->kd }}</td>
+                </tr>
+                <tr>
+                    <td class="py-2">indikator</td>
+                    <td class="py-2 border-b border-black" colspan="3">: {{ $pengayaan->indikator }}</td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
 
     {{-- <div class="font-bold text-center text-md capitalize mb-2 border-b-2 border-black">daftar kumpulan nilai

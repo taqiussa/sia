@@ -7,8 +7,10 @@ use App\Models\Kelas;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
 use App\Models\KategoriNilai;
+use App\Models\MataPelajaran;
 use App\Models\JenisPenilaian;
 use App\Models\AturanKurikulum;
+use App\Models\Pengayaan;
 
 class PrintNilaiPengayaanController extends Controller
 {
@@ -47,8 +49,31 @@ class PrintNilaiPengayaanController extends Controller
             ->with(['kurikulum' => fn ($q) => $q->select('id', 'nama')])
             ->first();
 
+        $pengayaan = Pengayaan::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'detail',
+                'detail.user'
+            ])
+            ->first();
+
         $data = [
+            'tahun' => request('tahun'),
+            'semester' => request('semester'),
+            'namaMapel' => MataPelajaran::find(request('mataPelajaranId'))
+                ->nama,
+            'kkm' => $kkm,
             'namaKurikulum' => $kurikulum->kurikulum->nama,
+            'namaWaliKelas' => $this->data_nama_wali_kelas(),
+            'namaKepalaSekolah' => $this->data_nama_kepala_sekolah(),
+            'jenisPenilaian' => JenisPenilaian::find(request('jenisPenilaianId'))
+                ->nama,
+            'namaKelas' => $kelas->nama,
+            'pengayaan' => $pengayaan,
         ];
 
         return view('print.guru.print-nilai-pengayaan', $data);

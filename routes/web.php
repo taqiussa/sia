@@ -39,6 +39,7 @@ use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintLedgerPtsController;
+use App\Http\Controllers\PrintLedgerRaporController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
@@ -390,6 +391,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintLedgerPtsController::class)->group(function () {
         Route::get('print-ledger-pts', 'index')->name('print-ledger-pts');
         Route::get('print-ledger-pts/print', 'print')->name('print-ledger-pts.print');
+    });
+
+    // Route Print Ledger Rapor
+    Route::controller(PrintLedgerRaporController::class)->group(function () {
+        Route::get('print-ledger-rapor', 'index')->name('print-ledger-rapor');
+        Route::get('print-ledger-rapor/print', 'print')->name('print-ledger-rapor.print');
     });
 
     // Route Print Nilai Al Qur'an

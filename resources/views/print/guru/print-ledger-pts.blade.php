@@ -50,11 +50,22 @@
                     <td class="border border-collapse border-black text-center px-1">{{ $loop->iteration }}</td>
                     <td class="border border-collapse border-black text-center px-1">{{ $siswa->nis }}</td>
                     <td class="border border-collapse border-black px-2 whitespace-nowrap">{{ $siswa->user?->name }}</td>
+
                     @foreach ($listMapel as $mapel)
-                        <td class="border border-collapse border-black text-center px-1">
-                            {{ floor($siswa->penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->whereIn('jenis_penilaian_id', $listJenis)->avg('nilai')) }}
+                        @php
+                            $avg = floor(
+                                $siswa->penilaians
+                                    ->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)
+                                    ->whereIn('jenis_penilaian_id', $listJenis)
+                                    ->avg('nilai'),
+                            );
+                        @endphp
+                        <td
+                            class="border border-collapse border-black text-center px-1 {{ $avg < $mapel->mapel->kkm->kkm ? 'text-red-600 bg-yellow-400' : '' }}">
+                            {{ $avg }}
                         </td>
                     @endforeach
+
                     <td class="border border-collapse border-black text-center px-1">
                         {{ floor(
                             $siswa->penilaians->whereIn('jenis_penilaian_id', $listJenis)->groupBy('mata_pelajaran_id')->map(function ($group, $key) {

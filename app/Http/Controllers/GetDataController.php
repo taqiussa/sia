@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pengayaan;
-use App\Models\Remidi;
 use App\Models\Siswa;
+use App\Models\Remidi;
+use App\Models\Pengayaan;
+use App\Models\Penilaian;
 use App\Models\SiswaEkstra;
+use App\Models\RemidiDetail;
 
 class GetDataController extends Controller
 {
@@ -44,6 +46,15 @@ class GetDataController extends Controller
 
     public function get_siswa_pengayaan()
     {
+        $nis = Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->where('nilai', '>', 75)
+            ->pluck('nis');
+
         return response()->json([
             'pengayaan' => Pengayaan::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
@@ -67,9 +78,10 @@ class GetDataController extends Controller
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
                         ->whereKelasId(request('kelasId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId'))
-                        ->where('nilai', '>', 75),
+                        ->whereKelasId(request('kelasId')),
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
+                ->whereIn('nis', $nis)
                 // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
                 //     ->whereSemester(request('semester'))
                 //     ->whereMataPelajaranId(request('mataPelajaranId'))
@@ -91,6 +103,23 @@ class GetDataController extends Controller
 
     public function get_siswa_Remidi()
     {
+        $nis = Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->where('nilai', '<', 75)
+            ->pluck('nis');
+
+        $nisRemidi = RemidiDetail::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->pluck('nis');
+
         return response()->json([
             'remidi' => Remidi::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
@@ -112,9 +141,11 @@ class GetDataController extends Controller
                         ->whereMataPelajaranId(request('mataPelajaranId'))
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId'))
-                        ->where('nilai', '<', 75),
+                        ->whereKelasId(request('kelasId')),
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
+                ->whereIn('nis', $nis)
+                ->orWhereIn('nis', $nisRemidi)
                 // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
                 //     ->whereSemester(request('semester'))
                 //     ->whereMataPelajaranId(request('mataPelajaranId'))

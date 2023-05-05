@@ -82,10 +82,10 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, nis, id, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir, remidiId) => {
-        const index = listSiswa.findIndex(siswa => siswa.nis === nis);
+    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, penilaianNilai, nilaiAwal, nilaiAkhir, remidiId) => {
+
         const newList = [...listSiswa];
-        newList[index] = {
+        newList.splice(index, 1, {
             nis: nis,
             kelas_id: kelasId,
             user: {
@@ -101,7 +101,8 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                 nilai_akhir: nilaiAkhir,
                 nilai_remidi: e.target.value
             }
-        };
+        })
+
         setMessage([]);
         setListSiswa(newList);
         setCount(count + 1);
@@ -136,6 +137,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     nis: response.data.nis,
                     message: response.data.message
                 })
+
             })
             .catch(error => {
                 Sweet
@@ -436,12 +438,13 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                                                 name='remidi'
                                                 className='w-auto max-w-[60px]'
                                                 value={siswa.remidi?.nilai_remidi ?? ''}
-                                                handleChange={(e) => handleDynamic(e, siswa.nis, siswa.remidi?.id, siswa.user.name, siswa.kelas_id, siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
+                                                handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
                                                 handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
                                             />
-                                            {message && message.nis === siswa.nis && (
-                                                <span className='text-emerald-500'>{message.message}</span>
-                                            )}
+                                            {message && message.nis == siswa.nis &&
+                                                (
+                                                    <span className='text-emerald-500'>{message.message}</span>
+                                                )}
                                             {data.arrayInput.length > 0 && data.arrayInput[index]?.remidi?.nilai_remidi > 100 && (
                                                 <span className='text-red-500'>Nilai Maksimal 100</span>
                                             )}

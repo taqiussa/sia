@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\Penilaian;
+use App\Models\RemidiDetail;
 use App\Models\Siswa;
 use App\Models\RuangUjian;
 use App\Models\SiswaEkstra;
@@ -116,6 +118,15 @@ trait SiswaTrait
 
     public function data_siswa_with_nilai_pengayaan()
     {
+        $nis = Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->where('nilai', '>', 75)
+            ->pluck('nis');
+
         return Siswa::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
             ->with([
@@ -130,9 +141,10 @@ trait SiswaTrait
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
                     ->whereJenisPenilaianId(request('jenisPenilaianId'))
-                    ->where('nilai', '>', 75),
+                    ->whereKelasId(request('kelasId')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
+            ->whereIn('nis', $nis)
             // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
             //     ->whereSemester(request('semester'))
             //     ->whereMataPelajaranId(request('mataPelajaranId'))
@@ -152,6 +164,23 @@ trait SiswaTrait
 
     public function data_siswa_with_nilai_remidi()
     {
+        $nis = Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->where('nilai', '<', 75)
+            ->pluck('nis');
+
+        $nisRemidi = RemidiDetail::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->pluck('nis');
+
         return Siswa::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
             ->with([
@@ -166,9 +195,11 @@ trait SiswaTrait
                     ->whereMataPelajaranId(request('mataPelajaranId'))
                     ->whereKategoriNilaiId(request('kategoriNilaiId'))
                     ->whereJenisPenilaianId(request('jenisPenilaianId'))
-                    ->where('nilai', '<', 75),
+                    ->whereKelasId(request('kelasId')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
+            ->whereIn('nis', $nis)
+            ->orWhereIn('nis', $nisRemidi)
             // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
             //     ->whereSemester(request('semester'))
             //     ->whereMataPelajaranId(request('mataPelajaranId'))

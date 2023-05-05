@@ -89,32 +89,29 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, nis, id, namaSiswa, kelasId, nilai, pengayaanId) => {
+    const handleDynamic = (e, index, id, nis, namaSiswa, kelasId, nilai, pengayaanId) => {
 
-        const siswaIndex = listSiswa.findIndex(siswa => siswa.nis === nis);
+        const newList = [...listSiswa]
+        newList.splice(index, 1, {
+            nis,
+            kelas_id: kelasId,
+            user: {
+                name: namaSiswa
+            },
+            penilaian:
+            {
+                nilai
+            },
+            pengayaan: {
+                id: id,
+                pengayaan_id: pengayaanId,
+                nilai_pengayaan: e.target.value
+            }
+        })
 
-        if (siswaIndex !== -1) {
-            const newList = [...listSiswa];
-            newList[siswaIndex] = {
-                nis,
-                kelas_id: kelasId,
-                user: {
-                    name: namaSiswa
-                },
-                penilaian:
-                {
-                    nilai
-                },
-                pengayaan: {
-                    id: id,
-                    pengayaan_id: pengayaanId,
-                    nilai_pengayaan: e.target.value
-                }
-            };
-            setMessage([]);
-            setListSiswa(newList);
-            setCount(count + 1);
-        }
+        setMessage([])
+        setListSiswa(newList)
+        setCount(count + 1)
     }
 
     const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, pengayaanId) => {
@@ -147,6 +144,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     nis: response.data.nis,
                     message: response.data.message
                 })
+
             })
             .catch(error => {
                 Sweet
@@ -400,7 +398,6 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     </thead>
                     <tbody>
                         {listSiswa && listSiswa
-                            .filter(siswa => siswa.penilaian.nilai > 75)
                             .map((siswa, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">
@@ -419,7 +416,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                                                 name='pengayaan'
                                                 className='w-auto max-w-[60px]'
                                                 value={siswa.pengayaan.nilai_pengayaan ?? ''}
-                                                handleChange={(e) => handleDynamic(e, siswa.nis, siswa.pengayaan?.id, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
+                                                handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
                                                 handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
                                             />
 

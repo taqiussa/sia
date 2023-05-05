@@ -17,9 +17,10 @@ import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
 import axios from 'axios'
+import Hapus from '@/Components/Sia/Hapus'
 
 const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
-    const { data, setData, post, errors, processing } = useForm({
+    const { data, setData, post, errors, processing, delete: destroy } = useForm({
         id: '',
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
         tahun: initTahun,
@@ -168,6 +169,44 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 )
             }
         })
+    }
+
+    const handleDelete = (pengayaanDetailId) => {
+
+        Sweet
+            .fire({
+                title: 'Menghapus Nilai Pengayaan',
+                text: 'Anda akan menghapus nilai pengayaan ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            })
+            .then(result => {
+                if (result.isConfirmed)
+                    destroy(
+                        route('input-nilai-pengayaan.hapus', {
+                            pengayaanDetailId: pengayaanDetailId,
+                            kelasId: data.kelasId,
+                            tanggal: data.tanggal,
+                            tahun: data.tahun,
+                            semester: data.semester,
+                            mataPelajaranId: data.mataPelajaranId,
+                            kategoriNilaiId: data.kategoriNilaiId,
+                            jenisPenilaianId: data.jenisPenilaianId,
+                        }),
+                        {
+                            onSuccess: () => {
+                                toast.success('Berhasil Menghapus nilai pengayaan')
+                                setData({ ...data })
+                                trackPromise(
+                                    getDataSiswa()
+                                )
+                            }
+                        }
+                    )
+            })
+
     }
 
     useEffect(() => {
@@ -394,6 +433,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nilai Pengayaan
                             </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -430,6 +472,11 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                                             )}
 
                                         </div>
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {siswa.pengayaan?.id && (
+                                            <Hapus onClick={() => handleDelete(siswa.pengayaan.id)} />
+                                        )}
                                     </td>
                                 </tr>
                             ))}

@@ -319,6 +319,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-nilai-pengayaan', 'index')->name('input-nilai-pengayaan');
         Route::post('input-nilai-pengayaan', 'simpan')->name('input-nilai-pengayaan.simpan');
         Route::put('input-nilai-pengayaan', 'update')->name('input-nilai-pengayaan.update');
+        Route::delete('input-nilai-pengayaan', 'hapus')->name('input-nilai-pengayaan.hapus');
     });
 
     // Route Input Nilai Remidi

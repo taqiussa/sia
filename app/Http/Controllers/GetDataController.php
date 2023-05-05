@@ -52,7 +52,7 @@ class GetDataController extends Controller
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
             ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
-            ->where('nilai', '>', 75)
+            ->where('nilai', '>=', 75)
             ->pluck('nis');
 
         return response()->json([

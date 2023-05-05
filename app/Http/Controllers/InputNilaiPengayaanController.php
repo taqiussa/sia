@@ -118,4 +118,20 @@ class InputNilaiPengayaanController extends Controller
             'nis' => request('nis')
         ]);
     }
+
+    public function hapus()
+    {
+
+        PengayaanDetail::destroy(request('pengayaanDetailId'));
+
+        return to_route('input-nilai-pengayaan', [
+            'tahun' => request('tahun'),
+            'semester' => request('semester'),
+            'tanggal' => request('tanggal'),
+            'kelasId' => request('kelasId'),
+            'mataPelajaranId' => request('mataPelajaranId'),
+            'kategoriNilaiId' => request('kategoriNilaiId'),
+            'jenisPenilaianId' => request('jenisPenilaianId'),
+        ]);
+    }
 }

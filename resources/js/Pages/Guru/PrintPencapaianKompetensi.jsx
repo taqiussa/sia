@@ -30,7 +30,9 @@ const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKel
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
     }, [data.tahun, data.mataPelajaranId])
 
@@ -42,7 +44,9 @@ const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKel
                 data: {
                     tahun: data.tahun,
                     kelasId: data.kelasId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
     }, [data.tahun, data.kelasId])
 

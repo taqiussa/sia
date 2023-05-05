@@ -28,7 +28,9 @@ const PrintNilaiSikap = ({ initTahun, initSemester, listMapel, listKelas, listKa
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
     }, [data.tahun, data.mataPelajaranId])
 

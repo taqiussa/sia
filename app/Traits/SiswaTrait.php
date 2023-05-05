@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\Kelas;
+use App\Models\Kkm;
 use App\Models\Penilaian;
 use App\Models\RemidiDetail;
 use App\Models\Siswa;
@@ -118,13 +120,20 @@ trait SiswaTrait
 
     public function data_siswa_with_nilai_pengayaan()
     {
+        $kelas = Kelas::find(request('kelasId'));
+
+        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+            ->whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->value('kkm');
+
         $nis = Penilaian::whereTahun(request('tahun'))
             ->whereSemester(request('semester'))
             ->whereMataPelajaranId(request('mataPelajaranId'))
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
             ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
-            ->where('nilai', '>=', 75)
+            ->where('nilai', '>=', $kkm)
             ->pluck('nis');
 
         return Siswa::whereTahun(request('tahun'))
@@ -164,13 +173,20 @@ trait SiswaTrait
 
     public function data_siswa_with_nilai_remidi()
     {
+        $kelas = Kelas::find(request('kelasId'));
+
+        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+            ->whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->value('kkm');
+
         $nis = Penilaian::whereTahun(request('tahun'))
             ->whereSemester(request('semester'))
             ->whereMataPelajaranId(request('mataPelajaranId'))
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
             ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
-            ->where('nilai', '<', 75)
+            ->where('nilai', '<', $kkm)
             ->pluck('nis');
 
         $nisRemidi = RemidiDetail::whereTahun(request('tahun'))
@@ -242,6 +258,20 @@ trait SiswaTrait
                 'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
+    public function data_siswa_with_penilaian_rapors()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
             ->get()

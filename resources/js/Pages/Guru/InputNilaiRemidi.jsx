@@ -216,7 +216,9 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId,
                     kelasId: data.kelasId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId, data.kelasId])
@@ -233,7 +235,9 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     tahun: data.tahun,
                     semester: data.semester,
                     kategoriNilaiId: data.kategoriNilaiId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
         }
 
@@ -249,7 +253,9 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId])

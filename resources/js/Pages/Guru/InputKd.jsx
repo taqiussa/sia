@@ -98,7 +98,9 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId,
                     tingkat: data.tingkat
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId, data.tingkat])
@@ -115,7 +117,9 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                     tahun: data.tahun,
                     semester: data.semester,
                     kategoriNilaiId: data.kategoriNilaiId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.kategoriNilaiId])

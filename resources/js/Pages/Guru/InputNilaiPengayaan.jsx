@@ -221,7 +221,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId,
                     kelasId: data.kelasId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId, data.kelasId])
@@ -238,7 +240,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     tahun: data.tahun,
                     semester: data.semester,
                     kategoriNilaiId: data.kategoriNilaiId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
         }
 
@@ -254,7 +258,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId])

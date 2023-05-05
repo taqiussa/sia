@@ -6,6 +6,7 @@ use App\Models\GuruKelas;
 use App\Models\GuruMapel;
 use App\Models\Kelas;
 use App\Models\KepalaSekolah;
+use App\Models\KurikulumMapel;
 use App\Models\PenilaianRapor;
 use App\Models\WaliKelas;
 
@@ -53,6 +54,18 @@ trait InitTrait
         return GuruMapel::whereUserId(auth()->user()->id)
             ->with([
                 'mapel' => fn ($q) => $q->select('id', 'nama')
+            ])
+            ->get();
+    }
+
+    public function data_mapel_rapor($tingkat)
+    {
+        return KurikulumMapel::whereTahun(request('tahun'))
+            ->whereTingkat($tingkat)
+            ->with([
+                'mapel' => fn ($q) => $q->select('id', 'nama'),
+                'mapel.kkm' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereTingkat($tingkat)
             ])
             ->get();
     }
@@ -110,5 +123,12 @@ trait InitTrait
             $tahunAjaran = (intval($tahunIni) + 1) . ' / ' . (intval($tahunIni) + 2);
         }
         return $tahunAjaran;
+    }
+
+    public function total_mapel($tingkat)
+    {
+        return KurikulumMapel::whereTahun(request('tahun'))
+            ->whereTingkat($tingkat)
+            ->count();
     }
 }

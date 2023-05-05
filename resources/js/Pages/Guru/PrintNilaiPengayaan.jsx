@@ -32,7 +32,9 @@ const PrintNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
     }, [data.tahun, data.mataPelajaranId])
 
@@ -45,7 +47,9 @@ const PrintNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 data: {
                     tahun: data.tahun,
                     kelasId: data.kelasId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
         }
     }, [data.tahun, data.kelasId])
@@ -64,7 +68,9 @@ const PrintNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     tahun: data.tahun,
                     semester: data.semester,
                     kategoriNilaiId: data.kategoriNilaiId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
         }
 

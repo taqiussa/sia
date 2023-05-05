@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kkm;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Remidi;
 use App\Models\Pengayaan;
 use App\Models\Penilaian;
+use App\Models\WaliKelas;
 use App\Models\SiswaEkstra;
 use App\Models\RemidiDetail;
 
@@ -22,6 +25,15 @@ class GetDataController extends Controller
                 ->get()
                 ->sortBy('user.name')
                 ->values()
+        ]);
+    }
+
+    public function get_kelas_wali_kelas()
+    {
+        return response()->json([
+            'kelasId' => WaliKelas::whereTahun(request('tahun'))
+                ->whereUserId(auth()->user()->id)
+                ->value('kelas_id') ?? ''
         ]);
     }
 
@@ -46,13 +58,20 @@ class GetDataController extends Controller
 
     public function get_siswa_pengayaan()
     {
+        $kelas = Kelas::find(request('kelasId'));
+
+        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+            ->whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->value('kkm');
+
         $nis = Penilaian::whereTahun(request('tahun'))
             ->whereSemester(request('semester'))
             ->whereMataPelajaranId(request('mataPelajaranId'))
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
             ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
-            ->where('nilai', '>=', 75)
+            ->where('nilai', '>=', $kkm)
             ->pluck('nis');
 
         return response()->json([
@@ -103,13 +122,20 @@ class GetDataController extends Controller
 
     public function get_siswa_Remidi()
     {
+        $kelas = Kelas::find(request('kelasId'));
+
+        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+            ->whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->value('kkm');
+
         $nis = Penilaian::whereTahun(request('tahun'))
             ->whereSemester(request('semester'))
             ->whereMataPelajaranId(request('mataPelajaranId'))
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
             ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
-            ->where('nilai', '<', 75)
+            ->where('nilai', '<', $kkm)
             ->pluck('nis');
 
         $nisRemidi = RemidiDetail::whereTahun(request('tahun'))

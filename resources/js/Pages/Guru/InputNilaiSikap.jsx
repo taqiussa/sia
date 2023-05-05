@@ -106,7 +106,9 @@ const InputNilaiSikap = ({ initTahun, initSemester, listKelas, listMapel, listKa
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
 
     }, [data.mataPelajaranId])

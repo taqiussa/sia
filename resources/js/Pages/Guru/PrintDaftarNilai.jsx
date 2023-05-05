@@ -28,7 +28,9 @@ const PrintDaftarNilai = ({ initTahun, initSemester, listMapel, listKelas }) => 
                 data: {
                     tahun: data.tahun,
                     mataPelajaranId: data.mataPelajaranId
-                }
+                },
+                replace: true,
+                preserveState: true
             })
     }, [data.tahun, data.mataPelajaranId])
 

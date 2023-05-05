@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <table class="w-full text-md capitalize mt-5">
+        <table class="w-full text-sm capitalize mt-5">
             <tbody>
                 <tr>
                     <td>sekolah</td>
@@ -137,7 +137,7 @@
             </tbody>
         </table>
         <div class="font-bold my-5 capitalize">program pengayaan</div>
-        <table class="w-full">
+        <table class="w-full text-xs">
             <thead>
                 <tr>
                     <th class="border border-collapse border-black">No</th>
@@ -154,10 +154,31 @@
                     <tr>
                         <td class="px-2 py-1 border border-collapse border-black text-center">{{ $loop->iteration }}</td>
                         <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->user->name }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black text-center">{{ $siswa->nilai_awal }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->bentuk_pelaksanaan }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->banyak_soal }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black text-center">{{ $siswa->nilai_pengayaan }}
+                        </td>
+                        <td class="px-2 py-1 border border-collapse border-black text-center"></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        <div class="flex justify-between items-start text-xs pt-3 px-10">
+            <div class="flex flex-col items-center justify-center">
+                <div>Mengetahui</div>
+                <div>Kepala Sekolah</div>
+                <div>
+                    <img src="{{ asset('images/kasek.png') }}" alt="ttd" class="h-16">
+                </div>
+                <div class="font-bold">{{ $namaKepalaSekolah }}</div>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <div>Ngampel, {{ tanggal($pengayaan->tanggal) }}</div>
+                <div>Guru Mata Pelajaran</div>
+                <div class="font-bold pt-16">{{ auth()->user()->name }}</div>
+            </div>
+        </div>
     </div>
 
     {{-- <div class="font-bold text-center text-md capitalize mb-2 border-b-2 border-black">daftar kumpulan nilai

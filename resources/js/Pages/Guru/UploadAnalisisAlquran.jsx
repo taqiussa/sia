@@ -20,7 +20,8 @@ const UploadAnalisisAlquran = ({ initSemester, initTahun, listJenis, listKategor
         kategoriNilaiId: '',
         jenisPenilaianId: '',
         kelasId: '',
-        jenisAnalisis: ''
+        jenisAnalisis: '',
+        fileUpload: ''
     })
 
     const onHandleChange = (e) => {

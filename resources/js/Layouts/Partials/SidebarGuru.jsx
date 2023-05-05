@@ -38,6 +38,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-sikap')} active={route().current('print-nilai-sikap')} label="print nilai sikap" />
                 <SidebarLink closeSide={closeSide} href={route('print-pencapaian-kompetensi')} active={route().current('print-pencapaian-kompetensi')} label="print pencapaian kompetensi" />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-alquran')} active={route().current('upload-analisis-alquran')} label="upload analisis al qur'an" />
+                <SidebarLink closeSide={closeSide} href={route('upload-analisis-nilai')} active={route().current('upload-analisis-nilai')} label="upload analisis nilai" />
             </div>
         </div>
     )

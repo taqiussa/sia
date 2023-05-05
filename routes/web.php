@@ -54,6 +54,7 @@ use App\Http\Controllers\RekapTahunanPengeluaranController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
+use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\UploadPenggajianController;
 use App\Models\Pengayaan;
 use Illuminate\Support\Facades\Route;
@@ -429,6 +430,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('upload-analisis-alquran', 'index')->name('upload-analisis-alquran');
         Route::get('upload-analisis-alquran/download', 'download')->name('upload-analisis-alquran.download');
         Route::post('upload-analisis-alquran', 'upload')->name('upload-analisis-alquran.upload');
+    });
+
+    // Route Upload Analisis Nilai
+    Route::controller(UploadAnalisisNilaiController::class)->group(function () {
+        Route::get('upload-analisis-nilai', 'index')->name('upload-analisis-nilai');
+        Route::get('upload-analisis-nilai/download', 'download')->name('upload-analisis-nilai.download');
+        Route::post('upload-analisis-nilai', 'upload')->name('upload-analisis-nilai.upload');
     });
 });
 

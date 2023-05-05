@@ -6,12 +6,15 @@ use App\Models\Penggajian;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportPenggajian implements ToCollection, SkipsEmptyRows, WithHeadingRow
+class ImportPenggajian implements ToCollection, SkipsEmptyRows, WithHeadingRow, SkipsOnFailure
 {
     use SkipsErrors;
+    use SkipsFailures;
     
     /**
     * @param Collection $collection

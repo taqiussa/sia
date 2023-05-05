@@ -38,6 +38,7 @@ use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintDaftarNilaiController;
+use App\Http\Controllers\PrintLedgerPtsController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
@@ -55,6 +56,7 @@ use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
+use App\Http\Controllers\UploadNilaiController;
 use App\Http\Controllers\UploadPenggajianController;
 use App\Models\Pengayaan;
 use Illuminate\Support\Facades\Route;
@@ -383,6 +385,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-daftar-nilai/print', 'print')->name('print-daftar-nilai.print');
     });
 
+    // Route Print Ledger PTS
+    Route::controller(PrintLedgerPtsController::class)->group(function () {
+        Route::get('print-ledger-pts', 'index')->name('print-ledger-pts');
+        Route::get('print-ledger-pts/print', 'print')->name('print-ledger-pts.print');
+    });
+
     // Route Print Nilai Al Qur'an
     Route::controller(PrintNilaiAlquranController::class)->group(function () {
         Route::get('print-nilai-alquran', 'index')->name('print-nilai-alquran');
@@ -437,6 +445,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('upload-analisis-nilai', 'index')->name('upload-analisis-nilai');
         Route::get('upload-analisis-nilai/download', 'download')->name('upload-analisis-nilai.download');
         Route::post('upload-analisis-nilai', 'upload')->name('upload-analisis-nilai.upload');
+    });
+
+    // Route Upload Nilai
+    Route::controller(UploadNilaiController::class)->group(function () {
+        Route::get('upload-nilai', 'index')->name('upload-nilai');
+        Route::get('upload-nilai/download', 'download')->name('upload-nilai.download');
+        Route::post('upload-nilai', 'upload')->name('upload-nilai.upload');
     });
 });
 

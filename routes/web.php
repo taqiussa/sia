@@ -41,6 +41,7 @@ use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
+use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\ProfileController;
@@ -403,6 +404,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintNilaiPengayaanController::class)->group(function () {
         Route::get('print-nilai-pengayaan', 'index')->name('print-nilai-pengayaan');
         Route::get('print-nilai-pengayaan/print', 'print')->name('print-nilai-pengayaan.print');
+    });
+
+    // Route Print Nilai Remidi
+    Route::controller(PrintNilaiRemidiController::class)->group(function () {
+        Route::get('print-nilai-remidi', 'index')->name('print-nilai-remidi');
+        Route::get('print-nilai-remidi/print', 'print')->name('print-nilai-remidi.print');
     });
 
     // Route Print Nilai Sikap

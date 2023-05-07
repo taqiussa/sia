@@ -133,7 +133,7 @@ class GetDataController extends Controller
         ]);
     }
 
-    public function get_siswa_Remidi()
+    public function get_siswa_remidi()
     {
         $kelas = Kelas::find(request('kelasId'));
 
@@ -306,7 +306,7 @@ class GetDataController extends Controller
                 ->with([
                     'kelas' => fn ($q) => $q->select('id', 'nama'),
                     'siswa' => fn ($q) => $q->select('nis', 'name'),
-                    'skor' => fn ($q) => $q->select('id', 'keterangan', 'skor'),
+                    'skors' => fn ($q) => $q->select('id', 'keterangan', 'skor'),
                     'user' => fn ($q) => $q->select('id', 'name'),
                 ])
                 ->get()

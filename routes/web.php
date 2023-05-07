@@ -32,6 +32,7 @@ use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\InputPrestasiController;
+use App\Http\Controllers\InputSkorBirrulWalidainController;
 use App\Http\Controllers\InputSkorController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
@@ -139,6 +140,8 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
+        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
+        Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
 
@@ -378,6 +381,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-skor', 'index')->name('input-skor');
         Route::post('input-skor', 'simpan')->name('input-skor.simpan');
         Route::delete('input-skor', 'hapus')->name('input-skor.hapus');
+    });
+
+    // Route Input Skor Birrul Walidain
+    Route::controller(InputSkorBirrulWalidainController::class)->group(function () {
+        Route::get('input-skor-birrul-walidain', 'index')->name('input-skor-birrul-walidain');
+        Route::post('input-skor-birrul-walidain', 'simpan')->name('input-skor-birrul-walidain.simpan');
+        Route::delete('input-skor-birrul-walidain', 'hapus')->name('input-skor-birrul-walidain.hapus');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

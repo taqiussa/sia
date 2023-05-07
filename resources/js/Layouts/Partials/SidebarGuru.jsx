@@ -49,6 +49,7 @@ const SidebarGuru = ({ closeSide }) => {
             <div>
                 <SidebarLink closeSide={closeSide} href={route('input-alpha')} active={route().current('input-alpha')} label="input alpha" />
                 <SidebarLink closeSide={closeSide} href={route('input-catatan-rapor')} active={route().current('input-catatan-rapor')} label="input catatan rapor" />
+                <SidebarLink closeSide={closeSide} href={route('input-skor-birrul-walidain')} active={route().current('input-skor-birrul-walidain')} label="input skor birrul walidain" />
                 <SidebarLink closeSide={closeSide} href={route('print-ledger-pts')} active={route().current('print-ledger-pts')} label="print ledger PTS" />
                 <SidebarLink closeSide={closeSide} href={route('print-ledger-rapor')} active={route().current('print-ledger-rapor')} label="print ledger rapor" />
                 <SidebarLink closeSide={closeSide} href={route('print-rapor')} active={route().current('print-rapor')} label="print rapor" />

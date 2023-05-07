@@ -1,21 +1,25 @@
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
+import InputText from '@/Components/Sia/InputText'
+import Kelas from '@/Components/Sia/Kelas'
+import Paginator from '@/Components/Sia/Paginator'
 import SearchableSelect from '@/Components/Sia/SearchableSelect'
 import Semester from '@/Components/Sia/Semester'
+import Siswa from '@/Components/Sia/Siswa'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal } from '@/Functions/functions'
-import getAllSiswa from '@/Functions/getAllSiswa'
-import getSkorSiswa from '@/Functions/getSkorSiswa'
+import getDataKelasWaliKelas from '@/Functions/getDataKelasWaliKelas'
+import getSiswa from '@/Functions/getSiswa'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputSkor = ({ initTahun, initSemester, listSkor }) => {
+const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -23,24 +27,22 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
         semester: initSemester,
         nis: '',
         skorId: '',
+        skor: '',
+        jumlah: 1,
+        kelasId: '',
+        search: '',
     })
 
     const [listSiswa, setListSiswa] = useState([])
-    const optionSiswa = listSiswa.map((siswa) => ({
-        value: siswa.nis,
-        label: `${siswa.user?.name} - ${siswa.kelas?.nama}`
-    }))
 
     async function getDataSiswa() {
-        const response = await getAllSiswa(data.tahun)
+        const response = await getSiswa(data.tahun, data.kelasId)
         setListSiswa(response.listSiswa)
     }
 
-    const [listData, setListData] = useState([])
-
-    async function getDataSkor() {
-        const response = await getSkorSiswa(data.tanggal, data.nis)
-        setListData(response.listData)
+    async function getData() {
+        const response = await getDataKelasWaliKelas(data.tahun)
+        setData('kelasId', response.kelasId)
     }
 
     const optionSkor = listSkor.map((skor) => ({
@@ -56,7 +58,7 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
         e.preventDefault()
 
         post(
-            route('input-skor.simpan'),
+            route('input-skor-birrul-walidain.simpan'),
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Skor')
@@ -88,9 +90,11 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
             .then(result => {
                 if (result.isConfirmed)
                     destroy(
-                        route('input-skor.hapus',
+                        route('input-skor-birrul-walidain.hapus',
                             {
-                                id: id
+                                id: id,
+                                tahun: data.tahun,
+                                kelasId: data.kelasId
                             }),
                         {
                             onSuccess: () => {
@@ -113,24 +117,64 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
     useEffect(() => {
         if (data.tahun)
             trackPromise(
-                getDataSiswa()
+                getData()
             )
     }, [])
 
     useEffect(() => {
         if (data.tahun)
             trackPromise(
-                getDataSiswa()
+                getData()
             )
     }, [data.tahun])
 
     useEffect(() => {
-        if (data.tanggal && data.nis)
-            trackPromise(
-                getDataSkor()
-            )
-    }, [data.tanggal, data.nis])
 
+        if (data.tahun && data.kelasId
+        ) {
+
+            trackPromise(
+                getDataSiswa()
+            )
+
+            router.reload(
+                {
+                    only: ['listData'],
+                    data: {
+                        tahun: data.tahun,
+                        kelasId: data.kelasId,
+                    },
+                    preserveState: true,
+                    replace: true
+                }
+            )
+
+        }
+        else {
+            setListSiswa([])
+        }
+    }, [data.tahun, data.kelasId])
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            router.reload(
+                {
+                    only: ['listData'],
+                    data: {
+                        tahun: data.tahun,
+                        kelasId: data.kelasId,
+                        search: data.search
+                    },
+                    preserveState: true,
+                    replace: true
+                },
+            )
+        }, 1000)
+
+        return () => {
+            clearTimeout(timerId)
+        }
+    }, [data.search])
 
     return (
         <>
@@ -163,17 +207,25 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
                     handleChange={onHandleChange}
                 />
 
+                <Kelas
+                    id='kelasId'
+                    name='kelasId'
+                    value={data.kelasId}
+                    message={errors.kelasId}
+                    handleChange={onHandleChange}
+                    listKelas={listKelas}
+                    disabled={true}
+                />
 
             </div>
             <div className="mt-2">
-                <SearchableSelect
+                <Siswa
                     id='nis'
                     name='nis'
-                    label='nama siswa'
-                    options={optionSiswa}
                     value={data.nis}
                     message={errors.nis}
-                    onChange={(e) => setData('nis', e)}
+                    handleChange={onHandleChange}
+                    listSiswa={listSiswa}
                 />
             </div>
 
@@ -195,7 +247,17 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
                     disabled={processing}
                 />
             </div>
-            <div className="overflow-x-auto pt-2">
+            <div className="my-2">
+                <InputText
+                    id='search'
+                    name='search'
+                    value={data.search}
+                    message={errors.search}
+                    label='search'
+                    handleChange={onHandleChange}
+                />
+            </div>
+            <div className="overflow-x-auto">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
@@ -207,9 +269,6 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nama
-                            </th>
-                            <th scope='col' className="py-3 px-2 text-left">
-                                Kelas
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Keterangan
@@ -226,39 +285,38 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listData && listData.map((dataSkor, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {hariTanggal(dataSkor.tanggal)}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSkor.siswa?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSkor.kelas?.nama}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSkor.skors?.keterangan}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSkor.skors?.skor}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSkor.user?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus
-                                        onClick={() => handleDelete(dataSkor.id)}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
+                        {listData &&
+                            listData.data.map((list, index) => (
+                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {index + 1 + ((listData.current_page - 1) * listData.per_page)}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {hariTanggal(list.tanggal)}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.siswa?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.skors?.keterangan}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.skors?.skor}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {list.user?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
+                                        <Hapus
+                                            onClick={() => handleDelete(list.id)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
+            <Paginator lists={listData} />
         </>
     )
 }

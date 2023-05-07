@@ -30,6 +30,7 @@ use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputPembayaranSiswaController;
 use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\InputPrestasiController;
+use App\Http\Controllers\InputSkorController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
@@ -47,6 +48,7 @@ use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\PrintRaporController;
+use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -54,6 +56,7 @@ use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
+use App\Http\Controllers\SaldoSkorController;
 use App\Http\Controllers\SlipGajiController;
 use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
@@ -132,6 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
+        Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
 
     // Route Slip Gaji
@@ -351,6 +355,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('input-prestasi', 'hapus')->name('input-prestasi.hapus');
     });
 
+    // Route Input Skor
+    Route::controller(InputSkorController::class)->group(function () {
+        Route::get('input-skor', 'index')->name('input-skor');
+        Route::post('input-skor', 'simpan')->name('input-skor.simpan');
+        Route::delete('input-skor/hapus', 'hapus')->name('input-skor.hapus');
+    });
+
     // Route Pendaftaran Siswa Ekstrakurikuler
     Route::controller(PendaftaranSiswaEkstrakurikulerController::class)->group(function () {
         Route::get('pendaftaran-siswa-ekstrakurikuler', 'index')->name('pendaftaran-siswa-ekstrakurikuler');
@@ -448,6 +459,15 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-rapor', 'index')->name('print-rapor');
         Route::get('print-rapor/download', 'download')->name('print-rapor.download');
     });
+
+    // Route Print Rapor PTS
+    Route::controller(PrintRaporPtsController::class)->group(function () {
+        Route::get('print-rapor-pts', 'index')->name('print-rapor-pts');
+        Route::get('print-rapor-pts/download', 'download')->name('print-rapor-pts.download');
+    });
+
+    // Route Saldo Skor
+    Route::get('saldo-skor', SaldoSkorController::class)->name('saldo-skor');
 
     // Route Upload Analisis Al Qur'an
     Route::controller(UploadAnalisisAlquranController::class)->group(function () {

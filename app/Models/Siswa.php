@@ -193,6 +193,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get all of the penilaianSkors for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaianSkors(): HasMany
+    {
+        return $this->hasMany(PenilaianSkor::class, 'nis', 'nis');
+    }
+
+    /**
      * Get all of the prestasi for the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

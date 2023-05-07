@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use EnumKehadiran;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use EnumKategoriSikap;
@@ -13,7 +12,6 @@ use App\Models\TanggalRapor;
 use App\Models\KurikulumMapel;
 use App\Models\AturanKurikulum;
 use App\Models\Kd;
-use App\Models\Kkm;
 use App\Models\MataPelajaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -181,17 +179,4 @@ class PrintRaporController extends Controller
         }
     }
 
-    private function get_list_mapel($tingkat, $kelompok)
-    {
-        $mataPelajaranId = MataPelajaran::whereKelompok($kelompok)
-            ->pluck('id');
-
-        return KurikulumMapel::whereTahun(request('tahun'))
-            ->whereTingkat($tingkat)
-            ->whereIn('mata_pelajaran_id', $mataPelajaranId)
-            ->with([
-                'mapel' => fn ($q) => $q->select('id', 'nama')
-            ])
-            ->get();
-    }
 }

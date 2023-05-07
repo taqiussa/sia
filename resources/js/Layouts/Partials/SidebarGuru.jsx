@@ -25,6 +25,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-remidi')} active={route().current('input-nilai-remidi')} label='input nilai remidi' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-sikap')} active={route().current('input-nilai-sikap')} label='input nilai sikap' />
                 <SidebarLink closeSide={closeSide} href={route('input-prestasi')} active={route().current('input-prestasi')} label='input prestasi' />
+                <SidebarLink closeSide={closeSide} href={route('input-skor')} active={route().current('input-skor')} label='input skor' />
                 <SidebarLink closeSide={closeSide} href={route('pendaftaran-siswa-ekstrakurikuler')} active={route().current('pendaftaran-siswa-ekstrakurikuler')} label='pendaftaran siswa ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-ekstrakurikuler')} active={route().current('print-absensi-ekstrakurikuler')} label='print absensi ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-kelas')} active={route().current('print-absensi-kelas')} label='print absensi kelas' />
@@ -37,6 +38,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-remidi')} active={route().current('print-nilai-remidi')} label="print nilai remidi" />
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-sikap')} active={route().current('print-nilai-sikap')} label="print nilai sikap" />
                 <SidebarLink closeSide={closeSide} href={route('print-pencapaian-kompetensi')} active={route().current('print-pencapaian-kompetensi')} label="print pencapaian kompetensi" />
+                <SidebarLink closeSide={closeSide} href={route('saldo-skor')} active={route().current('saldo-skor')} label='saldo skor' />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-alquran')} active={route().current('upload-analisis-alquran')} label="upload analisis al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-nilai')} active={route().current('upload-analisis-nilai')} label="upload analisis nilai" />
                 <SidebarLink closeSide={closeSide} href={route('upload-nilai')} active={route().current('upload-nilai')} label="upload nilai" />
@@ -48,6 +50,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('print-ledger-pts')} active={route().current('print-ledger-pts')} label="print ledger PTS" />
                 <SidebarLink closeSide={closeSide} href={route('print-ledger-rapor')} active={route().current('print-ledger-rapor')} label="print ledger rapor" />
                 <SidebarLink closeSide={closeSide} href={route('print-rapor')} active={route().current('print-rapor')} label="print rapor" />
+                <SidebarLink closeSide={closeSide} href={route('print-rapor-pts')} active={route().current('print-rapor-pts')} label="print rapor PTS" />
             </div>
         </div>
     )

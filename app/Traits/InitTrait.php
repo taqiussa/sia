@@ -2,13 +2,14 @@
 
 namespace App\Traits;
 
+use App\Models\Kelas;
 use App\Models\GuruKelas;
 use App\Models\GuruMapel;
-use App\Models\Kelas;
+use App\Models\WaliKelas;
 use App\Models\KepalaSekolah;
+use App\Models\MataPelajaran;
 use App\Models\KurikulumMapel;
 use App\Models\PenilaianRapor;
-use App\Models\WaliKelas;
 
 trait InitTrait
 {
@@ -123,6 +124,20 @@ trait InitTrait
             $tahunAjaran = (intval($tahunIni) + 1) . ' / ' . (intval($tahunIni) + 2);
         }
         return $tahunAjaran;
+    }
+
+    public function get_list_mapel($tingkat, $kelompok)
+    {
+        $mataPelajaranId = MataPelajaran::whereKelompok($kelompok)
+            ->pluck('id');
+
+        return KurikulumMapel::whereTahun(request('tahun'))
+            ->whereTingkat($tingkat)
+            ->whereIn('mata_pelajaran_id', $mataPelajaranId)
+            ->with([
+                'mapel' => fn ($q) => $q->select('id', 'nama')
+            ])
+            ->get();
     }
 
     public function total_mapel($tingkat)

@@ -182,9 +182,23 @@
             @foreach ($listSikap as $sikap)
                 <tr style="height: 100px;">
                     @php
-                        
-                        $hasil = $penilaianSikaps->where('jenis_sikap_id', $sikap->id)->avg('nilai');
-                        
+                        $id_wali_kelas = App\Models\WaliKelas::whereTahun($tahun)
+                            ->whereKelasId($kelasId)
+                            ->value('user_id');
+                        $id_mapel = App\Models\GuruMapel::whereUserId($id_wali_kelas)->pluck('mata_pelajaran_id');
+                        $sikap_wali = App\Models\PenilaianSikap::whereTahun($tahun)
+                            ->whereSemester($semester)
+                            ->whereNis($nis)
+                            ->whereIn('mata_pelajaran_id', $id_mapel)
+                            ->whereJenisSikapId($sikap->id)
+                            ->value('nilai');
+                        $sikap_mapel = App\Models\PenilaianSikap::whereTahun($tahun)
+                            ->whereSemester($semester)
+                            ->whereNis($nis)
+                            ->whereJenisSikapId($sikap->id)
+                            ->select(DB::raw('round(avg(nilai)) as nilai'))
+                            ->value('nilai');
+                        $hasil = (intval($sikap_mapel) + intval($sikap_wali)) / 2;
                         if ($hasil > 90) {
                             $predikat = 'menunjukkan penguasaan yang sangat baik';
                         } elseif ($hasil > 80) {
@@ -262,10 +276,10 @@
                     <td style="text-align: left ; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
                     </td>
                     <td style="text-align: center ; vertical-align:middle;">
-                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
+                        {{ floor($mapel->penilaian->avg('nilai')) }}
                     </td>
                     <td style="text-align: justify ;padding:10px;vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
+                        @foreach ($mapel->penilaian as $nilai)
                             @php
                                 if ($nilai->nilai < 60) {
                                     $predikat_a = 'Perlu penguatan';
@@ -277,7 +291,7 @@
                                     $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
                                 }
                             @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
+                            @foreach ($mapel->kd as $kd)
                                 @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
                                     {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
                                 @endif
@@ -294,10 +308,10 @@
                     <td style="text-align: center; vertical-align:middle;">{{ $loop->iteration + 7 }}</td>
                     <td style="text-align: left; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
                     </td>
-                    <td style="text-align: center; vertical-align:middle;">{{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
+                    <td style="text-align: center; vertical-align:middle;">{{ floor($mapel->penilaian->avg('nilai')) }}
                     </td>
                     <td style="text-align: justify; padding:10px; vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
+                        @foreach ($mapel->penilaian as $nilai)
                             @php
                                 if ($nilai->nilai < 60) {
                                     $predikat_a = 'Perlu penguatan';
@@ -309,7 +323,7 @@
                                     $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
                                 }
                             @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
+                            @foreach ($mapel->kd as $kd)
                                 @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
                                     {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
                                 @endif
@@ -327,10 +341,10 @@
                     <td style="text-align: left ; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
                     </td>
                     <td style="text-align: center ; vertical-align:middle;">
-                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
+                        {{ floor($mapel->penilaian->avg('nilai')) }}
                     </td>
                     <td style="text-align: justify; padding:10px; vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
+                        @foreach ($mapel->penilaian as $nilai)
                             @php
                                 if ($nilai->nilai < 60) {
                                     $predikat_a = 'Perlu penguatan';
@@ -342,7 +356,7 @@
                                     $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
                                 }
                             @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
+                            @foreach ($mapel->kd as $kd)
                                 @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
                                     {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
                                 @endif

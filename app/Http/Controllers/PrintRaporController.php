@@ -12,6 +12,9 @@ use App\Traits\SiswaTrait;
 use App\Models\TanggalRapor;
 use App\Models\KurikulumMapel;
 use App\Models\AturanKurikulum;
+use App\Models\Kd;
+use App\Models\Kkm;
+use App\Models\MataPelajaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PrintRaporController extends Controller
@@ -44,31 +47,40 @@ class PrintRaporController extends Controller
             ->with(['kurikulum'])
             ->first();
 
-        $siswa = Siswa::whereNis($nis)
-            ->with([
-                'biodata',
-                'catatan' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester),
-                'dataAlfa' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester),
-                'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester),
-                'penilaianEkstrakurikuler.ekstrakurikuler',
-                'penilaianEkstrakurikuler.ekstrakurikuler.deskripsi',
-                'prestasi' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester),
-            ])
-            ->withCount([
-                'absensis as hitung_izin' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester)
-                    ->whereKehadiranId(EnumKehadiran::IZIN),
-                'absensis as hitung_sakit' => fn ($q) => $q->whereTahun($tahun)
-                    ->whereSemester($semester)
-                    ->whereKehadiranId(EnumKehadiran::SAKIT),
-            ])
-            ->first();
+        $listKd = Kd::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereTingkat($kelas->tingkat)
+            ->get();
+
 
         if ($cekKurikulum->kurikulum->nama == 'K13') {
+            $siswa = Siswa::whereNis($nis)
+                ->with([
+                    'biodata',
+                    'catatan' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'dataAlfa' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'penilaianEkstrakurikuler.ekstrakurikuler',
+                    'penilaianEkstrakurikuler.ekstrakurikuler.deskripsi',
+                    'penilaians' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'penilaianSikaps' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'prestasi' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                ])
+                ->withCount([
+                    'absensis as hitung_izin' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester)
+                        ->whereKehadiranId(EnumKehadiran::IZIN),
+                    'absensis as hitung_sakit' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester)
+                        ->whereKehadiranId(EnumKehadiran::SAKIT),
+                ])
+                ->first();
             $data = [
                 'kelasId' => $kelas->id,
                 'namaKelas' => $kelas->nama,
@@ -78,15 +90,18 @@ class PrintRaporController extends Controller
                 'nisn' => $siswa->biodata->nisn,
                 'tahun' => $tahun,
                 'semester' => $semester,
+                'listKd' => $listKd,
                 'listSikap' => JenisSikap::whereKategoriSikapId(EnumKategoriSikap::PANCASILA)
                     ->get(),
-                'kelompok_a' => $this->get_nilai_kurtilas($nis, $kelas->tingkat, 'A'),
-                'kelompok_b' => $this->get_nilai_kurtilas($nis, $kelas->tingkat, 'B'),
-                'kelompok_c' => $this->get_nilai_kurtilas($nis, $kelas->tingkat, 'C'),
+                'kelompok_a' => $this->get_list_mapel($kelas->tingkat, 'A'),
+                'kelompok_b' => $this->get_list_mapel($kelas->tingkat, 'B'),
+                'kelompok_c' => $this->get_list_mapel($kelas->tingkat, 'C'),
                 'sakit' => round($siswa->hitung_sakit / 4) ?? 0,
                 'izin' => round($siswa->hitung_izin / 4) ?? 0,
                 'alpha' => $siswa->dataAlfa->jumlah ?? 0,
                 'naik' => $naik,
+                'penilaians' => $siswa->penilaians,
+                'penilaianSikaps' => $siswa->penilaianSikaps,
                 'penilaianEkstrakurikuler' => $siswa->penilaianEkstrakurikuler,
                 'listPrestasi' => $siswa->prestasi,
                 'catatan' => $siswa->catatan->catatan,
@@ -103,24 +118,79 @@ class PrintRaporController extends Controller
                 fn () => print($pdf),
                 $siswa->user->name . '.pdf'
             );
+        } else {
+
+            $siswa = Siswa::whereNis($nis)
+                ->with([
+                    'biodata',
+                    'catatan' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'dataAlfa' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'penilaianEkstrakurikuler' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                    'penilaianEkstrakurikuler.ekstrakurikuler',
+                    'penilaianEkstrakurikuler.ekstrakurikuler.deskripsi',
+                    'penilaians' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester),
+                ])
+                ->withCount([
+                    'absensis as hitung_izin' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester)
+                        ->whereKehadiranId(EnumKehadiran::IZIN),
+                    'absensis as hitung_sakit' => fn ($q) => $q->whereTahun($tahun)
+                        ->whereSemester($semester)
+                        ->whereKehadiranId(EnumKehadiran::SAKIT),
+                ])
+                ->first();
+
+            $data = [
+                'kelasId' => $kelas->id,
+                'namaKelas' => $kelas->nama,
+                'tingkat' => $kelas->tingkat,
+                'namaSiswa' => $siswa->user->name,
+                'nis' => $nis,
+                'nisn' => $siswa->biodata->nisn,
+                'tahun' => $tahun,
+                'semester' => $semester,
+                'listKd' => $listKd,
+                'kelompok_a' => $this->get_list_mapel($kelas->tingkat, 'A'),
+                'kelompok_b' => $this->get_list_mapel($kelas->tingkat, 'B'),
+                'kelompok_c' => $this->get_list_mapel($kelas->tingkat, 'C'),
+                'sakit' => round($siswa->hitung_sakit / 4) ?? 0,
+                'izin' => round($siswa->hitung_izin / 4) ?? 0,
+                'alpha' => $siswa->dataAlfa->jumlah ?? 0,
+                'naik' => $naik,
+                'penilaians' => $siswa->penilaians,
+                'penilaianEkstrakurikuler' => $siswa->penilaianEkstrakurikuler,
+                'catatan' => $siswa->catatan->catatan,
+                'tanggalRapor' => TanggalRapor::whereTahun($tahun)
+                    ->whereSemester($semester)
+                    ->first(),
+                'namaWaliKelas' => $this->data_nama_wali_kelas(),
+                'namaKepalaSekolah' => $this->data_nama_kepala_sekolah(),
+            ];
+
+            $pdf = Pdf::loadView('download.rapor-merdeka', $data)->setPaper(array(0, 0, 609.449, 921.26))->download();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                $siswa->user->name . '.pdf'
+            );
         }
     }
 
-    private function get_nilai_kurtilas($nis, $tingkat, $kelompok)
+    private function get_list_mapel($tingkat, $kelompok)
     {
+        $mataPelajaranId = MataPelajaran::whereKelompok($kelompok)
+            ->pluck('id');
+
         return KurikulumMapel::whereTahun(request('tahun'))
             ->whereTingkat($tingkat)
+            ->whereIn('mata_pelajaran_id', $mataPelajaranId)
             ->with([
-                'mapel',
-                'kkm' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereTingkat($tingkat),
-                'kd' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereTingkat($tingkat),
-                'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereSemester(request('semester'))
-                    ->whereNis($nis),
+                'mapel' => fn ($q) => $q->select('id', 'nama')
             ])
-            ->whereHas('mapel', fn ($q) => $q->whereKelompok($kelompok))
             ->get();
     }
 }

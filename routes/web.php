@@ -15,7 +15,9 @@ use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\InputAlphaController;
 use App\Http\Controllers\InputAnalisisNilaiController;
+use App\Http\Controllers\InputCatatanRaporController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\InputKdController;
 use App\Http\Controllers\InputNilaiAlquranController;
@@ -132,6 +134,8 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
         Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
+        Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
+        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
@@ -272,17 +276,31 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('form-tugas', 'hapus')->name('form-tugas.hapus');
     });
 
-    // Route Input Deskripsi Ekstrakurikuler
-    Route::controller(InputDeskripsiEkstrakurikulerController::class)->group(function () {
-        Route::get('input-deskripsi-ekstrakurikuler', 'index')->name('input-deskripsi-ekstrakurikuler');
-        Route::post('input-deskripsi-ekstrakurikuler', 'simpan')->name('input-deskripsi-ekstrakurikuler.simpan');
-        Route::delete('input-deskripsi-ekstrakurikuler', 'hapus')->name('input-deskripsi-ekstrakurikuler.hapus');
+    // Route Input Alpha
+    Route::controller(InputAlphaController::class)->group(function () {
+        Route::get('input-alpha', 'index')->name('input-alpha');
+        Route::post('input-alpha', 'simpan')->name('input-alpha.simpan');
+        Route::delete('input-alpha', 'hapus')->name('input-alpha.hapus');
+    });
+
+    // Route Input Catatan Rapor
+    Route::controller(InputCatatanRaporController::class)->group(function () {
+        Route::get('input-catatan-rapor', 'index')->name('input-catatan-rapor');
+        Route::post('input-catatan-rapor', 'simpan')->name('input-catatan-rapor.simpan');
+        Route::delete('input-catatan-rapor', 'hapus')->name('input-catatan-rapor.hapus');
     });
 
     // Route Input Analisis Nilai
     Route::controller(InputAnalisisNilaiController::class)->group(function () {
         Route::get('input-analisis-nilai', 'index')->name('input-analisis-nilai');
         Route::post('input-analisis-nilai', 'simpan')->name('input-analisis-nilai.simpan');
+    });
+
+    // Route Input Deskripsi Ekstrakurikuler
+    Route::controller(InputDeskripsiEkstrakurikulerController::class)->group(function () {
+        Route::get('input-deskripsi-ekstrakurikuler', 'index')->name('input-deskripsi-ekstrakurikuler');
+        Route::post('input-deskripsi-ekstrakurikuler', 'simpan')->name('input-deskripsi-ekstrakurikuler.simpan');
+        Route::delete('input-deskripsi-ekstrakurikuler', 'hapus')->name('input-deskripsi-ekstrakurikuler.hapus');
     });
 
     // Route Input Kd
@@ -359,7 +377,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputSkorController::class)->group(function () {
         Route::get('input-skor', 'index')->name('input-skor');
         Route::post('input-skor', 'simpan')->name('input-skor.simpan');
-        Route::delete('input-skor/hapus', 'hapus')->name('input-skor.hapus');
+        Route::delete('input-skor', 'hapus')->name('input-skor.hapus');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

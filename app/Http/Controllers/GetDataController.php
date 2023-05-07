@@ -204,6 +204,22 @@ class GetDataController extends Controller
         ]);
     }
 
+    public function get_siswa_with_alpha()
+    {
+        return response()->json([
+            'listAlpha' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'dataAlfa'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
     public function get_siswa_with_analisis_nilai()
     {
         return response()->json([
@@ -220,6 +236,22 @@ class GetDataController extends Controller
                         ->whereMataPelajaranId(request('mataPelajaranId'))
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
+    public function get_siswa_with_catatan()
+    {
+        return response()->json([
+            'listCatatan' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'catatan'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester')),
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
                 ->get()

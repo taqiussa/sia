@@ -9,10 +9,8 @@ use App\Traits\InitTrait;
 use App\Models\JenisSikap;
 use App\Traits\SiswaTrait;
 use App\Models\TanggalRapor;
-use App\Models\KurikulumMapel;
 use App\Models\AturanKurikulum;
 use App\Models\Kd;
-use App\Models\MataPelajaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PrintRaporController extends Controller

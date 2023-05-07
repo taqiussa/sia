@@ -1,4 +1,4 @@
-@extends('print-no-header')
+@extends('print-no-header-rata')
 @section('title', 'Print Daftar Nilai')
 @section('content')
     <div class="font-bold text-center text-md capitalize mb-2 border-b-2 border-black">daftar kumpulan nilai

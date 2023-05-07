@@ -1,4 +1,4 @@
-@extends('print-no-header')
+@extends('print-no-header-rata')
 @section('title', 'Print Ledger PTS')
 @section('content')
     <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger PTS Penilaian Kelas</div>

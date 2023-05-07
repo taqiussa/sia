@@ -63,6 +63,36 @@ class Siswa extends Model
     }
 
     /**
+     * Get the biodata that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function biodata(): BelongsTo
+    {
+        return $this->belongsTo(Biodata::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
+     * Get the catatan that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function catatan(): BelongsTo
+    {
+        return $this->belongsTo(Catatan::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
+     * Get the dataAlfa that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function dataAlfa(): BelongsTo
+    {
+        return $this->belongsTo(DataAlfa::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get the kelas that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -160,6 +190,16 @@ class Siswa extends Model
     public function penilaianSikaps(): HasMany
     {
         return $this->hasMany(PenilaianSikap::class, 'nis', 'nis');
+    }
+
+    /**
+     * Get all of the prestasi for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function prestasi(): HasMany
+    {
+        return $this->hasMany(Prestasi::class, 'nis', 'nis');
     }
 
     /**

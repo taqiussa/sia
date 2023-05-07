@@ -46,6 +46,7 @@ use App\Http\Controllers\PrintNilaiPengayaanController;
 use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
+use App\Http\Controllers\PrintRaporController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -124,6 +125,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
+        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
         Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
@@ -439,6 +441,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintPencapaianKompetensiController::class)->group(function () {
         Route::get('print-pencapaian-kompetensi', 'index')->name('print-pencapaian-kompetensi');
         Route::get('print-pencapaian-kompetensi/print', 'print')->name('print-pencapaian-kompetensi.print');
+    });
+
+    // Route Print Rapor
+    Route::controller(PrintRaporController::class)->group(function () {
+        Route::get('print-rapor', 'index')->name('print-rapor');
+        Route::get('print-rapor/download', 'download')->name('print-rapor.download');
     });
 
     // Route Upload Analisis Al Qur'an

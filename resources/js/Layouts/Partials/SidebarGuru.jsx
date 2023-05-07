@@ -31,8 +31,6 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('print-absensi-ujian')} active={route().current('print-absensi-ujian')} label='print absensi ujian' />
                 <SidebarLink closeSide={closeSide} href={route('print-analisis')} active={route().current('print-analisis')} label="print analisis" />
                 <SidebarLink closeSide={closeSide} href={route('print-daftar-nilai')} active={route().current('print-daftar-nilai')} label="print daftar nilai" />
-                <SidebarLink closeSide={closeSide} href={route('print-ledger-pts')} active={route().current('print-ledger-pts')} label="print ledger PTS" />
-                <SidebarLink closeSide={closeSide} href={route('print-ledger-rapor')} active={route().current('print-ledger-rapor')} label="print ledger rapor" />
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-alquran')} active={route().current('print-nilai-alquran')} label="print nilai al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-ekstrakurikuler')} active={route().current('print-nilai-ekstrakurikuler')} label="print nilai ekstrakurikuler" />
                 <SidebarLink closeSide={closeSide} href={route('print-nilai-pengayaan')} active={route().current('print-nilai-pengayaan')} label="print nilai pengayaan" />
@@ -42,6 +40,14 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-alquran')} active={route().current('upload-analisis-alquran')} label="upload analisis al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-nilai')} active={route().current('upload-analisis-nilai')} label="upload analisis nilai" />
                 <SidebarLink closeSide={closeSide} href={route('upload-nilai')} active={route().current('upload-nilai')} label="upload nilai" />
+            </div>
+            <div className="text-slate-600 font-bold mt-3">
+                Wali Kelas
+            </div>
+            <div>
+                <SidebarLink closeSide={closeSide} href={route('print-ledger-pts')} active={route().current('print-ledger-pts')} label="print ledger PTS" />
+                <SidebarLink closeSide={closeSide} href={route('print-ledger-rapor')} active={route().current('print-ledger-rapor')} label="print ledger rapor" />
+                <SidebarLink closeSide={closeSide} href={route('print-rapor')} active={route().current('print-rapor')} label="print rapor" />
             </div>
         </div>
     )

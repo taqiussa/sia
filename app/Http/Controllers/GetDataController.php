@@ -37,6 +37,18 @@ class GetDataController extends Controller
         ]);
     }
 
+    public function get_siswa()
+    {
+        return response()->json([
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with(['user' => fn ($q) => $q->select('nis', 'name')])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
     public function get_siswa_ekstra_with_nilai()
     {
         return response()->json([

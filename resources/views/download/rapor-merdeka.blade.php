@@ -314,11 +314,12 @@
         <tbody>
             <tr>
                 <td width="60%">Sakit</td>
-                <td width="40%" class="ctr"> {{ $sakit }} hari</td>
+                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? 0 }}
+                    hari</td>
             </tr>
             <tr>
                 <td>Izin</td>
-                <td class="ctr"> {{ $izin }} hari</td>
+                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? 0 }} hari</td>
             </tr>
             <tr>
                 <td>Tanpa Keterangan</td>

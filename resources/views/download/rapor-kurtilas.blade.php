@@ -294,7 +294,8 @@
                     <td style="text-align: center; vertical-align:middle;">{{ $loop->iteration + 7 }}</td>
                     <td style="text-align: left; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
                     </td>
-                    <td style="text-align: center; vertical-align:middle;">{{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
+                    <td style="text-align: center; vertical-align:middle;">
+                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
                     </td>
                     <td style="text-align: justify; padding:10px; vertical-align:middle;">
                         @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
@@ -404,11 +405,12 @@
         <tbody>
             <tr>
                 <td width="60%" style="padding-left:10px;">Sakit</td>
-                <td width="40%" class="ctr"> {{ $sakit }} hari</td>
+                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? 0 }}
+                    hari</td>
             </tr>
             <tr>
                 <td style="padding-left:10px;">Izin</td>
-                <td class="ctr"> {{ $izin }} hari</td>
+                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? 0 }} hari</td>
             </tr>
             <tr>
                 <td style="padding-left:10px;">Tanpa Keterangan</td>

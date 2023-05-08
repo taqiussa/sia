@@ -50,6 +50,8 @@ class InputSkorBirrulWalidainController extends Controller
                 'listSkor' => Skor::orderByDesc('skor')->get(),
                 'listKelas' => Kelas::orderBy('nama')->get(),
                 'listData' => $lisData,
+                'initKelas' => $this->data_kelas_wali_kelas(),
+                'filters' => request()->only('search')
             ]
         );
     }

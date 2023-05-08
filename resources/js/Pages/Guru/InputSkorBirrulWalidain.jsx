@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor }) => {
+const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, filters }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -30,7 +30,7 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor }) =
         skor: '',
         jumlah: 1,
         kelasId: '',
-        search: '',
+        search: filters.search ?? ''
     })
 
     const [listSiswa, setListSiswa] = useState([])

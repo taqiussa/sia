@@ -50,6 +50,13 @@ trait InitTrait
             ->values();
     }
 
+    public function data_kelas_wali_kelas()
+    {
+        return  WaliKelas::whereTahun(request('tahun'))
+            ->whereUserId(auth()->user()->id)
+            ->value('kelas_id') ?? '';
+    }
+
     public function data_mapel()
     {
         return GuruMapel::whereUserId(auth()->user()->id)

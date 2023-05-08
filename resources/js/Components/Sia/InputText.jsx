@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
 export default forwardRef(function InputText(
-    { type = 'text', name, id, value, message, className, required, isFocused, handleChange, label },
+    { type = 'text', name, id, value, message, className, required, isFocused, handleChange, label, disabled },
     ref
 ) {
 
@@ -29,11 +29,12 @@ export default forwardRef(function InputText(
                     id={id}
                     value={value}
                     className={
-                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ` +
-                        className
+                        `border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full ${disabled && 'bg-gray-200'
+                        } ` + className
                     }
                     ref={input}
                     required={required}
+                    disabled={disabled}
                     onChange={(e) => handleChange(e)}
                 />
 

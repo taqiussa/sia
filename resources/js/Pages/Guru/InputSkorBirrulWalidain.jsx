@@ -13,13 +13,15 @@ import { hariTanggal } from '@/Functions/functions'
 import getDataKelasWaliKelas from '@/Functions/getDataKelasWaliKelas'
 import getSiswa from '@/Functions/getSiswa'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, router, useForm, usePage } from '@inertiajs/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, filters }) => {
+const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor }) => {
+
+    const { auth } = usePage().props
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -27,10 +29,8 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, fil
         semester: initSemester,
         nis: '',
         skorId: '',
-        skor: '',
         jumlah: 1,
         kelasId: '',
-        search: filters.search ?? ''
     })
 
     const [listSiswa, setListSiswa] = useState([])
@@ -66,8 +66,10 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, fil
                         tanggal: data.tanggal,
                         tahun: data.tahun,
                         semester: data.semester,
+                        kelasId: data.kelasId,
                         nis: data.nis,
-                        skorId: ''
+                        jumlah: data.jumlah,
+                        skorId: data.skorId
                     })
 
                     getDataSkor()
@@ -103,8 +105,10 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, fil
                                     tanggal: data.tanggal,
                                     tahun: data.tahun,
                                     semester: data.semester,
+                                    kelasId: data.kelasId,
                                     nis: data.nis,
-                                    skorId: ''
+                                    jumlah: data.jumlah,
+                                    skorId: data.skorId
                                 })
 
                                 getDataSkor()
@@ -155,108 +159,88 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, fil
         }
     }, [data.tahun, data.kelasId])
 
-    useEffect(() => {
-        const timerId = setTimeout(() => {
-            router.reload(
-                {
-                    only: ['listData'],
-                    data: {
-                        tahun: data.tahun,
-                        kelasId: data.kelasId,
-                        search: data.search
-                    },
-                    preserveState: true,
-                    replace: true
-                },
-            )
-        }, 1000)
-
-        return () => {
-            clearTimeout(timerId)
-        }
-    }, [data.search])
-
     return (
         <>
-            <Head title='Input Skor' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">input skor</div>
+            <Head title='Input Skor Birrul Walidain' />
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">input skor birrul walidain</div>
+            <form onSubmit={submit}>
+                <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 mb-2'>
+                    <Tanggal
+                        id='tanggal'
+                        name='tanggal'
+                        label='tanggal'
+                        value={data.tanggal}
+                        message={errors.tanggal}
+                        handleChange={onHandleChange}
+                    />
 
-            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 mb-2'>
-                <Tanggal
-                    id='tanggal'
-                    name='tanggal'
-                    label='tanggal'
-                    value={data.tanggal}
-                    message={errors.tanggal}
-                    handleChange={onHandleChange}
-                />
+                    <Tahun
+                        id='tahun'
+                        name='tahun'
+                        value={data.tahun}
+                        message={errors.tahun}
+                        handleChange={onHandleChange}
+                    />
 
-                <Tahun
-                    id='tahun'
-                    name='tahun'
-                    value={data.tahun}
-                    message={errors.tahun}
-                    handleChange={onHandleChange}
-                />
+                    <Semester
+                        id='semester'
+                        name='semester'
+                        value={data.semester}
+                        message={errors.semester}
+                        handleChange={onHandleChange}
+                    />
 
-                <Semester
-                    id='semester'
-                    name='semester'
-                    value={data.semester}
-                    message={errors.semester}
-                    handleChange={onHandleChange}
-                />
+                    <Kelas
+                        id='kelasId'
+                        name='kelasId'
+                        value={data.kelasId}
+                        message={errors.kelasId}
+                        handleChange={onHandleChange}
+                        listKelas={listKelas}
+                        disabled={true}
+                    />
 
-                <Kelas
-                    id='kelasId'
-                    name='kelasId'
-                    value={data.kelasId}
-                    message={errors.kelasId}
-                    handleChange={onHandleChange}
-                    listKelas={listKelas}
-                    disabled={true}
-                />
+                </div>
+                <div className="mt-2">
+                    <Siswa
+                        id='nis'
+                        name='nis'
+                        value={data.nis}
+                        message={errors.nis}
+                        handleChange={onHandleChange}
+                        listSiswa={listSiswa}
+                    />
+                </div>
 
-            </div>
-            <div className="mt-2">
-                <Siswa
-                    id='nis'
-                    name='nis'
-                    value={data.nis}
-                    message={errors.nis}
-                    handleChange={onHandleChange}
-                    listSiswa={listSiswa}
-                />
-            </div>
-
-            <div className="mt-2">
-                <SearchableSelect
-                    id='skorId'
-                    name='skorId'
-                    label='pilih skor'
-                    options={optionSkor}
-                    value={data.skorId}
-                    message={errors.skorId}
-                    onChange={(e) => setData('skorId', e)}
-                />
-            </div>
-            <div className="mt-2">
-                <PrimaryButton
-                    onClick={submit}
-                    children='simpan'
-                    disabled={processing}
-                />
-            </div>
-            <div className="my-2">
-                <InputText
-                    id='search'
-                    name='search'
-                    value={data.search}
-                    message={errors.search}
-                    label='search'
-                    handleChange={onHandleChange}
-                />
-            </div>
+                <div className="lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-2 my-2">
+                    <InputText
+                        id='jumlah'
+                        name='jumlah'
+                        label='jumlah melakukan'
+                        value={data.jumlah}
+                        message={errors.jumlah}
+                        handleChange={onHandleChange}
+                    />
+                    <div className="col-span-3">
+                        <SearchableSelect
+                            id='skorId'
+                            name='skorId'
+                            label='pilih skor'
+                            options={optionSkor}
+                            value={data.skorId}
+                            message={errors.skorId}
+                            onChange={(e) => setData('skorId', e)}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <PrimaryButton
+                        onClick={submit}
+                        children='simpan'
+                        disabled={processing}
+                    />
+                </div>
+            </form>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
@@ -301,15 +285,15 @@ const InputSkor = ({ initTahun, initSemester, listData, listKelas, listSkor, fil
                                         {list.skors?.keterangan}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.skors?.skor}
+                                        {list.skor}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         {list.user?.name}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
-                                        <Hapus
+                                        {list.user.id == auth.user.id && <Hapus
                                             onClick={() => handleDelete(list.id)}
-                                        />
+                                        />}
                                     </td>
                                 </tr>
                             ))}

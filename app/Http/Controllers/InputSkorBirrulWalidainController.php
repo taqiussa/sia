@@ -17,11 +17,8 @@ class InputSkorBirrulWalidainController extends Controller
 
     public function index()
     {
-        $nis = User::when(request('search'), fn ($q) => $q->where('name', 'like', '%' . request('search') . '%'))
-            ->get();
 
-        $lisData = PenilaianSkor::when(request('search'), fn ($q) => $q->whereIn('nis', $nis->pluck('nis')))
-            ->whereTahun(request('tahun'))
+        $lisData = PenilaianSkor::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
             ->with([
                 'kelas' => fn ($q) => $q->select('id', 'nama'),
@@ -35,6 +32,7 @@ class InputSkorBirrulWalidainController extends Controller
             ->through(fn ($q) => [
                 'id' => $q->id,
                 'tanggal' => $q->tanggal,
+                'skor' => $q->skor,
                 'kelas' => $q->kelas,
                 'siswa' => $q->siswa,
                 'skors' => $q->skors,
@@ -51,7 +49,6 @@ class InputSkorBirrulWalidainController extends Controller
                 'listKelas' => Kelas::orderBy('nama')->get(),
                 'listData' => $lisData,
                 'initKelas' => $this->data_kelas_wali_kelas(),
-                'filters' => request()->only('search')
             ]
         );
     }
@@ -67,6 +64,10 @@ class InputSkorBirrulWalidainController extends Controller
             'kelasId' => 'required',
         ]);
 
+        $skor = Skor::find(request('skorId'));
+
+        $jumlah = $skor->skor * request('jumlah');
+
         PenilaianSkor::create(
             [
                 'tanggal' => request('tanggal'),
@@ -75,7 +76,7 @@ class InputSkorBirrulWalidainController extends Controller
                 'nis' => request('nis'),
                 'kelas_id' => request('kelasId'),
                 'skor_id' => request('skorId'),
-                'skor' => request('skor'),
+                'skor' => $jumlah,
                 'user_id' => auth()->user()->id
             ]
         );
@@ -84,7 +85,7 @@ class InputSkorBirrulWalidainController extends Controller
             'input-skor-birrul-walidain',
             [
                 'tahun' => request('tahun'),
-                'kelasId' => request('kelasId')
+                'kelasId' => request('kelasId'),
             ]
         );
     }

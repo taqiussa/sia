@@ -55,6 +55,7 @@ use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
+use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
@@ -66,9 +67,7 @@ use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\UploadNilaiController;
 use App\Http\Controllers\UploadPenggajianController;
-use App\Models\Pengayaan;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +85,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return inertia('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Group Data
@@ -492,6 +491,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintRaporPtsController::class)->group(function () {
         Route::get('print-rapor-pts', 'index')->name('print-rapor-pts');
         Route::get('print-rapor-pts/download', 'download')->name('print-rapor-pts.download');
+    });
+
+    // Route Rekap Pembayaran Siswa
+    Route::controller(RekapPembayaranSiswaController::class)->group(function () {
+        Route::get('rekap-pembayaran-siswa', 'index')->name('rekap-pembayaran-siswa');
+        Route::get('rekap-pembayaran-siswa/print', 'print')->name('rekap-pembayaran-siswa.print');
     });
 
     // Route Saldo Skor

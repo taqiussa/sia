@@ -1,5 +1,5 @@
 @extends('print')
-@section('title', 'Rekap Per Siswa -')
+@section('title', 'Rekap Per Siswa')
 @section('content')
     <div class="text-center font-bold text-md mb-2 capitalize">
         rekap pembayaran siswa tahun pelajaran {{ $tahun }}
@@ -96,7 +96,7 @@
                 Ngampel, {{ tanggal(date('Y-m-d')) }}
             </div>
             <div>Bendahara</div>
-            <div class="pt-16 font-bold">{{ auth()->user()->name }}</div>
+            <div class="pt-16 font-bold">{{ $namaBendahara->skip(1)->first()->name }}</div>
         </div>
     </div>
 @endsection

@@ -26,6 +26,100 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_siswa_belum_ekstra()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereNotIn('tingkat', [9])
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->whereDoesntHave('siswaEkstra', fn ($q) => $q->whereTahun(request('tahun')))
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
+    public function data_siswa_ekstra()
+    {
+        return SiswaEkstra::whereTahun(request('tahun'))
+            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
+    public function data_siswa_ekstra_with_absensi()
+    {
+        return SiswaEkstra::whereTahun(request('tahun'))
+            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
+            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
+            ->with([
+                'absensi' => fn ($q) => $q->whereTanggal(request('tanggal')),
+                'absensi.guru' => fn ($q) => $q->select('id', 'name'),
+                'absensi.kehadiran' => fn ($q) => $q->select('id', 'nama'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
+    public function data_siswa_ekstra_with_nilai()
+    {
+        return SiswaEkstra::whereTahun(request('tahun'))
+            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
+            ->with([
+                'biodata' => fn ($q) => $q->select('nis', 'jenis_kelamin'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
+    public function data_siswa_per_kelas()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+    
+    public function data_siswa_ujian_with_absensi()
+    {
+        return RuangUjian::whereTahun(request('tahun'))
+            ->whereSemester($this->data_semester())
+            ->whereNamaRuang(request('namaRuang'))
+            ->whereNamaUjian(request('namaUjian'))
+            ->whereJenisKelamin(request('jenisKelamin'))
+            ->with([
+                'absensi' => fn ($q) => $q->whereTanggal(request('tanggal'))
+                    ->whereJam(request('jam')),
+                'absensi.guru' => fn ($q) => $q->select('id', 'name'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('nis', 'name'),
+            ])
+            ->get()
+            ->sortBy(['kelas.nama', 'user.name'])
+            ->values();
+    }
+
     public function data_siswa_with_absensi()
     {
         return Siswa::whereTahun(request('tahun'))
@@ -306,85 +400,5 @@ trait SiswaTrait
             ->sortBy('user.name')
             ->values();
     }
-
-    public function data_siswa_belum_ekstra()
-    {
-        return Siswa::whereTahun(request('tahun'))
-            ->whereNotIn('tingkat', [9])
-            ->with([
-                'kelas' => fn ($q) => $q->select('id', 'nama'),
-                'user' => fn ($q) => $q->select('nis', 'name')
-            ])
-            ->whereDoesntHave('siswaEkstra', fn ($q) => $q->whereTahun(request('tahun')))
-            ->get()
-            ->sortBy(['kelas.nama', 'user.name'])
-            ->values();
-    }
-
-    public function data_siswa_ekstra()
-    {
-        return SiswaEkstra::whereTahun(request('tahun'))
-            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
-            ->with([
-                'kelas' => fn ($q) => $q->select('id', 'nama'),
-                'user' => fn ($q) => $q->select('nis', 'name')
-            ])
-            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
-            ->get()
-            ->sortBy(['kelas.nama', 'user.name'])
-            ->values();
-    }
-
-    public function data_siswa_ekstra_with_absensi()
-    {
-        return SiswaEkstra::whereTahun(request('tahun'))
-            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
-            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
-            ->with([
-                'absensi' => fn ($q) => $q->whereTanggal(request('tanggal')),
-                'absensi.guru' => fn ($q) => $q->select('id', 'name'),
-                'absensi.kehadiran' => fn ($q) => $q->select('id', 'nama'),
-                'kelas' => fn ($q) => $q->select('id', 'nama'),
-                'user' => fn ($q) => $q->select('nis', 'name')
-            ])
-            ->get()
-            ->sortBy(['kelas.nama', 'user.name'])
-            ->values();
-    }
-
-    public function data_siswa_ekstra_with_nilai()
-    {
-        return SiswaEkstra::whereTahun(request('tahun'))
-            ->whereEkstrakurikulerId(request('ekstrakurikulerId'))
-            ->with([
-                'biodata' => fn ($q) => $q->select('nis', 'jenis_kelamin'),
-                'kelas' => fn ($q) => $q->select('id', 'nama'),
-                'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereSemester(request('semester')),
-                'user' => fn ($q) => $q->select('nis', 'name')
-            ])
-            ->withWhereHas('biodata', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
-            ->get()
-            ->sortBy(['kelas.nama', 'user.name'])
-            ->values();
-    }
-
-    public function data_siswa_ujian_with_absensi()
-    {
-        return RuangUjian::whereTahun(request('tahun'))
-            ->whereSemester($this->data_semester())
-            ->whereNamaRuang(request('namaRuang'))
-            ->whereNamaUjian(request('namaUjian'))
-            ->whereJenisKelamin(request('jenisKelamin'))
-            ->with([
-                'absensi' => fn ($q) => $q->whereTanggal(request('tanggal'))
-                    ->whereJam(request('jam')),
-                'absensi.guru' => fn ($q) => $q->select('id', 'name'),
-                'kelas' => fn ($q) => $q->select('id', 'nama'),
-                'user' => fn ($q) => $q->select('nis', 'name'),
-            ])
-            ->get()
-            ->sortBy(['kelas.nama', 'user.name'])
-            ->values();
-    }
+    
 }

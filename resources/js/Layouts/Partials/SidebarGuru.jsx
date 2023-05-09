@@ -54,6 +54,7 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('print-ledger-rapor')} active={route().current('print-ledger-rapor')} label="print ledger rapor" />
                 <SidebarLink closeSide={closeSide} href={route('print-rapor')} active={route().current('print-rapor')} label="print rapor" />
                 <SidebarLink closeSide={closeSide} href={route('print-rapor-pts')} active={route().current('print-rapor-pts')} label="print rapor PTS" />
+                <SidebarLink closeSide={closeSide} href={route('rekap-pembayaran-siswa')} active={route().current('rekap-pembayaran-siswa')} label="rekap pembayaran siswa" />
             </div>
         </div>
     )

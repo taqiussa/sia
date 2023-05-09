@@ -34,6 +34,7 @@ use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\InputPrestasiController;
 use App\Http\Controllers\InputSkorBirrulWalidainController;
 use App\Http\Controllers\InputSkorController;
+use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
@@ -387,6 +388,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-skor-birrul-walidain', 'index')->name('input-skor-birrul-walidain');
         Route::post('input-skor-birrul-walidain', 'simpan')->name('input-skor-birrul-walidain.simpan');
         Route::delete('input-skor-birrul-walidain', 'hapus')->name('input-skor-birrul-walidain.hapus');
+    });
+
+    // Route Jadwal Jam Kosong
+    Route::controller(JadwalJamKosongController::class)->group(function () {
+        Route::get('jadwal-jam-kosong', 'index')->name('jadwal-jam-kosong');
+        Route::post('jadwal-jam-kosong', 'simpan')->name('jadwal-jam-kosong.simpan');
+        Route::delete('jadwal-jam-kosong', 'hapus')->name('jadwal-jam-kosong.hapus');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

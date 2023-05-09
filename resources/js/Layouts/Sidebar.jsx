@@ -4,6 +4,7 @@ import { Icon } from '@mdi/react';
 import { mdiAccountCircleOutline } from '@mdi/js';
 import SidebarBendahara from './Partials/SidebarBendahara';
 import SidebarGuru from './Partials/SidebarGuru';
+import SidebarKetenagaan from './Partials/SidebarKetenagaan';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
@@ -40,6 +41,10 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarGuru closeSide={closeSide} />
                             }
 
+                            {auth.roles.includes('Ketenagaan') &&
+                                <SidebarKetenagaan closeSide={closeSide} />
+                            }
+
                             {/* {auth.roles.includes('Karyawan') &&
                                 <SidebarKaryawan closeSide={closeSide} />
                             }
@@ -51,7 +56,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                             {auth.roles.includes('Kesiswaan') &&
                                 <SidebarKesiswaan closeSide={closeSide} />
                             }
-
+                            
                             {auth.roles.includes('Konseling') &&
                                 <SidebarKonseling closeSide={closeSide} />
                             }

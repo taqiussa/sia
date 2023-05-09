@@ -258,3 +258,13 @@ enum EnumKehadiranIbadah: int
     case Izin = 2;
     case Alpha = 3;
 }
+
+enum EnumHari: int
+{
+    case Senin = 1;
+    case Selasa = 2;
+    case Rabu = 3;
+    case Kamis = 4;
+    case Jumat = 5;
+    case Sabtu = 6;
+}

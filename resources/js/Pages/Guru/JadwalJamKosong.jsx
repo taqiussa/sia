@@ -1,10 +1,18 @@
+import PrimaryButton from '@/Components/PrimaryButton'
+import Guru from '@/Components/Sia/Guru'
+import Hapus from '@/Components/Sia/Hapus'
+import Hari from '@/Components/Sia/Hari'
+import Jam from '@/Components/Sia/Jam'
+import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
+import Tahun from '@/Components/Sia/Tahun'
+import { namaHari } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
-import { useForm } from '@inertiajs/react'
-import React from 'react'
+import { Head, router, useForm } from '@inertiajs/react'
+import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
+const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
@@ -53,7 +61,8 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
                 if (result.isConfirmed)
                     destroy(
                         route('jadwal-jam-kosong.hapus', {
-                            id: id
+                            id: id,
+                            userId: data.userId
                         }
                         ),
                         {
@@ -73,9 +82,118 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
 
     }
 
+    useEffect(() => {
+
+        if (data.userId)
+            router.reload({
+                only: ['listJadwal'],
+                data: {
+                    tahun: data.tahun,
+                    semester: data.semester,
+                    userId: data.userId
+                },
+                replace: true,
+                preserveState: true
+            })
+
+    }, [data.userId])
+
     return (
         <>
+            <Head title='Jadwal Jam Kosong' />
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 mb-2 uppercase">
+                jadwal jam kosong
+            </div>
+            <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+                <Tahun
+                    id='tahun'
+                    name='tahun'
+                    value={data.tahun}
+                    message={errors.tahun}
+                    handleChange={onHandleChange}
+                />
 
+                <Semester
+                    id='semester'
+                    name='semester'
+                    value={data.semester}
+                    message={errors.semester}
+                    handleChange={onHandleChange}
+                />
+
+                <Guru
+                    id='userId'
+                    name='userId'
+                    value={data.userId}
+                    message={errors.userId}
+                    handleChange={onHandleChange}
+                    listUser={listUser}
+                />
+
+                <Hari
+                    id='hari'
+                    name='hari'
+                    value={data.hari}
+                    message={errors.hari}
+                    handleChange={onHandleChange}
+                />
+
+                <Jam
+                    id='jam'
+                    name='jam'
+                    value={data.jam}
+                    message={errors.jam}
+                    handleChange={onHandleChange}
+                />
+
+            </div>
+
+            <PrimaryButton onClick={submit} children='simpan' disabled={processing} />
+
+            <div className="overflow-x-auto pt-2">
+                <table className="w-full text-sm text-slate-600">
+                    <thead className="text-sm text-slate-600 bg-gray-50">
+                        <tr>
+                            <th scope='col' className="py-3 px-2">
+                                No
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Semester
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Hari
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Jam
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listJadwal && listJadwal.map((jadwal, index) => (
+                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                    {index + 1}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {jadwal.semester}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {namaHari(jadwal.hari)}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {jadwal.jam}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    <Hapus onClick={() => handleDelete(jadwal.id)} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }

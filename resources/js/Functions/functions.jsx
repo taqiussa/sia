@@ -68,6 +68,25 @@ export function namaBulan(bulan) {
     return new Date(0, bulanNumber).toLocaleDateString('id-ID', { month: 'long' });
 }
 
+export function namaHari(hari) {
+    switch (hari) {
+        case 1:
+            return 'Senin';
+        case 2:
+            return 'Selasa';
+        case 3:
+            return 'Rabu';
+        case 4:
+            return 'Kamis';
+        case 5:
+            return 'Jumat';
+        case 6:
+            return 'Sabtu';
+        default:
+            return '';
+    }
+}
+
 export function penjumlahan(list, column) {
 
     const totalJumlah = list.reduce((acc, curr) => {

@@ -1,3 +1,5 @@
+import Checkbox from '@/Components/Checkbox'
+import RadioButton from '@/Components/RadioButton'
 import Guru from '@/Components/Sia/Guru'
 import Tanggal from '@/Components/Sia/Tanggal'
 import getPermintaanBadal from '@/Functions/getPermintaanBadal'
@@ -7,7 +9,7 @@ import moment from 'moment/moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const PermintaanBadal = () => {
+const PermintaanBadal = ({ listUser }) => {
 
     const { data, setData, errors, post, processing } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -15,7 +17,15 @@ const PermintaanBadal = () => {
     })
 
     const [listPermintaan, setListPermintaan] = useState([])
-    const [listUser, setListUser] = useState([])
+    // const [listUser, setListUser] = useState([])
+    const [filterUser, setFilterUser] = useState([])
+
+    const [selectedRadio, setSelectedRadio] = useState('');
+
+    const handleRadioChange = (event) => {
+        setSelectedRadio(event.target.value);
+    };
+
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -25,6 +35,20 @@ const PermintaanBadal = () => {
         const response = await getPermintaanBadal(data.tanggal)
         setListPermintaan(response.listPermintaan)
     }
+
+    useEffect(() => {
+
+        setFilterUser(listUser.filter((user) =>
+            selectedRadio === 'bk' && (
+                user.id === 2
+            )))
+
+        setFilterUser(listUser.filter((user) =>
+            selectedRadio === 'kosong' && (
+                user.id === 3
+            )))
+
+    }, [selectedRadio])
 
     useEffect(() => {
         if (data.tanggal)
@@ -93,14 +117,42 @@ const PermintaanBadal = () => {
                                     {permintaan.mapel?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Guru
-                                        id='userId'
-                                        name='userId'
-                                        value={data.userId}
-                                        handleChange={onHandleChange}
-                                        message={errors.userId}
-                                        listUser={listUser}
-                                    />
+                                    <div className="flex flex-col">
+
+                                        <Guru
+                                            id='userId'
+                                            name='userId'
+                                            value={data.userId}
+                                            handleChange={onHandleChange}
+                                            message={errors.userId}
+                                            listUser={filterUser}
+                                        />
+
+                                        <RadioButton
+                                            name='radio'
+                                            value='kosong'
+                                            label='guru kosong'
+                                            handleChange={handleRadioChange}
+                                            checked={selectedRadio === 'kosong'}
+                                        />
+
+                                        <RadioButton
+                                            name='radio'
+                                            value='bk'
+                                            label='guru bk'
+                                            handleChange={handleRadioChange}
+                                            checked={selectedRadio === 'bk'}
+                                        />
+
+
+                                        <RadioButton
+                                            name='radio'
+                                            value='alquran'
+                                            label="guru al qur'an"
+                                            handleChange={handleRadioChange}
+                                            checked={selectedRadio === 'alquran'}
+                                        />
+                                    </div>
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                 </td>

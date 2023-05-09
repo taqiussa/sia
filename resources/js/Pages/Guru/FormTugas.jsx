@@ -24,6 +24,31 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
         tugas: ''
     })
 
+    function reloadListKelas() {
+        router.reload({
+            only: ['listKelas'],
+            data: {
+                tahun: data.tahun,
+                mataPelajaranId: data.mataPelajaranId
+            },
+            replace: true,
+            preserveState: true
+        })
+    }
+
+    function reloadListMapelAndTugas() {
+        router.reload({
+            only: ['listMapel', 'listTugas'],
+            data: {
+                tanggal: data.tanggal,
+                tahun: data.tahun
+            },
+            replace: true,
+            preserveState: true
+        })
+
+    }
+
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -35,6 +60,7 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Tugas Kelas')
                 setData({
+                    tahun: data.tahun,
                     tanggal: data.tanggal,
                     mataPelajaranId: data.mataPelajaranId,
                     jam: data.jam,
@@ -70,20 +96,18 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
                         route('form-tugas.hapus', {
                             id: id,
                             tanggal: data.tanggal,
+                            tahun: data.tahun,
                             mataPelajaranId: data.mataPelajaranId
                         }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Tugas')
-                                setData('tanggal', data.tanggal)
-                                setData('mataPelajaranId', data.mataPelajaranId)
-                                router.reload({
-                                    only: ['listTugas'],
-                                    data: {
-                                        tanggal: data.tanggal,
-                                    },
-                                    replace: true,
-                                    preserveState: true
+                                setData({
+                                    tanggal: data.tanggal,
+                                    mataPelajaranId: data.mataPelajaranId,
+                                    jam: data.jam,
+                                    kelasId: data.kelasId,
+                                    tugas: data.tugas
                                 })
                             }
                         }
@@ -95,31 +119,14 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            reloadListKelas()
 
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
         if (data.tanggal && data.tahun)
-            router.reload({
-                only: ['listMapel', 'listTugas'],
-                data: {
-                    tanggal: data.tanggal,
-                    tahun: data.tahun
-                },
-                replace: true,
-                preserveState: true
-            })
-
+            reloadListMapelAndTugas()
     }, [data.tanggal, data.tahun])
 
     return (

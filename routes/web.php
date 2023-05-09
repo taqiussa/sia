@@ -15,6 +15,10 @@ use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\GetDataGuruController;
+use App\Http\Controllers\GetDataKetenagaanController;
+use App\Http\Controllers\GetDataPenilaianController;
+use App\Http\Controllers\GetDataSkorController;
 use App\Http\Controllers\InputAlphaController;
 use App\Http\Controllers\InputAnalisisNilaiController;
 use App\Http\Controllers\InputCatatanRaporController;
@@ -38,6 +42,7 @@ use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
+use App\Http\Controllers\PermintaanBadalController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\PrintAbsensiKelasController;
 use App\Http\Controllers\PrintAbsensiUjianController;
@@ -115,6 +120,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-absensi-siswa', 'get_absensi_siswa')->name('get-absensi-siswa');
         Route::post('get-absensi-ujian', 'get_absensi_ujian')->name('get-absensi-ujian');
         Route::post('get-info-absensi', 'get_info_absensi')->name('get-info-absensi');
+        Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
     });
 
     // Route Get Data Bendahara
@@ -130,20 +136,39 @@ Route::middleware('auth')->group(function () {
     // Route Get Data
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
-        Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
         Route::post('get-siswa', 'get_siswa')->name('get-siswa');
+        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
+    });
+
+    // Route Get Data Guru
+    Route::controller(GetDataGuruController::class)->group(function () {
+        Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
+        
+    });
+
+    // Route Get Data Ketenagaan
+    Route::controller(GetDataKetenagaanController::class)->group(function () {
+        Route::post('get-permintaan-badal', 'get_permintaan_badal')->name('get-permintaan-badal');
+    });
+
+    // Route Get Data Penilaian
+    Route::controller(GetDataPenilaianController::class)->group(function () {
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
         Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
-        Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
-        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
-        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
-        Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
+    });
+
+    // Route Get Data Skor
+    Route::controller(GetDataSkorController::class)->group(function () {
+        // Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
+        // Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
+
+
 
     // Route Slip Gaji
     Route::get('slip-gaji', SlipGajiController::class)->name('slip-gaji');
@@ -402,6 +427,11 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('pendaftaran-siswa-ekstrakurikuler', 'index')->name('pendaftaran-siswa-ekstrakurikuler');
         Route::post('pendaftaran-siswa-ekstrakurikuler', 'simpan')->name('pendaftaran-siswa-ekstrakurikuler.simpan');
         Route::delete('pendaftaran-siswa-ekstrakurikuler', 'hapus')->name('pendaftaran-siswa-ekstrakurikuler.hapus');
+    });
+
+    Route::controller(PermintaanBadalController::class)->group(function () {
+        Route::get('permintaan-badal', 'index')->name('permintaan-badal');
+        Route::post('permintaan-badal', 'simpan')->name('permintaan-badal.simpan');
     });
 
     // Route Print Absensi Ekstrakurikuler

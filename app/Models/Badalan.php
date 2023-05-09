@@ -38,7 +38,7 @@ class Badalan extends Model
      */
     public function mapel(): BelongsTo
     {
-        return $this->belongsTo(MataPelajaran::class)->withDefault();
+        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id')->withDefault();
     }
 
     /**

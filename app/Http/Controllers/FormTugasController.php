@@ -35,8 +35,12 @@ class FormTugasController extends Controller
         Badalan::destroy(request('id'));
 
         return to_route('form-tugas', [
+            'tahun' => request('tahun'),
             'tanggal' => request('tanggal'),
+            'kelasId' => request('kelasId'),
             'mataPelajaranId' => request('mataPelajaranId'),
+            'jam' => request('jam'),
+            'tugas' => request('tugas')
         ]);
     }
 
@@ -88,6 +92,7 @@ class FormTugasController extends Controller
             return to_route(
                 'form-tugas',
                 [
+                    'tahun' => request('tahun'),
                     'tanggal' => request('tanggal'),
                     'kelasId' => request('kelasId'),
                     'mataPelajaranId' => request('mataPelajaranId'),

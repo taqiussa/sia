@@ -77,4 +77,21 @@ class GetAbsensiController extends Controller
                 ->values()
         ]);
     }
+
+    public function get_siswa_with_alpha()
+    {
+        return response()->json([
+            'listAlpha' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'dataAlfa'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
 }

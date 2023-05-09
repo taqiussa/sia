@@ -17,7 +17,7 @@ class JadwalJamKosongController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
-                'listUser' => User::where('username', '!=', null)
+                'listUser' => User::whereNotNull('username')
                     ->where('username', '!=', 'administrator')
                     ->orderBy('name')
                     ->get(),

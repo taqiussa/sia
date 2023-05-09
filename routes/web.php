@@ -7,12 +7,13 @@ use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
+use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\FormTugasController;
-use App\Http\Controllers\GetAbsensiController;
+use App\Http\Controllers\GetDataAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\GetDataGuruController;
@@ -62,6 +63,7 @@ use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
+use App\Http\Controllers\RekapJamKosongController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
@@ -116,8 +118,9 @@ Route::middleware('auth')->group(function () {
     });
 
     // Route Get Absensi
-    Route::controller(GetAbsensiController::class)->group(function () {
+    Route::controller(GetDataAbsensiController::class)->group(function () {
         Route::post('get-absensi-ekstrakurikuler', 'get_absensi_ekstrakurikuler')->name('get-absensi-ekstrakurikuler');
+        Route::post('get-absensi-kelas', 'get_absensi_kelas')->name('get-absensi-kelas');
         Route::post('get-absensi-siswa', 'get_absensi_siswa')->name('get-absensi-siswa');
         Route::post('get-absensi-ujian', 'get_absensi_ujian')->name('get-absensi-ujian');
         Route::post('get-info-absensi', 'get_info_absensi')->name('get-info-absensi');
@@ -144,7 +147,6 @@ Route::middleware('auth')->group(function () {
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
-        
     });
 
     // Route Get Data Ketenagaan
@@ -297,6 +299,9 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
     });
+
+    // Route Cek List Absensi
+    Route::get('cek-list-absensi', CekListAbsensiController::class)->name('cek-list-absensi');
 
     // Route Data Siswa Ekstrakurikuler
     Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');
@@ -539,6 +544,9 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-rapor-pts', 'index')->name('print-rapor-pts');
         Route::get('print-rapor-pts/download', 'download')->name('print-rapor-pts.download');
     });
+
+    // Route Rekap Jam Kosong
+    Route::get('rekap-jam-kosong', RekapJamKosongController::class)->name('rekap-jam-kosong');
 
     // Route Rekap Pembayaran Siswa
     Route::controller(RekapPembayaranSiswaController::class)->group(function () {

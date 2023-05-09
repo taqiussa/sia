@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\Absensi;
+use App\Models\Kelas;
 use App\Models\RuangUjian;
 use App\Models\SiswaEkstra;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
 use EnumKehadiran;
 
-class GetAbsensiController extends Controller
+class GetDataAbsensiController extends Controller
 {
     use InitTrait;
     use SiswaTrait;
@@ -18,6 +19,15 @@ class GetAbsensiController extends Controller
     public function get_absensi_ekstrakurikuler()
     {
         return response()->json(['listSiswa' => $this->data_siswa_ekstra_with_absensi()]);
+    }
+
+    public function get_absensi_kelas()
+    {
+        return response()->json([
+            'listKelas' => Kelas::with(['absensis' => fn ($q) => $q->whereTanggal(request('tanggal'))])
+                ->orderBy('nama')
+                ->get()
+        ]);
     }
 
     public function get_absensi_siswa()
@@ -93,5 +103,4 @@ class GetAbsensiController extends Controller
                 ->values()
         ]);
     }
-
 }

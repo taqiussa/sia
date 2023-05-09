@@ -41,6 +41,7 @@ use App\Http\Controllers\InputSkorController;
 use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
+use App\Http\Controllers\ListBadalController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
 use App\Http\Controllers\PermintaanBadalController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
@@ -423,6 +424,11 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('jadwal-jam-kosong', 'index')->name('jadwal-jam-kosong');
         Route::post('jadwal-jam-kosong', 'simpan')->name('jadwal-jam-kosong.simpan');
         Route::delete('jadwal-jam-kosong', 'hapus')->name('jadwal-jam-kosong.hapus');
+    });
+
+    // Route List Badal
+    Route::controller(ListBadalController::class)->group(function () {
+        Route::get('list-badal', 'index')->name('list-badal');
     });
 
     // Route Pendaftaran Siswa Ekstrakurikuler

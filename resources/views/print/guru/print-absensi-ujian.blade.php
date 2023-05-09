@@ -16,6 +16,9 @@
                 Putri
         @endswitch
     </div>
+    <div>
+        Jam : {{ $jam }}
+    </div>
     <table class="w-full border border-collapse border-black">
         <thead>
             <tr>
@@ -52,8 +55,10 @@
                                 Absensi Belum Selesai
                             @endif
                         @empty
-                            @if ($kelas->total_absensi < $kelas->total_siswa)
+                            @if (empty($kelas->total_absensi))
                                 Belum Ada Absensi
+                            @elseif ($kelas->total_absensi < $kelas->total_siswa)
+                                Absensi Belum Selesai
                             @else
                                 Nihil
                             @endif
@@ -66,7 +71,7 @@
     <div class="flex justify-end pt-5">
         <div class="flex flex-col items-center">
             <div>Ngampel, {{ tanggal($tanggal) }}</div>
-            <div>Panitia</div>
+            <div>Pengawas Kehadiran</div>
             <div class="pt-10">
                 {{ auth()->user()->name }}
             </div>

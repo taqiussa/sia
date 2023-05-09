@@ -1,15 +1,21 @@
 import Checkbox from '@/Components/Checkbox'
+import PrimaryButton from '@/Components/PrimaryButton'
 import RadioButton from '@/Components/RadioButton'
 import Guru from '@/Components/Sia/Guru'
+import Sweet from '@/Components/Sia/Sweet'
 import Tanggal from '@/Components/Sia/Tanggal'
+import getGuruIzin from '@/Functions/getGuruIzin'
+import getGuruKosong from '@/Functions/getGuruKosong'
+import getGuruSudahBadal from '@/Functions/getGuruSudahBadal'
 import getPermintaanBadal from '@/Functions/getPermintaanBadal'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment/moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
+import { toast } from 'react-toastify'
 
-const PermintaanBadal = ({ listUser }) => {
+const PermintaanBadal = ({ listGuruAlquran, listGuruBk }) => {
 
     const { data, setData, errors, post, processing } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -17,15 +23,17 @@ const PermintaanBadal = ({ listUser }) => {
     })
 
     const [listPermintaan, setListPermintaan] = useState([])
-    // const [listUser, setListUser] = useState([])
-    const [filterUser, setFilterUser] = useState([])
+    const [listGuruIzin, setListGuruIzin] = useState([])
+    const [listUser, setListUser] = useState([])
+    const [listGuruKosong, setListGuruKosong] = useState([])
+    const [listGuruSudahBadal, setListGuruSudahBadal] = useState([])
+
 
     const [selectedRadio, setSelectedRadio] = useState('');
 
     const handleRadioChange = (event) => {
         setSelectedRadio(event.target.value);
     };
-
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -36,24 +44,71 @@ const PermintaanBadal = ({ listUser }) => {
         setListPermintaan(response.listPermintaan)
     }
 
+    async function getDataGuruIzin() {
+        const response = await getGuruIzin(data.tanggal)
+        setListGuruIzin(response.listGuruIzin)
+    }
+
+    async function getDataGuruKosong() {
+        const response = await getGuruKosong(data.tanggal)
+        setListGuruKosong(response.listGuruKosong)
+    }
+
+    async function getDataGuruSudahBadal() {
+        const response = await getGuruSudahBadal(data.tanggal)
+        setListGuruSudahBadal(response.listGuruSudahBadal)
+    }
+
+    const submit = (e, id) => {
+        e.preventDefault()
+
+        post(
+            route('permintaan-badal.simpan',
+                {
+                    id: id,
+                    badalId: data.userId
+                }),
+            {
+                onSuccess: () => {
+                    toast.success('Berhasil Membuat Badal')
+                    setData({
+                        tanggal: data.tanggal,
+                        userId: ''
+                    })
+                    getDataPermintaan()
+                },
+                onError: () => {
+                    Sweet.fire({
+                        title: 'Oops....',
+                        text: 'Guru Badal Belum di Pilih',
+                        icon: 'error'
+                    })
+                }
+            })
+    }
+
     useEffect(() => {
+        let filteredUser = [];
 
-        setFilterUser(listUser.filter((user) =>
-            selectedRadio === 'bk' && (
-                user.id === 2
-            )))
+        if (selectedRadio === 'bk') {
+            filteredUser = listGuruBk
+        } else if (selectedRadio === 'kosong') {
+            filteredUser = listGuruKosong
+        } else if (selectedRadio === 'alquran') {
+            filteredUser = listGuruAlquran
+        }
 
-        setFilterUser(listUser.filter((user) =>
-            selectedRadio === 'kosong' && (
-                user.id === 3
-            )))
+        setListUser(filteredUser)
 
     }, [selectedRadio])
 
     useEffect(() => {
         if (data.tanggal)
             trackPromise(
-                getDataPermintaan()
+                getDataPermintaan(),
+                getDataGuruIzin(),
+                getDataGuruKosong(),
+                getDataGuruSudahBadal()
             )
     }, [data.tanggal])
     return (
@@ -125,7 +180,18 @@ const PermintaanBadal = ({ listUser }) => {
                                             value={data.userId}
                                             handleChange={onHandleChange}
                                             message={errors.userId}
-                                            listUser={filterUser}
+                                            listUser={listUser.filter((user) => {
+                                                if (!user.jam_kosong) {
+                                                    return !listGuruSudahBadal.some((sudahBadal) => sudahBadal.jam === permintaan.jam && sudahBadal.badal_id === user.id)
+                                                } else {
+                                                    const filteredKosong = user.jam_kosong.filter((kosong) => {
+                                                        return kosong.jam === permintaan.jam
+                                                            && !listGuruIzin.includes(kosong.user_id)
+                                                            && !listGuruSudahBadal.some((sudahBadal) => sudahBadal.jam === permintaan.jam && sudahBadal.badal_id === kosong.user_id)
+                                                    })
+                                                    return filteredKosong.length > 0
+                                                }
+                                            })}
                                         />
 
                                         <RadioButton
@@ -155,6 +221,7 @@ const PermintaanBadal = ({ listUser }) => {
                                     </div>
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
+                                    <PrimaryButton children='simpan' onClick={(e) => submit(e, permintaan.id)} disabled={processing} />
                                 </td>
                             </tr>
                         ))}

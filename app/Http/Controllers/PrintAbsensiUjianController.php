@@ -32,6 +32,7 @@ class PrintAbsensiUjianController extends Controller
         $listKelas = Kelas::whereIn('id', $kelasId)
             ->with([
                 'absensis' => fn ($q) => $q->whereTanggal(request('tanggal'))
+                    ->whereJam(request('jam'))
                     ->where('kehadiran_id', '!=', EnumKehadiran::HADIR),
                 'absensis.siswa',
                 'absensis.kehadiran',
@@ -39,8 +40,12 @@ class PrintAbsensiUjianController extends Controller
                     ->whereSemester($this->data_semester())
                     ->whereNamaUjian(request('namaUjian'))
             ])
+            ->withWhereHas('ruangUjian', fn ($q) => $q->whereTahun(request('tahun'))
+                ->whereSemester($this->data_semester())
+                ->whereNamaUjian(request('namaUjian')))
             ->withCount([
-                'absensis as total_absensi' => fn ($q) => $q->whereTanggal(request('tanggal')),
+                'absensis as total_absensi' => fn ($q) => $q->whereTanggal(request('tanggal')
+                    ->whereJam(request('jam'))),
                 'siswas as total_siswa' => fn ($q) => $q->whereTahun(request('tahun')),
             ])
             ->get();

@@ -148,6 +148,9 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Ketenagaan
     Route::controller(GetDataKetenagaanController::class)->group(function () {
+        Route::post('get-guru-izin', 'get_guru_izin')->name('get-guru-izin');
+        Route::post('get-guru-kosong', 'get_guru_kosong')->name('get-guru-kosong');
+        Route::post('get-guru-sudah-badal', 'get_guru_sudah_badal')->name('get-guru-sudah-badal');
         Route::post('get-permintaan-badal', 'get_permintaan_badal')->name('get-permintaan-badal');
     });
 

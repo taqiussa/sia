@@ -78,10 +78,9 @@ const CekListAbsensi = () => {
                                     {kelas.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {kelas.absensis.filter(absensi => absensi.jam === '7-8')}
-                                    {/* {kelas.absensis.length > 0 &&
+                                    {kelas.absensis.filter(absensi => absensi.jam === '7-8').length > 0 &&
                                         <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
-                                    } */}
+                                    }
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                 </td>

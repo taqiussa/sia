@@ -64,6 +64,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
 use App\Http\Controllers\RekapJamKosongController;
+use App\Http\Controllers\RekapKehadiranController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
@@ -547,6 +548,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
 
     // Route Rekap Jam Kosong
     Route::get('rekap-jam-kosong', RekapJamKosongController::class)->name('rekap-jam-kosong');
+
+    Route::controller(RekapKehadiranController::class)->group(function () {
+        Route::get('rekap-kehadiran', 'index')->name('rekap-kehadiran');
+        Route::get('rekap-kehadiran/detail', 'detail')->name('rekap-kehadiran.detail');
+        Route::post('rekap-kehadiran', 'simpan')->name('rekap-kehadiran.simpan');
+    });
 
     // Route Rekap Pembayaran Siswa
     Route::controller(RekapPembayaranSiswaController::class)->group(function () {

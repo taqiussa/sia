@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
 export default forwardRef(function Kehadiran(
-    { name, id, value, message, className, required, isFocused, handleChange, listKehadiran },
+    { name, id, value, message, className, required, isFocused, handleChange, listKehadiran, label },
     ref
 ) {
 
@@ -19,6 +19,10 @@ export default forwardRef(function Kehadiran(
 
     return (
         <div className='flex flex-col text-slate-600 capitalize'>
+            {label &&
+                <div>
+                    {label}
+                </div>}
             <div>
                 <select
                     name={name}

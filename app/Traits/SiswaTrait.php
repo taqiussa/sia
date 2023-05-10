@@ -9,6 +9,7 @@ use App\Models\RemidiDetail;
 use App\Models\Siswa;
 use App\Models\RuangUjian;
 use App\Models\SiswaEkstra;
+use App\Models\User;
 use PhpParser\Node\Expr\FuncCall;
 
 trait SiswaTrait
@@ -26,6 +27,32 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_all_siswa_with_biodata()
+    {
+        $user = User::when(request('search'), fn ($q) => $q->where('name', 'like', '%' . request('search') . '%'))
+            ->pluck('nis');
+
+        return Siswa::whereIn('nis', $user)
+            ->whereTahun(request('tahun'))
+            ->with([
+                'alamat',
+                'biodata',
+                'kelas',
+                'orangTua',
+                'user',
+            ])
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($q) => [
+                'id' => $q->id,
+                'nis' => $q->nis,
+                'alamat' => $q->alamat,
+                'biodata' => $q->biodata,
+                'kelas' => $q->kelas,
+                'orangTua' => $q->orangTua,
+                'user' => $q->user
+            ]);
+    }
     public function data_siswa_belum_ekstra()
     {
         return Siswa::whereTahun(request('tahun'))
@@ -100,7 +127,7 @@ trait SiswaTrait
             ->sortBy('user.name')
             ->values();
     }
-    
+
     public function data_siswa_ujian_with_absensi()
     {
         return RuangUjian::whereTahun(request('tahun'))
@@ -400,5 +427,4 @@ trait SiswaTrait
             ->sortBy('user.name')
             ->values();
     }
-    
 }

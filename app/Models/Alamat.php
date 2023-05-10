@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Alamat extends Model
@@ -14,40 +14,40 @@ class Alamat extends Model
     /**
      * Get the desa that owns the Alamat
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function desa(): BelongsTo
+    public function desa(): HasMany
     {
-        return $this->belongsTo(Desa::class, 'desa', 'code')->withDefault();
+        return $this->hasMany(Desa::class, 'desa', 'code');
     }
 
     /**
      * Get the kabupaten that owns the Alamat
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function kabupaten(): BelongsTo
+    public function kabupaten(): HasMany
     {
-        return $this->belongsTo(Kabupaten::class, 'kabupaten', 'code')->withDefault();
+        return $this->hasMany(Kabupaten::class, 'kabupaten', 'code');
     }
 
     /**
      * Get the kecamatan that owns the Alamat
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function kecamatan(): BelongsTo
+    public function kecamatan(): HasMany
     {
-        return $this->belongsTo(Kecamatan::class, 'kecamatan', 'code')->withDefault();
+        return $this->hasMany(Kecamatan::class, 'kecamatan', 'code');
     }
 
     /**
      * Get the provinsi that owns the Alamat
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function provinsi(): BelongsTo
+    public function provinsi(): HasMany
     {
-        return $this->belongsTo(Provinsi::class, 'provinsi', 'code')->withDefault();
+        return $this->hasMany(Provinsi::class, 'provinsi', 'code');
     }
 }

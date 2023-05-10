@@ -8,6 +8,7 @@ const SidebarKonseling = ({ closeSide }) => {
                 Konseling
             </div>
             <div>
+                <SidebarLink closeSide={closeSide} href={route('cari-data-siswa')} active={route().current('cari-data-siswa')} label='cari data siswa' />
                 <SidebarLink closeSide={closeSide} href={route('cek-list-absensi')} active={route().current('cek-list-absensi')} label='cek list absensi' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-kehadiran')} active={route().current('rekap-kehadiran')} label='rekap kehadiran' />
             </div>

@@ -103,6 +103,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get the orangTua that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orangTua(): BelongsTo
+    {
+        return $this->belongsTo(OrangTua::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
      * Get all of the pembayarans for the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

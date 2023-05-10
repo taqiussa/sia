@@ -7,6 +7,7 @@ use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
+use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
@@ -300,6 +301,9 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
     });
+
+    // Route Cari Data Siswa
+    Route::get('cari-data-siswa', CariDataSiswaController::class)->name('cari-data-siswa');
 
     // Route Cek List Absensi
     Route::get('cek-list-absensi', CekListAbsensiController::class)->name('cek-list-absensi');

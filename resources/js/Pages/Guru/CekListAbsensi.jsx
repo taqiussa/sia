@@ -2,6 +2,8 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import getAbsensiKelas from '@/Functions/getAbsensiKelas'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
+import { mdiCheckCircle } from '@mdi/js'
+import Icon from '@mdi/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -76,7 +78,10 @@ const CekListAbsensi = () => {
                                     {kelas.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {kelas.absensis.length}
+                                    {kelas.absensis.filter(absensi => absensi.jam === '7-8')}
+                                    {/* {kelas.absensis.length > 0 &&
+                                        <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
+                                    } */}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                 </td>

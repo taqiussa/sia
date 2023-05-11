@@ -6,7 +6,7 @@ export default function Spinner() {
     const { promiseInProgress } = usePromiseTracker({delay:300});
     return (
         promiseInProgress && (
-            <div className="z-[60] flex justify-center items-center w-full h-screen absolute bg-white/80 backdrop-blur">
+            <div className="z-[60] flex justify-center items-center w-full h-screen absolute bg-white/30 backdrop-blur">
                 <LineWave
                     height="150"
                     width="150"

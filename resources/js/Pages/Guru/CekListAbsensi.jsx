@@ -37,12 +37,15 @@ const CekListAbsensi = () => {
             <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 upperacase mb-2">
                 cek list absensi kelas
             </div>
-            <Tanggal
-                id='tanggal'
-                name='tanggal'
-                value={data.tanggal}
-                handleChange={onHandleChange}
-            />
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+
+                <Tanggal
+                    id='tanggal'
+                    name='tanggal'
+                    value={data.tanggal}
+                    handleChange={onHandleChange}
+                />
+            </div>
 
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">

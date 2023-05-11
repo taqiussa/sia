@@ -6,14 +6,19 @@
         tahun {{ $tahun }}
     </div>
     <div>Hari / Tanggal : {{ hariTanggal($tanggal) }}</div>
-    <div>Shift :
+    <div>Mata Pelajaran : {{ $namaMapel }}</div>
+    <div class="capitalize">Shift :
         @switch($jenisKelamin)
             @case('L')
                 Putra
             @break
 
-            @default
+            @case('P')
                 Putri
+            @break
+
+            @default
+                Putra dan Putri
         @endswitch
     </div>
     <div>
@@ -35,7 +40,7 @@
                     <td class="pl-2 border border-collapse border-black align-middle text-center">{{ $kelas->nama }}</td>
                     <td class="pl-2 border border-collapse border-black">
                         <ul>
-                            @foreach ($kelas->ruangUjian->unique('nama_ruang')->sortBy('nama_ruang') as $item)
+                            @foreach ($listRuang->where('kelas_id', $kelas->id)->unique('nama_ruang')->sortBy('nama_ruang') as $item)
                                 <li>
                                     Ruang {{ $item->nama_ruang }}
                                 </li>
@@ -44,25 +49,23 @@
                     </td>
                     <td class="pl-2 border border-collapse border-black align-middle">
                         <ol class=" list-decimal">
-                            @foreach ($kelas->absensis as $absen)
+                            @foreach ($kelas->absensis->where('kehadiran_id', '!=', 1) as $absen)
                                 <li class=" list-inside">
                                     {{ $absen->siswa->name }} ({{ $absen->kehadiran->nama }})
                                 </li>
                             @endforeach
                         </ol class=" list-decimal">
-                        @forelse ($kelas->absensis as $absensi)
-                            @if ($kelas->total_absensi < $kelas->total_siswa)
-                                Absensi Belum Selesai
+                        @foreach ($listRuang->where('kelas_id', $kelas->id)->groupBy('nama_ruang') as $item)
+                            @if ($kelas->absensis->whereIn('nis', $item->pluck('nis'))->count() == 0)
+                                <li class=" list-none">
+                                    Ruang {{ $item->value('nama_ruang') }} Belum di Absen
+                                </li>
+                            @elseif ($kelas->absensis->whereIn('nis', $item->pluck('nis'))->count() < $item->count())
+                                <li class=" list-none">
+                                    Ruang {{ $item->value('nama_ruang') }} Absensi Belum Selesai
+                                </li>
                             @endif
-                        @empty
-                            @if (empty($kelas->total_absensi))
-                                Belum Ada Absensi
-                            @elseif ($kelas->total_absensi < $kelas->total_siswa)
-                                Absensi Belum Selesai
-                            @else
-                                Nihil
-                            @endif
-                        @endforelse
+                        @endforeach
                     </td>
                 </tr>
             @endforeach

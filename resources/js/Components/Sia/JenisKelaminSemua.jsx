@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
-export default forwardRef(function Ujian(
+export default forwardRef(function JenisKelaminSemua(
     { name, id, value, message, className, required, isFocused, handleChange },
     ref
 ) {
@@ -21,7 +21,7 @@ export default forwardRef(function Ujian(
     return (
         <div className='flex flex-col text-slate-600 capitalize'>
             <div>
-                nama ujian
+                jenis kelamin
             </div>
             <div>
                 <select
@@ -36,15 +36,14 @@ export default forwardRef(function Ujian(
                     required={required}
                     onChange={(e) => handleChange(e)}>
 
-                    <option value="">Pilih UJian</option>
+                    <option value="">Pilih Jenis Kelamin</option>
 
-                    <option value="PAS">PAS</option>
+                    <option value="semua">Semua</option>
 
-                    <option value="PAT">PAT</option>
+                    <option value="L">Laki-laki</option>
 
-                    <option value="PTS">PTS</option>
+                    <option value="P">Perempuan</option>
 
-                    <option value="US">US</option>
                 </select>
             </div>
             {message ?

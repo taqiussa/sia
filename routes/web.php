@@ -63,6 +63,7 @@ use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\PrintRaporController;
 use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RekapBimbinganController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
 use App\Http\Controllers\RekapJamKosongController;
@@ -555,6 +556,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintRaporPtsController::class)->group(function () {
         Route::get('print-rapor-pts', 'index')->name('print-rapor-pts');
         Route::get('print-rapor-pts/download', 'download')->name('print-rapor-pts.download');
+    });
+
+    // Route Rekap Bimbingan
+    Route::controller(RekapBimbinganController::class)->group(function () {
+        Route::get('rekap-bimbingan', 'index')->name('rekap-bimbingan');
+        Route::delete('rekap-bimbingan', 'hapus')->name('rekap-bimbingan.hapus');
     });
 
     // Route Rekap Jam Kosong

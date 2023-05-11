@@ -3,7 +3,7 @@ import getAbsensiKelas from '@/Functions/getAbsensiKelas'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import { mdiCheckCircle } from '@mdi/js'
-import Icon from '@mdi/react'
+import { Icon } from '@mdi/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -78,11 +78,24 @@ const CekListAbsensi = () => {
                                     {kelas.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {kelas.absensis.filter(absensi => absensi.jam === '7-8').length > 0 &&
+                                    {kelas.absensis.filter(absensi => absensi.jam == '1-2').length > 0 &&
                                         <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
                                     }
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
+                                    {kelas.absensis.filter(absensi => absensi.jam == '3-4').length > 0 &&
+                                        <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
+                                    }
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {kelas.absensis.filter(absensi => absensi.jam == '5-6').length > 0 &&
+                                        <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
+                                    }
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {kelas.absensis.filter(absensi => absensi.jam == '7-8').length > 0 &&
+                                        <Icon path={mdiCheckCircle} size={1} className='text-emerald-500' />
+                                    }
                                 </td>
                             </tr>
                         ))}

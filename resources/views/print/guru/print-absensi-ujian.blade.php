@@ -49,11 +49,15 @@
                     </td>
                     <td class="pl-2 border border-collapse border-black align-middle">
                         <ol class=" list-decimal">
-                            @foreach ($kelas->absensis->where('kehadiran_id', '!=', 1) as $absen)
-                                <li class=" list-inside">
-                                    {{ $absen->siswa->name }} ({{ $absen->kehadiran->nama }})
-                                </li>
-                            @endforeach
+                            @if ($kelas->absensis->where('kehadiran_id', '!=', 1)->count() > 0)
+                                @foreach ($kelas->absensis->where('kehadiran_id', '!=', 1) as $absen)
+                                    <li class=" list-inside">
+                                        {{ $absen->siswa->name }} ({{ $absen->kehadiran->nama }})
+                                    </li>
+                                @endforeach
+                            @elseif($kelas->absensis->count() == $kelas->total_siswa)
+                                Nihil
+                            @endif
                         </ol class=" list-decimal">
                         @foreach ($listRuang->where('kelas_id', $kelas->id)->groupBy('nama_ruang') as $item)
                             @if ($kelas->absensis->whereIn('nis', $item->pluck('nis'))->count() == 0)

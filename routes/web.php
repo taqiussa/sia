@@ -7,6 +7,7 @@ use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
+use App\Http\Controllers\BimbinganIndividuController;
 use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DataPemasukanController;
@@ -300,6 +301,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('absensi-ujian', 'index')->name('absensi-ujian');
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
+    });
+
+    // Route Bimbingan Individu
+    Route::controller(BimbinganIndividuController::class)->group(function () {
+        Route::get('bimbingan-individu', 'index')->name('bimbingan-individu');
+        Route::post('bimbingan-individu', 'simpan')->name('bimbingan-individu.simpan');
     });
 
     // Route Cari Data Siswa

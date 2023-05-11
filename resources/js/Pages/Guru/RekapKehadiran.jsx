@@ -65,7 +65,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Hadir
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 1).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 1).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
@@ -91,7 +91,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Izin
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 3).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 3).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 Detail
@@ -116,7 +116,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Sakit
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 2).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 2).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
@@ -142,7 +142,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Alpha
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 4).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 4).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
@@ -168,7 +168,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Bolos
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 5).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 5).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
@@ -194,7 +194,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Pulang
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id === 6).length}
+                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 6).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">

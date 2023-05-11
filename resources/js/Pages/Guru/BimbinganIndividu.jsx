@@ -30,8 +30,8 @@ const BimbinganIndividu = ({ initTahun, listKelas }) => {
 
     const [listSiswa, setListSiswa] = useState([])
 
-    const onHandleChange = (e) => {
-        setData(e.target.name, e.target.value)
+    const onHandleChange = (event) => {
+        setData(event.target.name, event.target.type === 'file' ? event.target.files[0] : event.target.value);
     }
 
     async function getData() {

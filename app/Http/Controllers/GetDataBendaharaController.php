@@ -84,7 +84,8 @@ class GetDataBendaharaController extends Controller
                 ])
                 ->latest()
                 ->get(),
-            'wajibBayar' => $wajibBayar
+            'wajibBayar' => $wajibBayar,
+            'jumlah' => $wajibBayar / 12
         ]);
     }
 

@@ -19,6 +19,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@fontsource/figtree": "^4.5.3",
         "@mdi/js": "^7.2.96",
         "@mdi/react": "^1.6.1",
         "lodash": "^4.17.21",

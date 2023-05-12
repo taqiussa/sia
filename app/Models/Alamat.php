@@ -18,7 +18,7 @@ class Alamat extends Model
      */
     public function desa(): HasMany
     {
-        return $this->hasMany(Desa::class, 'desa', 'code');
+        return $this->hasMany(Desa::class, 'code', 'desa');
     }
 
     /**
@@ -28,7 +28,7 @@ class Alamat extends Model
      */
     public function kabupaten(): HasMany
     {
-        return $this->hasMany(Kabupaten::class, 'kabupaten', 'code');
+        return $this->hasMany(Kabupaten::class, 'code', 'kabupaten');
     }
 
     /**
@@ -38,7 +38,7 @@ class Alamat extends Model
      */
     public function kecamatan(): HasMany
     {
-        return $this->hasMany(Kecamatan::class, 'kecamatan', 'code');
+        return $this->hasMany(Kecamatan::class, 'code', 'kecamatan');
     }
 
     /**
@@ -48,6 +48,6 @@ class Alamat extends Model
      */
     public function provinsi(): HasMany
     {
-        return $this->hasMany(Provinsi::class, 'provinsi', 'code');
+        return $this->hasMany(Provinsi::class, 'code', 'provinsi');
     }
 }

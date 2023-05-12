@@ -40,7 +40,7 @@ class InputPembayaranSiswaController extends Controller
             'tingkat' => $siswa->tingkat,
             'nis' => request('nis'),
             'kelas_id' => $siswa->kelas_id,
-            'jumlah' => $this->ambilAngka(request('total')),
+            'jumlah' => ambilAngka(request('total')),
             'user_id' => auth()->user()->id
         ]);
 
@@ -54,7 +54,7 @@ class InputPembayaranSiswaController extends Controller
                 'kelas_id' => $siswa->kelas_id,
                 'kategori_pemasukan_id' => 1,
                 'gunabayar_id' => $input,
-                'jumlah' => $this->ambilAngka(request('jumlah')),
+                'jumlah' => ambilAngka(request('jumlah')),
                 'user_id' => auth()->user()->id
             ]);
         }

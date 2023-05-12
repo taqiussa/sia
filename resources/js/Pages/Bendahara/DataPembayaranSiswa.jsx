@@ -1,22 +1,49 @@
 import Hapus from '@/Components/Sia/Hapus'
 import InputText from '@/Components/Sia/InputText'
-import Paginator from '@/Components/Sia/Paginator'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal, rupiah } from '@/Functions/functions'
+import getPembayaran from '@/Functions/getPembayaran'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
-import React, { useEffect } from 'react'
+import { Head, useForm } from '@inertiajs/react'
+import React, { useEffect, useState } from 'react'
+import ReactPaginate from 'react-paginate'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
-const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
+
+const DataPembayaranSiswa = ({ initTahun }) => {
 
     const { data, setData, errors, delete: destroy } = useForm({
         tahun: initTahun,
-        search: filters.search ?? ''
+        search: ''
     })
+
+    const [listPembayaran, setListPembayaran] = useState([])
+
+    const [page, setPage] = useState(0);
+    const postsPerPage = 10;
+    const numberOfPostsVisited = page * postsPerPage;
+    const totalPages = Math.ceil(listPembayaran?.length / postsPerPage);
+    const changePage = ({ selected }) => {
+        setPage(selected);
+    };
+
+
+    const filteredData = listPembayaran?.filter((list) => {
+        const searchTerm = data.search.toLowerCase();
+        const siswa = list.siswa?.name.toLowerCase();
+        return (
+            siswa.includes(searchTerm)
+        );
+    });
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value)
+    }
+
+    async function getDataPembayaran() {
+        const response = await getPembayaran(data.tahun)
+        setListPembayaran(response.listPembayaran)
     }
 
     const handleDelete = (id) => {
@@ -43,6 +70,7 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
                                     tahun: data.tahun,
                                     search: data.search
                                 })
+                                getDataPembayaran()
                             }
                         }
                     )
@@ -52,41 +80,20 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
 
     useEffect(() => {
         if (data.tahun)
-            router.reload(
-                {
-                    only: ['listPembayaran'],
-                    data: {
-                        tahun: data.tahun
-                    },
-                    preserveState: true,
-                    replace: true
-                },
+            trackPromise(
+                getDataPembayaran()
             )
-    }, [data.tahun])
+    }, [])
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            router.reload(
-                {
-                    only: ['listPembayaran'],
-                    data: {
-                        tahun: data.tahun,
-                        search: data.search
-                    },
-                    preserveState: true,
-                    replace: true
-                },
+        if (data.tahun)
+            trackPromise(
+                getDataPembayaran()
             )
-        }, 1000)
-
-        return () => {
-            clearTimeout(timerId)
-        }
-    }, [data.search])
+    }, [data.tahun])
     return (
         <>
-            <Head title='Data pembayaran Siswa' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">data pembayaran siswa</div>
+            <Head title='Input pembayaran' />
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-3'>
 
                 <Tahun
@@ -133,34 +140,53 @@ const DataPembayaranSiswa = ({ initTahun, listPembayaran, filters }) => {
                     </thead>
                     <tbody>
                         {listPembayaran &&
-                            listPembayaran.data.map((list, index) => (
-                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                        {index + 1 + ((listPembayaran.current_page - 1) * listPembayaran.per_page)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {hariTanggal(list.tanggal)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.siswa?.name}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {rupiah(list.jumlah)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.user?.name}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
-                                        <Hapus
-                                            onClick={() => handleDelete(list.id)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
+                            filteredData
+                                .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
+                                .map((list, index) => (
+                                    <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                        <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                            {index + 1 + (page * 10)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {hariTanggal(list.tanggal)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.siswa?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {rupiah(list.jumlah)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.user?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
+                                            <Hapus
+                                                onClick={() => handleDelete(list.id)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
                     </tbody>
                 </table>
             </div>
-            <Paginator lists={listPembayaran} />
+            <section className="my-2 overflow-x-auto">
+                <ReactPaginate
+                    pageRangeDisplayed={3} //The range of buttons pages displayed.
+                    previousLabel={"Previous"} //lable for previous page button
+                    nextLabel={"Next"} // lable for Next page button
+                    pageCount={totalPages} // place here the variable for total number of pages
+                    onPageChange={changePage} // place here the trigger event function
+                    /// navigation CSS styling ///
+                    containerClassName={"flex items-center my-4 space-x-1 text-slate-600"}
+                    pageLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-md py-1 px-2 border"}
+                    previousLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-l-md py-1 px-2 border"}
+                    nextLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-r-md py-1 px-2 border"}
+                    disabledLinkClassName={"text-gray-300 cursor-not-allowed hover:bg-white"}
+                    activeLinkClassName={"focus:shadow-outline transition-colors duration-150 bg-emerald-500 text-emerald-100 cursor-pointer"}
+                    /// end navigation styling ///
+                    renderOnZeroPageCount={null}
+                />
+            </section>
         </>
     )
 }

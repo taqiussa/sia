@@ -57,6 +57,9 @@ const AturWajibBayar = ({ initTahun }) => {
         setDataSiswa(response.dataSiswa)
         setListPembayaran(response.listPembayaran)
         setWajibBayar(response.wajibBayar)
+        setData('jumlah', response.jumlah)
+        setData('arrayInput', [])
+        setListTransaksi([])
     }
 
     const onHandleChange = (event) => {
@@ -73,6 +76,7 @@ const AturWajibBayar = ({ initTahun }) => {
         }
         setData({ ...data, arrayInput: updatedArrayInput });
         setListTransaksi(updatedArrayInput)
+
     }
 
     const submit = (e) => {
@@ -90,12 +94,12 @@ const AturWajibBayar = ({ initTahun }) => {
                         total: '',
                         arrayInput: []
                     })
-                    setListTransaksi([])
                     getDataPembayaranSiswa()
                     checkboxRefs.current.forEach((check) => {
                         if (check.current !== null)
                             check.current.checked = false
                     })
+                    setListTransaksi([])
                 },
                 onError: (error) => {
                     Sweet.fire({
@@ -146,9 +150,6 @@ const AturWajibBayar = ({ initTahun }) => {
             trackPromise(
                 getDataSiswa()
             )
-        return () => {
-            setListSiswa([])
-        }
     }, [])
 
     useEffect(() => {
@@ -156,33 +157,23 @@ const AturWajibBayar = ({ initTahun }) => {
             trackPromise(
                 getDataSiswa()
             )
-        return () => {
-            setListSiswa([])
-            setListTransaksi([])
-        }
     }, [data.tahun])
 
     useEffect(() => {
-        if (data.tahun && data.nis)
+        if (data.tahun && data.nis) {
             trackPromise(
                 getDataPembayaranSiswa()
             )
-        return () => {
-            setListPembayaran([])
-            setListTransaksi([])
         }
     }, [data.tahun, data.nis])
 
     useEffect(() => {
-        if (wajibBayar)
-            setData('jumlah', wajibBayar / 12)
-    }, [wajibBayar])
+        const totalJumlah = listTransaksi.reduce((acc, curr) => {
+            return acc + data.jumlah
+        }, 0)
 
-    useEffect(() => {
-        if (listTransaksi.length > 0)
-            setData('total', listTransaksi.length * data.jumlah)
+        setData('total', totalJumlah)
     }, [listTransaksi])
-
     return (
         <>
             <Head title='Input Pembayaran Siswa' />

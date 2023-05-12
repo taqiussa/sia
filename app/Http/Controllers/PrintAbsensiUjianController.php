@@ -26,7 +26,7 @@ class PrintAbsensiUjianController extends Controller
 
     public function print()
     {
-        if (request('jenisKelamin') === 'semua') {
+        if (request('jenisKelamin') == 'semua') {
             $kelasId = RuangUjian::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
                 ->groupBy('kelas_id')
@@ -57,6 +57,7 @@ class PrintAbsensiUjianController extends Controller
             ->withCount([
                 'siswas as total_siswa' => fn ($q) => $q->whereTahun(request('tahun')),
             ])
+            ->orderBy('nama')
             ->get();
 
         $listRuang = RuangUjian::whereTahun(request('tahun'))

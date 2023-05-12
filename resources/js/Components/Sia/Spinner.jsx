@@ -3,7 +3,7 @@ import { usePromiseTracker } from "react-promise-tracker";
 import { LineWave } from "react-loader-spinner";
 
 export default function Spinner() {
-    const { promiseInProgress } = usePromiseTracker({delay:300});
+    const { promiseInProgress } = usePromiseTracker({delay:1500});
     return (
         promiseInProgress && (
             <div className="z-[60] flex justify-center items-center w-full h-screen absolute bg-white/30 backdrop-blur">

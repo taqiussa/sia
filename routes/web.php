@@ -71,6 +71,7 @@ use App\Http\Controllers\RekapKehadiranController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\RekapPenggajianController;
 use App\Http\Controllers\RekapPerSiswaController;
+use App\Http\Controllers\RekapSkorController;
 use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\RekapTahunanPengeluaranController;
 use App\Http\Controllers\SaldoSkorController;
@@ -577,6 +578,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(RekapPembayaranSiswaController::class)->group(function () {
         Route::get('rekap-pembayaran-siswa', 'index')->name('rekap-pembayaran-siswa');
         Route::get('rekap-pembayaran-siswa/print', 'print')->name('rekap-pembayaran-siswa.print');
+    });
+
+    // Route Rekap Skor
+    Route::controller(RekapSkorController::class)->group(function () {
+        Route::get('rekap-skor', 'index')->name('rekap-skor');
+        Route::delete('rekap-skor', 'hapus')->name('rekap-skor.hapus');
     });
 
     // Route Saldo Skor

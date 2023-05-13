@@ -1,47 +1,57 @@
 import DownloadLink from '@/Components/Sia/DownloadLink'
-import Paginator from '@/Components/Sia/Paginator'
 import PrintLink from '@/Components/Sia/PrintLink'
 import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal, penjumlahan, rupiah, tanggal } from '@/Functions/functions'
+import getPemasukanHarian from '@/Functions/getPemasukanHarian'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import { toInteger } from 'lodash'
 import moment from 'moment'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import ReactPaginate from 'react-paginate'
+import { trackPromise } from 'react-promise-tracker'
 
-const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtotalPembayaran }) => {
+const RekapHarianPemasukan = ({ initTahun }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
         tanggalAwal: moment(new Date()).format('YYYY-MM-DD'),
         tanggalAkhir: moment(new Date()).format('YYYY-MM-DD'),
+        listPemasukan: [],
+        listPembayaran: [],
+        subtotalPembayaran: []
     })
+
+    const [page, setPage] = useState(0);
+    const postsPerPage = 10;
+    const numberOfPostsVisited = page * postsPerPage;
+    const totalPages = Math.ceil(data.listPembayaran?.length / postsPerPage);
+    const changePage = ({ selected }) => {
+        setPage(selected);
+    };
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value)
     }
 
+    async function getData() {
+        const response = await getPemasukanHarian(data.tanggalAwal, data.tanggalAkhir)
+        setData({
+            tanggalAwal: data.tanggalAwal,
+            tanggalAkhir: data.tanggalAkhir,
+            listPemasukan: response.listPemasukan,
+            listPembayaran: response.listPembayaran,
+            subtotalPembayaran: response.subtotalPembayaran
+        })
+    }
+
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            router.reload(
-                {
-                    only: ['listPemasukan', 'listPembayaran', 'subtotalPembayaran'],
-                    data: {
-                        tanggalAwal: data.tanggalAwal,
-                        tanggalAkhir: data.tanggalAkhir,
-                    },
-                    preserveState: true,
-                    replace: true
-                },
+        if (data.tanggalAwal && data.tanggalAkhir)
+            trackPromise(
+                getData()
             )
-        }, 1000)
-
-        return () => {
-            clearTimeout(timerId)
-        }
-
     }, [data.tanggalAwal, data.tanggalAkhir])
 
     return (
@@ -138,49 +148,66 @@ const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtot
                         </tr>
                     </thead>
                     <tbody>
-                        {listPembayaran &&
-                            listPembayaran.data.map((list, index) => (
-                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                        {index + 1 + ((listPembayaran.current_page - 1) * listPembayaran.per_page)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {tanggal(list.tanggal)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.siswa?.name}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.kelas?.nama}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.gunabayar?.nama}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.tahun}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.user?.name}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {rupiah(list.jumlah)}
-                                    </td>
-                                </tr>
-                            ))}
+                        {data.listPembayaran &&
+                            data.listPembayaran
+                                .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
+                                .map((list, index) => (
+                                    <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                        <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                            {index + 1 + (page * 10)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {tanggal(list.tanggal)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.siswa?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.kelas?.nama}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.gunabayar?.nama}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.tahun}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.user?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {rupiah(list.jumlah)}
+                                        </td>
+                                    </tr>
+                                ))}
                         <tr>
                             <td className="py-2 px-2 font-bold bg-slate-200 text-slate-600 text-lg" colSpan={7}>
                                 Subtotal
                             </td>
                             <td className="py-2 px-2 font-bold bg-slate-200 text-slate-600 text-lg">
-                                {rupiah(subtotalPembayaran)}
+                                {rupiah(data.subtotalPembayaran)}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             {
-                listPembayaran.data.length > 0 &&
-                <Paginator lists={listPembayaran} />
+                data.listPembayaran.length > 0 &&
+                <ReactPaginate
+                    pageRangeDisplayed={3} //The range of buttons pages displayed.
+                    previousLabel={"Previous"} //lable for previous page button
+                    nextLabel={"Next"} // lable for Next page button
+                    pageCount={totalPages} // place here the variable for total number of pages
+                    onPageChange={changePage} // place here the trigger event function
+                    /// navigation CSS styling ///
+                    containerClassName={"flex items-center my-4 space-x-1 text-slate-600"}
+                    pageLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-md py-1 px-2 border"}
+                    previousLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-l-md py-1 px-2 border"}
+                    nextLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-r-md py-1 px-2 border"}
+                    disabledLinkClassName={"text-gray-300 cursor-not-allowed hover:bg-white"}
+                    activeLinkClassName={"focus:shadow-outline transition-colors duration-150 bg-emerald-500 text-emerald-100 cursor-pointer"}
+                    /// end navigation styling ///
+                    renderOnZeroPageCount={null}
+                />
             }
             <div className="py-3 font-bold text-lg text-slate-600">Rekap Pemasukan</div>
             <div className="overflow-x-auto">
@@ -208,8 +235,8 @@ const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtot
                         </tr>
                     </thead>
                     <tbody>
-                        {listPemasukan &&
-                            listPemasukan.map((list, index) => (
+                        {data.listPemasukan &&
+                            data.listPemasukan.map((list, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                         {index + 1}
@@ -236,7 +263,7 @@ const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtot
                                 Subtotal
                             </td>
                             <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-200">
-                                {rupiah(penjumlahan(listPemasukan, 'jumlah'))}
+                                {rupiah(penjumlahan(data.listPemasukan, 'jumlah'))}
                             </td>
                         </tr>
                         <tr>
@@ -244,7 +271,7 @@ const RekapHarianPemasukan = ({ initTahun, listPemasukan, listPembayaran, subtot
                                 Total
                             </td>
                             <td className="py-2 px-2 font-bold text-xl text-slate-600 bg-slate-300">
-                                {rupiah(penjumlahan(listPemasukan, 'jumlah') + toInteger(subtotalPembayaran))}
+                                {rupiah(penjumlahan(data.listPemasukan, 'jumlah') + toInteger(data.subtotalPembayaran))}
                             </td>
                         </tr>
                     </tbody>

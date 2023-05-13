@@ -118,6 +118,7 @@ class GetDataBendaharaController extends Controller
             'totalPengeluaran' => $totalPengeluaran
         ]);
     }
+
     public function get_pemasukan()
     {
         return response()->json([
@@ -128,6 +129,29 @@ class GetDataBendaharaController extends Controller
                 ])
                 ->latest()
                 ->get()
+        ]);
+    }
+
+    public function get_pemasukan_harian()
+    {
+        $pembayaran = Pembayaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+            ->with([
+                'gunabayar' => fn ($q) => $q->select('id', 'nama'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'siswa' => fn ($q) => $q->select('nis', 'name'),
+                'user' => fn ($q) => $q->select('id', 'name'),
+            ]);
+
+        return response()->json([
+            'listPemasukan' => Pemasukan::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+                ->with([
+                    'kategori' => fn ($q) => $q->select('id', 'nama'),
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->latest()
+                ->get(),
+            'listPembayaran' => $pembayaran->get(),
+            'subtotalPembayaran' => $pembayaran->sum('jumlah')
         ]);
     }
 

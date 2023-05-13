@@ -134,6 +134,8 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Bendahara
     Route::controller(GetDataBendaharaController::class)->group(function () {
+        Route::post('get-kas-bulanan', 'get_kas_bulanan')->name('get-kas-bulanan');
+        Route::post('get-kas-tahunan', 'get_kas_tahunan')->name('get-kas-tahunan');
         Route::post('get-pemasukan', 'get_pemasukan')->name('get-pemasukan');
         Route::post('get-pengeluaran', 'get_pengeluaran')->name('get-pengeluaran');
         Route::post('get-pembayaran', 'get_pembayaran')->name('get-pembayaran');

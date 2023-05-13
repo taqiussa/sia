@@ -1,35 +1,45 @@
 import PrintLink from '@/Components/Sia/PrintLink'
 import Tahun from '@/Components/Sia/Tahun'
 import { penjumlahan, rupiah } from '@/Functions/functions'
+import getKasTahunan from '@/Functions/getKasTahunan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP, totalPemasukan, totalPengeluaran }) => {
-
-    console.log(listPemasukan)
+const KasTahunan = ({ initTahun }) => {
 
     const { data, setData, errors, processing } = useForm({
         tahun: initTahun,
+        listPemasukan: [],
+        listPengeluaran: [],
+        saldo: 0,
+        totalSPP: 0,
+        totalPemasukan: 0,
+        totalPengeluaran: 0,
     })
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
 
+    async function getData() {
+        const response = await getKasTahunan(data.tahun)
+        setData({
+            tahun: data.tahun,
+            listPemasukan: response.listPemasukan,
+            listPengeluaran: response.listPengeluaran,
+            saldo: response.saldo,
+            totalSPP: response.totalSPP,
+            totalPemasukan: response.totalPemasukan,
+            totalPengeluaran: response.totalPengeluaran,
+        })
+    }
+
     useEffect(() => {
 
         if (data.tahun) {
-            router.reload(
-                {
-                    only: ['listPemasukan', 'listPengeluaran', 'saldo', 'totalSPP', 'totalPemasukan', 'totalPengeluaran'],
-                    data: {
-                        tahun: data.tahun,
-                    },
-                    preserveState: true,
-                    replace: true
-                }
-            )
+            trackPromise(getData())
         }
 
     }, [data.tahun])
@@ -82,11 +92,11 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     PEMBAYARAN SPP SISWA
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {rupiah(totalSPP)}
+                                    {rupiah(data.totalSPP)}
                                 </td>
                             </tr>
-                            {listPemasukan &&
-                                listPemasukan.map((list, index) => (
+                            {data.listPemasukan &&
+                                data.listPemasukan.map((list, index) => (
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                             {index + 2}
@@ -104,7 +114,7 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     Total
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
-                                    {rupiah(totalPemasukan)}
+                                    {rupiah(data.totalPemasukan)}
                                 </td>
                             </tr>
                             <tr>
@@ -118,7 +128,7 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     total pemasukan tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
-                                    {rupiah(totalPemasukan)}
+                                    {rupiah(data.totalPemasukan)}
                                 </td>
                             </tr>
                             <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -126,7 +136,7 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     total pengeluaran tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
-                                    {rupiah(totalPengeluaran)}
+                                    {rupiah(data.totalPengeluaran)}
                                 </td>
                             </tr>
                             <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -134,7 +144,7 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     saldo akhir tahun {data.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-bold text-lg text-slate-600 bg-slate-300">
-                                    {rupiah(saldo)}
+                                    {rupiah(data.saldo)}
                                 </td>
                             </tr>
                         </tbody>
@@ -156,8 +166,8 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                             </tr>
                         </thead>
                         <tbody>
-                            {listPengeluaran &&
-                                listPengeluaran.map((list, index) => (
+                            {data.listPengeluaran &&
+                                data.listPengeluaran.map((list, index) => (
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                             {index + 1}
@@ -175,7 +185,7 @@ const KasTahunan = ({ initTahun, listPemasukan, listPengeluaran, saldo, totalSPP
                                     Total
                                 </td>
                                 <td className="py-2 px-2 font-bold text-xl text-slate-600 bg-slate-300">
-                                    {rupiah(totalPengeluaran)}
+                                    {rupiah(data.totalPengeluaran)}
                                 </td>
                             </tr>
                         </tbody>

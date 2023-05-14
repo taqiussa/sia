@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Siswa;
 use App\Models\Pemasukan;
 use App\Models\Transaksi;
 use App\Models\Pembayaran;
+use App\Models\Penggajian;
 use App\Models\WajibBayar;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Str;
@@ -183,6 +185,22 @@ class GetDataBendaharaController extends Controller
         ]);
     }
 
+    public function get_penggajian()
+    {
+        return response()->json([
+            'listPenggajian' => User::where('username', '!=', '')
+                ->where('username', '!=', 'administrator')
+                ->with([
+                    'penggajian' => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereBulan(request('bulan'))
+                ])
+                ->orderBy('name')
+                ->get(),
+            'total' => Penggajian::whereTahun(request('tahun'))
+                ->whereBulan(request('bulan'))
+                ->sum('jumlah_terima')
+        ]);
+    }
 
     public function get_pembayaran_siswa()
     {
@@ -230,6 +248,20 @@ class GetDataBendaharaController extends Controller
                 ])
                 ->latest()
                 ->get()
+        ]);
+    }
+
+    public function get_pengeluaran_harian()
+    {
+        $pengeluaran = Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+            ->with([
+                'kategori' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('id', 'name'),
+            ]);
+
+        return response()->json([
+            'listPengeluaran' => $pengeluaran->get(),
+            'total' => $pengeluaran->sum('jumlah')
         ]);
     }
 

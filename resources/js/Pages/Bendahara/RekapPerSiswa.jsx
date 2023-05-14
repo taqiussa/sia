@@ -1,17 +1,24 @@
 import Kelas from '@/Components/Sia/Kelas'
 import PrintIcon from '@/Components/Sia/PrintIcon'
 import Tahun from '@/Components/Sia/Tahun'
+import getSiswa from '@/Functions/getSiswa'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const RekapPerSiswa = ({ initTahun, listKelas, listSiswa }) => {
+const RekapPerSiswa = ({ initTahun, listKelas }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
         kelasId: '',
+        listSiswa: [],
     })
 
+    async function getData() {
+        const response = await getSiswa(data.tahun, data.kelasId)
+        setData('listSiswa', response.listSiswa)
+    }
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value)
@@ -19,16 +26,8 @@ const RekapPerSiswa = ({ initTahun, listKelas, listSiswa }) => {
 
     useEffect(() => {
         if (data.tahun && data.kelasId)
-            router.reload(
-                {
-                    only: ['listSiswa'],
-                    data: {
-                        tahun: data.tahun,
-                        kelasId: data.kelasId
-                    },
-                    preserveState: true,
-                    replace: true
-                },
+            trackPromise(
+                getData()
             )
     }, [data.tahun, data.kelasId])
 
@@ -77,8 +76,8 @@ const RekapPerSiswa = ({ initTahun, listKelas, listSiswa }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa &&
-                            listSiswa.map((list, index) => (
+                        {data.listSiswa &&
+                            data.listSiswa.map((list, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                         {index + 1}

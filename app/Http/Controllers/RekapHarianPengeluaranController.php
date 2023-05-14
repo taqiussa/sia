@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Traits\InitTrait;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportRekapHarianPemasukan;
 use App\Exports\ExportRekapHarianPengeluaran;
-use App\Models\Pengeluaran;
 
 class RekapHarianPengeluaranController extends Controller
 {
@@ -15,28 +13,10 @@ class RekapHarianPengeluaranController extends Controller
 
     public function index()
     {
-        $pengeluaran = Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
-            ->with([
-                'kategori' => fn ($q) => $q->select('id', 'nama'),
-                'user' => fn ($q) => $q->select('id', 'name'),
-            ]);
-
         return inertia(
             'Bendahara/RekapHarianPengeluaran',
             [
                 'initTahun' => $this->data_tahun(),
-                'listPengeluaran' => $pengeluaran->paginate(10)
-                    ->withQueryString()
-                    ->through(fn ($q) => [
-                        'id' => $q->id,
-                        'tanggal' => $q->tanggal,
-                        'kategori' => $q->kategori,
-                        'keterangan' => $q->keterangan,
-                        'tanggal_nota' => $q->tanggal_nota,
-                        'user' => $q->user,
-                        'jumlah' => $q->jumlah
-                    ]),
-                'total' => $pengeluaran->sum('jumlah')
             ]
         );
     }

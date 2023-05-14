@@ -138,6 +138,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-kas-tahunan', 'get_kas_tahunan')->name('get-kas-tahunan');
         Route::post('get-pemasukan', 'get_pemasukan')->name('get-pemasukan');
         Route::post('get-pemasukan-harian', 'get_pemasukan_harian')->name('get-pemasukan-harian');
+        Route::post('get-pemasukan-tahunan', 'get_pemasukan_tahunan')->name('get-pemasukan-tahunan');
         Route::post('get-pembayaran', 'get_pembayaran')->name('get-pembayaran');
         Route::post('get-pembayaran-custom', 'get_pembayaran_custom')->name('get-pembayaran-custom');
         Route::post('get-pembayaran-siswa', 'get_pembayaran_siswa')->name('get-pembayaran-siswa');

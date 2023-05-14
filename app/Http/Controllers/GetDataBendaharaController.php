@@ -134,6 +134,27 @@ class GetDataBendaharaController extends Controller
         ]);
     }
 
+    public function get_pemasukan_tahunan()
+    {
+        return response()->json([
+            'listPemasukan' => Pemasukan::whereTahun(request('tahun'))
+                ->with([
+                    'kategori' => fn ($q) => $q->select('id', 'nama'),
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->latest()
+                ->get(),
+            'listPembayaran' => Pembayaran::whereTahun(request('tahun'))
+                ->with([
+                    'gunabayar' => fn ($q) => $q->select('id', 'nama'),
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'siswa' => fn ($q) => $q->select('nis', 'name'),
+                    'user' => fn ($q) => $q->select('id', 'name'),
+                ])
+                ->get()
+        ]);
+    }
+
     public function get_pemasukan_harian()
     {
         $pembayaran = Pembayaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])

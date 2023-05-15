@@ -243,7 +243,7 @@ trait SiswaTrait
     {
         $kelas = Kelas::find(request('kelasId'));
 
-        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+        $kkm = Kkm::whereMataPelajaranId(request('mataPelajaranId'))
             ->whereTahun(request('tahun'))
             ->whereTingkat($kelas->tingkat)
             ->value('kkm');
@@ -296,7 +296,7 @@ trait SiswaTrait
     {
         $kelas = Kelas::find(request('kelasId'));
 
-        $kkm = Kkm::whereMataPelajaraId(request('mataPelajaranId'))
+        $kkm = Kkm::whereMataPelajaranId(request('mataPelajaranId'))
             ->whereTahun(request('tahun'))
             ->whereTingkat($kelas->tingkat)
             ->value('kkm');

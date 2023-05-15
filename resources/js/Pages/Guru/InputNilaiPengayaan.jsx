@@ -1,5 +1,5 @@
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import Tahun from '@/Components/Sia/Tahun'
 import Semester from '@/Components/Sia/Semester'
@@ -18,8 +18,11 @@ import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
 import axios from 'axios'
 import Hapus from '@/Components/Sia/Hapus'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getListKategori from '@/Functions/getListKategori'
+import getListJenis from '@/Functions/getListJenis'
 
-const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
+const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         id: '',
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -34,6 +37,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         indikator: '',
         bentukPelaksanaan: '',
         banyakSoal: '',
+        listKelas: [],
+        listKategori: [],
+        listJenis: [],
         arrayInput: []
     })
 
@@ -42,21 +48,14 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
     const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
-    const uniqueNis = new Set()
-
     async function getDataSiswa() {
         const response = await getSiswaPengayaan(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
         if (response.pengayaan !== '') {
             setPengayaan(response.pengayaan)
             setData({
+                ...data,
                 id: response.pengayaan.id,
-                tahun: data.tahun,
-                semester: data.semester,
-                mataPelajaranId: data.mataPelajaranId,
-                kelasId: data.kelasId,
-                kategoriNilaiId: data.kategoriNilaiId,
-                jenisPenilaianId: data.jenisPenilaianId,
                 tanggal: response.pengayaan.tanggal,
                 ki: response.pengayaan.ki,
                 kd: response.pengayaan.kd,
@@ -68,14 +67,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
         } else {
             setPengayaan([])
             setData({
+                ...data,
                 id: '',
-                tahun: data.tahun,
-                semester: data.semester,
-                mataPelajaranId: data.mataPelajaranId,
-                kelasId: data.kelasId,
-                kategoriNilaiId: data.kategoriNilaiId,
-                jenisPenilaianId: data.jenisPenilaianId,
-                tanggal: data.tanggal,
                 ki: '',
                 kd: '',
                 indikator: '',
@@ -84,6 +77,30 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                 arrayInput: []
             })
         }
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listKategori: response.listKategori
+        })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({
+            ...data,
+            listJenis: response.listJenis
+        })
     }
 
     const onHandleChange = (e) => {
@@ -187,13 +204,6 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     destroy(
                         route('input-nilai-pengayaan.hapus', {
                             pengayaanDetailId: pengayaanDetailId,
-                            kelasId: data.kelasId,
-                            tanggal: data.tanggal,
-                            tahun: data.tahun,
-                            semester: data.semester,
-                            mataPelajaranId: data.mataPelajaranId,
-                            kategoriNilaiId: data.kategoriNilaiId,
-                            jenisPenilaianId: data.jenisPenilaianId,
                         }),
                         {
                             onSuccess: () => {
@@ -210,60 +220,24 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
     }
 
     useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-            && data.kelasId
-        )
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
 
-    }, [data.mataPelajaranId, data.kelasId])
+        if (data.tahun && data.mataPelajaranId)
+            trackPromise(getDataKelas())
+    }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-        ) {
+
+        if (data.kelasId)
+            trackPromise(getDataKategori())
+    }, [data.kelasId])
+
+    useEffect(() => {
+
+        if (data.kategoriNilaiId) {
             setData('jenisPenilaianId', '')
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
         }
-
-    }, [data.kategoriNilaiId])
-
-    useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-        )
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
-
-    }, [data.mataPelajaranId])
+    }, [data.semester, data.kategoriNilaiId])
 
     useEffect(() => {
 
@@ -349,7 +323,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -358,7 +332,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                     value={data.kategoriNilaiId}
                     message={errors.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
                 <div className="col-span-2">
 
@@ -368,7 +342,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel, listKelas, li
                         value={data.jenisPenilaianId}
                         message={errors.jenisPenilaianId}
                         handleChange={onHandleChange}
-                        listJenis={listJenis}
+                        listJenis={data.listJenis}
                     />
                 </div>
             </div>

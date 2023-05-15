@@ -22,14 +22,6 @@ class InputNilaiPengayaanController extends Controller
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
                 'listMapel' => $this->data_mapel(),
-                'listKelas' => $this->data_kelas(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())
-                    ->orderBy('nama')
-                    ->get(),
-                'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->orderBy('nama')
-                    ->get()
             ]
         );
     }
@@ -64,15 +56,7 @@ class InputNilaiPengayaanController extends Controller
             ]
         );
 
-        return to_route('input-nilai-pengayaan', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'tanggal' => request('tanggal'),
-            'kelasId' => request('kelasId'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-            'kategoriNilaiId' => request('kategoriNilaiId'),
-            'jenisPenilaianId' => request('jenisPenilaianId'),
-        ]);
+        return to_route('input-nilai-pengayaan');
     }
 
     public function update()
@@ -124,14 +108,6 @@ class InputNilaiPengayaanController extends Controller
 
         PengayaanDetail::destroy(request('pengayaanDetailId'));
 
-        return to_route('input-nilai-pengayaan', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'tanggal' => request('tanggal'),
-            'kelasId' => request('kelasId'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-            'kategoriNilaiId' => request('kategoriNilaiId'),
-            'jenisPenilaianId' => request('jenisPenilaianId'),
-        ]);
+        return to_route('input-nilai-pengayaan');
     }
 }

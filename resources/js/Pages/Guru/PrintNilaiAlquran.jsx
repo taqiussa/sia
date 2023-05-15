@@ -2,17 +2,38 @@ import Kelas from '@/Components/Sia/Kelas'
 import PrintLink from '@/Components/Sia/PrintLink'
 import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
 import Tahun from '@/Components/Sia/Tahun'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getSiswa from '@/Functions/getSiswa'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
+const PrintNilaiAlquran = ({ initTahun }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
         kelasId: '',
-        nis: ''
+        nis: '',
+        listSiswa: [],
+        listKelas: []
     })
+
+    async function getDataSiswa() {
+        const response = await getSiswa(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listSiswa: response.listSiswa
+        })
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, 12)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -20,15 +41,25 @@ const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
 
     useEffect(() => {
 
-        router.reload({
-            only: ['listKelas', 'listSiswa'],
-            data: {
-                tahun: data.tahun,
-                kelasId: data.kelasId
-            },
-            replace: true,
-            preserveState: true
-        })
+        trackPromise(getDataKelas())
+
+    }, [])
+
+    useEffect(() => {
+        if (data.tahun) {
+            trackPromise(
+                getDataKelas()
+            )
+        }
+
+    }, [data.tahun])
+
+    useEffect(() => {
+        if (data.tahun && data.kelasId) {
+            trackPromise(
+                getDataSiswa()
+            )
+        }
 
     }, [data.tahun, data.kelasId])
 
@@ -51,7 +82,7 @@ const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
                     name='kelasId'
                     value={data.kelasId}
                     message={errors.kelasId}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                     handleChange={onHandleChange}
                 />
 
@@ -103,7 +134,7 @@ const PrintNilaiAlquran = ({ initTahun, listKelas, listSiswa }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

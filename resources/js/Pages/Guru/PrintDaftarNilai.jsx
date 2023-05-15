@@ -3,18 +3,29 @@ import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const PrintDaftarNilai = ({ initTahun, initSemester, listMapel, listKelas }) => {
+const PrintDaftarNilai = ({ initTahun, initSemester, listMapel }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
         semester: initSemester,
         mataPelajaranId: '',
-        kelasId: ''
+        kelasId: '',
+        listKelas: []
     })
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -23,15 +34,7 @@ const PrintDaftarNilai = ({ initTahun, initSemester, listMapel, listKelas }) => 
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
     }, [data.tahun, data.mataPelajaranId])
 
     return (
@@ -67,7 +70,7 @@ const PrintDaftarNilai = ({ initTahun, initSemester, listMapel, listKelas }) => 
                     name='kelasId'
                     value={data.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
             </div>
 

@@ -22,20 +22,6 @@ class PrintNilaiAlquranController extends Controller
             'Guru/PrintNilaiAlquran',
             [
                 'initTahun' => $this->data_tahun(),
-                'listKelas' => GuruKelas::whereTahun(request('tahun'))
-                    ->whereGuruId(auth()->user()->id)
-                    ->with([
-                        'kelas' => fn ($q) => $q->select('id', 'nama'),
-                    ])
-                    ->get(),
-                'listSiswa' => Siswa::whereTahun(request('tahun'))
-                    ->whereKelasId(request('kelasId'))
-                    ->with([
-                        'user' => fn ($q) => $q->select('nis', 'name')
-                    ])
-                    ->get()
-                    ->sortBy('user.name')
-                    ->values(),
             ]
         );
     }

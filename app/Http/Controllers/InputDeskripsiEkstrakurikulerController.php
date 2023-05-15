@@ -15,12 +15,6 @@ class InputDeskripsiEkstrakurikulerController extends Controller
         return inertia('Guru/InputDeskripsiEkstrakurikuler', [
             'initTahun' => $this->data_tahun(),
             'initSemester' => $this->data_semester(),
-            'listEkstrakurikuler' => Ekstrakurikuler::orderBy('nama')
-                ->with([
-                    'deskripsi' => fn ($q) => $q->whereTahun(request('tahun'))
-                        ->whereSemester(request('semester'))
-                ])
-                ->get()
         ]);
     }
 
@@ -28,7 +22,7 @@ class InputDeskripsiEkstrakurikulerController extends Controller
     {
         DeskripsiEkstra::destroy(request('id'));
 
-        return to_route('input-deskripsi-ekstrakurikuler', ['tahun' => request('tahun'), 'semester' => request('semester')]);
+        return to_route('input-deskripsi-ekstrakurikuler');
     }
 
     public function simpan()
@@ -40,13 +34,17 @@ class InputDeskripsiEkstrakurikulerController extends Controller
             'deskripsi' => 'required'
         ]);
 
-        DeskripsiEkstra::create([
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'ekstra_id' => request('ekstrakurikulerId'),
-            'deskripsi' => request('deskripsi')
-        ]);
+        DeskripsiEkstra::updateOrCreate(
+            [
+                'tahun' => request('tahun'),
+                'semester' => request('semester'),
+                'ekstra_id' => request('ekstrakurikulerId'),
+            ],
+            [
+                'deskripsi' => request('deskripsi')
+            ]
+        );
 
-        return to_route('input-deskripsi-ekstrakurikuler', ['tahun' => request('tahun'), 'semester' => request('semester')]);
+        return to_route('input-deskripsi-ekstrakurikuler');
     }
 }

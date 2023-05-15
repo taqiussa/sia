@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\SiswaEkstra;
+use App\Models\Ekstrakurikuler;
 
 class GetDataController extends Controller
 {
@@ -62,6 +63,18 @@ class GetDataController extends Controller
                 ->get()
                 ->sortBy('user.name')
                 ->values()
+        ]);
+    }
+
+    public function get_list_ekstra()
+    {
+        return response()->json([
+            'listEkstrakurikuler' => Ekstrakurikuler::orderBy('nama')
+                ->with([
+                    'deskripsi' => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereSemester(request('semester'))
+                ])
+                ->get()
         ]);
     }
 }

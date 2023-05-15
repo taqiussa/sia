@@ -5,20 +5,27 @@ import InputArea from '@/Components/Sia/InputArea'
 import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
+import getListEkstrakurikuler from '@/Functions/getListEkstrakurikuler'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikuler }) => {
+const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester }) => {
 
     const { data, setData, errors, processing, post, delete: destroy } = useForm({
         tahun: initTahun,
         semester: initSemester,
         ekstrakurikulerId: '',
         deskripsi: '',
+        listEkstrakurikuler: []
     })
 
+    async function getData() {
+        const response = await getListEkstrakurikuler(data.tahun, data.semester)
+        setData({ ...data, listEkstrakurikuler: response.listEkstrakurikuler })
+    }
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -29,22 +36,8 @@ const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakuri
         post(route('input-deskripsi-ekstrakurikuler.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Deskripsi Ekstrakurikuler')
-                setData({
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    ekstrakurikulerId: data.ekstrakurikulerId,
-                    deskripsi: data.deskripsi
-                })
-
-                router.reload({
-                    only: ['listEkstrakurikuler'],
-                    data: {
-                        tahun: data.tahun,
-                        semester: data.semester
-                    },
-                    replace: true,
-                    preserveState: true
-                })
+                setData({ ...data })
+                trackPromise(getData())
             }
         })
     }
@@ -65,12 +58,12 @@ const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakuri
                     destroy(
                         route('input-deskripsi-ekstrakurikuler.hapus', {
                             id: id,
-                            tahun: data.tahun,
-                            semester: data.semester
                         }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Deskripsi Ekstrakurikuler')
+                                setData({...data})
+                                trackPromise(getData())
                             }
                         }
                     )
@@ -80,15 +73,14 @@ const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakuri
     useEffect(() => {
 
         if (data.tahun && data.semester)
-            router.reload({
-                only: ['listEkstrakurikuler'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getData())
+
+    }, [])
+
+    useEffect(() => {
+
+        if (data.tahun && data.semester)
+            trackPromise(getData())
 
     }, [data.tahun, data.semester])
 
@@ -122,7 +114,7 @@ const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakuri
                             value={data.ekstrakurikulerId}
                             message={errors.ekstrakurikulerId}
                             handleChange={onHandleChange}
-                            listEkstrakurikuler={listEkstrakurikuler}
+                            listEkstrakurikuler={data.listEkstrakurikuler}
                         />
 
                     </div>
@@ -159,7 +151,7 @@ const InputDeskripsiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakuri
                         </tr>
                     </thead>
                     <tbody>
-                        {listEkstrakurikuler && listEkstrakurikuler.map((ekstra, index) => (
+                        {data.listEkstrakurikuler && data.listEkstrakurikuler.map((ekstra, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

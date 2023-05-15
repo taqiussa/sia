@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kd;
 use App\Models\Badalan;
-use App\Models\JenisPenilaian;
-use App\Models\KategoriNilai;
 use App\Models\WaliKelas;
 use App\Traits\InitTrait;
+use App\Models\KategoriNilai;
+use App\Models\JenisPenilaian;
 
 class GetDataGuruController extends Controller
 {
@@ -35,6 +36,31 @@ class GetDataGuruController extends Controller
             'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())
                 ->orderBy('nama')
                 ->get()
+        ]);
+    }
+
+    public function get_list_kategori_per_tingkat()
+    {
+        return response()->json([
+            'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai_per_tingkat())
+                ->orderBy('nama')
+                ->get()
+        ]);
+    }
+
+    public function get_list_kd()
+    {
+        return response()->json([
+            'listKd' => Kd::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->with([
+                    'jenis' => fn ($q) => $q->select('id', 'nama'),
+                    'kategori' => fn ($q) => $q->select('id', 'nama'),
+                ])
+                ->get()
+                ->sortBy(['tingkat', 'kategori.nama', 'jenis.nama'])
+                ->values()
         ]);
     }
 

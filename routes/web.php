@@ -132,6 +132,15 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
     });
 
+    // Route Get Data
+    Route::controller(GetDataController::class)->group(function () {
+        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
+        Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
+        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
+        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
+    });
+
     // Route Get Data Bendahara
     Route::controller(GetDataBendaharaController::class)->group(function () {
         Route::post('get-kas-bulanan', 'get_kas_bulanan')->name('get-kas-bulanan');
@@ -149,19 +158,14 @@ Route::middleware('auth')->group(function () {
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
 
-    // Route Get Data
-    Route::controller(GetDataController::class)->group(function () {
-        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
-        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
-        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
-        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
-    });
 
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
         Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
         Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
+        Route::post('get-list-kategori-per-tingkat', 'get_list_kategori_per_tingkat')->name('get-list-kategori-per-tingkat');
+        Route::post('get-list-kd', 'get_list_kd')->name('get-list-kd');
         Route::post('get-list-kelas-guru', 'get_list_kelas_guru')->name('get-list-kelas-guru');
         Route::post('get-list-tugas', 'get_list_tugas')->name('get-list-tugas');
     });

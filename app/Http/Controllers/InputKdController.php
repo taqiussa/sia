@@ -20,24 +20,7 @@ class InputKdController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai_per_tingkat())
-                    ->orderBy('nama')
-                    ->get(),
-                'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->orderBy('nama')
-                    ->get(),
                 'listMapel' => $this->data_mapel(),
-                'listKd' => Kd::whereTahun(request('tahun'))
-                    ->whereSemester(request('semester'))
-                    ->whereMataPelajaranId(request('mataPelajaranId'))
-                    ->with([
-                        'jenis' => fn ($q) => $q->select('id', 'nama'),
-                        'kategori' => fn ($q) => $q->select('id', 'nama'),
-                    ])
-                    ->get()
-                    ->sortBy(['tingkat', 'kategori.nama', 'jenis.nama'])
-                    ->values()
             ]
         );
     }

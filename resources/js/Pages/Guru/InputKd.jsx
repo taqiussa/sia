@@ -8,6 +8,9 @@ import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tingkat from '@/Components/Sia/Tingkat'
+import getListJenis from '@/Functions/getListJenis'
+import getListKategori from '@/Functions/getListKategori'
+import getListKategoriPerTingkat from '@/Functions/getListKategoriPerTingkat'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
@@ -22,8 +25,25 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
         tingkat: '',
         kategoriNilaiId: '',
         jenisPenilaianId: '',
-        deskripsi: ''
+        deskripsi: '',
+        listKategori: [],
+        listJenis: [],
+        listKd: []
     })
+
+    async function getDataKategori() {
+        const response = await getListKategoriPerTingkat(data.tahun, data.tingkat)
+        setData({ ...data, listKategori: response.listKategori })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({ ...data, listJenis: response.listJenis })
+    }
+
+    async function getDataKd(){
+
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -35,15 +55,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
         post(route('input-kd.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan KD / TP')
-                setData({
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    mataPelajaranId: data.mataPelajaranId,
-                    tingkat: data.tingkat,
-                    kategoriNilaiId: data.kategoriNilaiId,
-                    jenisPenilaianId: data.jenisPenilaianId,
-                    deskripsi: data.deskripsi
-                })
+                setData({ ...data })
             }
         })
     }

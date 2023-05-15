@@ -26,14 +26,6 @@ class PrintAnalisisController extends Controller
             'initTahun' => $this->data_tahun(),
             'initSemester' => $this->data_semester(),
             'listMapel' => $this->data_mapel(),
-            'listKelas' => $this->data_kelas(),
-            'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())
-                ->orderBy('nama')
-                ->get(),
-            'listJenis' => JenisPenilaian::whereKategoriNilaiId(request('kategoriNilaiId'))
-                ->whereIn('id', $this->data_jenis_penilaian())
-                ->orderBy('nama')
-                ->get()
         ]);
     }
 
@@ -101,7 +93,7 @@ class PrintAnalisisController extends Controller
 
         if (request('kategoriNilaiId') == 3 || request('kategoriNilaiId') == 6) {
             return view('print.guru.print-analisis-pengetahuan', $data);
-        }else{
+        } else {
             return view('print.guru.print-analisis-keterampilan', $data);
         }
     }

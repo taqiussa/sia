@@ -95,7 +95,6 @@ class GetDataController extends Controller
         ]);
     }
 
-
     public function get_siswa_with_catatan()
     {
         return response()->json([

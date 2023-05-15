@@ -6,11 +6,15 @@ import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
+import getListJenis from '@/Functions/getListJenis'
+import getListKategori from '@/Functions/getListKategori'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
+const PrintAnalisis = ({ initTahun, initSemester, listMapel }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
@@ -18,8 +22,35 @@ const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKate
         mataPelajaranId: '',
         kelasId: '',
         kategoriNilaiId: '',
-        jenisPenilaianId: ''
+        jenisPenilaianId: '',
+        listKelas: [],
+        listKategori: [],
+        listJenis: []
     })
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listKategori: response.listKategori
+        })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({
+            ...data,
+            listJenis: response.listJenis
+        })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -28,45 +59,20 @@ const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKate
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
 
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
         if (data.tahun && data.kelasId)
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKategori())
     }, [data.tahun, data.kelasId])
 
     useEffect(() => {
         if (data.kategoriNilaiId) {
 
             setData('jenisPenilaianId', '')
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
         }
     }, [data.semester, data.kategoriNilaiId])
 
@@ -102,7 +108,7 @@ const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKate
                     name='kelasId'
                     value={data.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -110,7 +116,7 @@ const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKate
                     name='kategoriNilaiId'
                     value={data.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
 
                 <JenisPenilaian
@@ -118,7 +124,7 @@ const PrintAnalisis = ({ initTahun, initSemester, listMapel, listKelas, listKate
                     name='jenisPenilaianId'
                     value={data.jenisPenilaianId}
                     handleChange={onHandleChange}
-                    listJenis={listJenis}
+                    listJenis={data.listJenis}
                 />
 
             </div>

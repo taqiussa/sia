@@ -19,7 +19,6 @@ class PrintAbsensiEkstrakurikulerController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'listEkstrakurikuler' => Ekstrakurikuler::orderBy('nama')->get(),
-                'listSiswa' => $this->data_siswa_ekstra_with_absensi()
             ]
         );
     }

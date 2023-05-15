@@ -3,20 +3,27 @@ import Ekstrakurikuler from '@/Components/Sia/Ekstrakurikuler'
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
+import getAbsensiEkstrakurikuler from '@/Functions/getAbsensiEkstrakurikuler'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const PrintAbsensiEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa }) => {
+const PrintAbsensiEkstrakurikuler = ({ initTahun, listEkstrakurikuler }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
         ekstrakurikulerId: '',
-        jenisKelamin: ''
+        jenisKelamin: '',
+        listSiswa: []
     })
 
+    async function getDataSiswa() {
+        const response = await getAbsensiEkstrakurikuler(data.tanggal, data.tahun, data.ekstrakurikulerId, data.jenisKelamin)
+        setData({ ...data, listSiswa: response.listSiswa })
+    }
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -24,17 +31,7 @@ const PrintAbsensiEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa
     useEffect(() => {
 
         if (data.tanggal && data.tahun && data.ekstrakurikulerId && data.jenisKelamin)
-            router.reload({
-                only: ['listSiswa'],
-                data: {
-                    tahun: data.tahun,
-                    tanggal: data.tanggal,
-                    ekstrakurikulerId: data.ekstrakurikulerId,
-                    jenisKelamin: data.jenisKelamin
-                },
-                preserveState: true,
-                replace: true
-            })
+            trackPromise(getDataSiswa())
 
     }, [data.tanggal, data.tahun, data.ekstrakurikulerId, data.jenisKelamin])
 
@@ -111,7 +108,7 @@ const PrintAbsensiEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

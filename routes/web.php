@@ -180,11 +180,13 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Penilaian
     Route::controller(GetDataPenilaianController::class)->group(function () {
+        Route::post('get-list-jenis-alquran-with-nilai-siswa', 'get_list_jenis_alquran_with_nilai_siswa')->name('get-list-jenis-alquran-with-nilai-siswa');
         Route::post('get-siswa-ekstra-with-nilai', 'get_siswa_ekstra_with_nilai')->name('get-siswa-ekstra-with-nilai');
         Route::post('get-siswa-pengayaan', 'get_siswa_pengayaan')->name('get-siswa-pengayaan');
         Route::post('get-siswa-remidi', 'get_siswa_remidi')->name('get-siswa-remidi');
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
+        Route::post('get-siswa-with-nilai-alquran', 'get_siswa_with_nilai_alquran')->name('get-siswa-with-nilai-alquran');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
     });
 

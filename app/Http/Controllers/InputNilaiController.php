@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisPenilaian;
-use App\Models\KategoriNilai;
 use App\Models\Penilaian;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
@@ -21,14 +19,6 @@ class InputNilaiController extends Controller
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
                 'listMapel' => $this->data_mapel(),
-                'listKelas' => $this->data_kelas(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())
-                    ->orderBy('nama')
-                    ->get(),
-                'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->orderBy('nama')
-                    ->get()
             ]
         );
     }

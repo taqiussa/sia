@@ -6,19 +6,34 @@ import Kelas from '@/Components/Sia/Kelas'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal } from '@/Functions/functions'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getSiswaWithNilaiAlquran from '@/Functions/getSiswaWithNilaiAlquran'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, listSiswa }) => {
+const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         kelasId: '',
         jenisAlquran: '',
         nilai: '',
+        listKelas: [],
+        listSiswa: []
     })
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, 12)
+        setData({ ...data, listKelas: response.listKelas })
+    }
+
+    async function getDataSiswa() {
+        const response = await getSiswaWithNilaiAlquran(data.tahun, data.kelasId, data.jenisAlquran)
+        setData({ ...data, listSiswa: response.listSiswa })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -30,12 +45,8 @@ const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, l
         post(route('input-nilai-binnadzor-per-kelas.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Nilai')
-                setData({
-                    tahun: data.tahun,
-                    kelasId: data.kelasId,
-                    jenisAlquran: data.jenisAlquran,
-                    nilai: data.nilai
-                })
+                setData({ ...data })
+                trackPromise(getDataSiswa())
             }
         })
     }
@@ -60,12 +71,8 @@ const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, l
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Nilai')
-                                setData({
-                                    tahun: data.tahun,
-                                    kelasId: data.kelasId,
-                                    jenisAlquran: data.jenisAlquran,
-                                    nilai: ''
-                                })
+                                setData({ ...data })
+                                trackPromise(getDataSiswa())
                             }
                         }
                     )
@@ -75,29 +82,18 @@ const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, l
 
     useEffect(() => {
         if (data.tahun) {
-            router.reload({
-                only: ['listKelas'],
-                data:
-                {
-                    tahun: data.tahun
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
+        }
+
+    }, [])
+
+    useEffect(() => {
+        if (data.tahun) {
+            trackPromise(getDataKelas())
         }
 
         if (data.tahun && data.kelasId && data.jenisAlquran) {
-            router.reload({
-                only: ['listSiswa'],
-                data:
-                {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId,
-                    jenisAlquran: data.jenisAlquran
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataSiswa())
         }
     }, [data.tahun, data.kelasId, data.jenisAlquran])
 
@@ -119,7 +115,7 @@ const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, l
                     name='kelasId'
                     value={data.kelasId}
                     message={errors.kelasId}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                     handleChange={onHandleChange}
                 />
 
@@ -172,7 +168,7 @@ const InputNilaiBinnadzorPerKelas = ({ initTahun, listJenisAlquran, listKelas, l
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

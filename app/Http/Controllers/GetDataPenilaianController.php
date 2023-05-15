@@ -9,11 +9,25 @@ use App\Models\Remidi;
 use App\Models\Pengayaan;
 use App\Models\Penilaian;
 use App\Models\SiswaEkstra;
+use App\Models\JenisAlquran;
 use App\Models\RemidiDetail;
 
 
 class GetDataPenilaianController extends Controller
 {
+
+    public function get_list_jenis_alquran_with_nilai_siswa()
+    {
+        return response()->json([
+            'listJenisAlquran' => JenisAlquran::whereKategoriAlquranId(request('kategoriAlquran'))
+                ->with([
+                    'penilaian' => fn ($q) => $q->whereNis(request('nis')),
+                    'penilaian.user'
+                ])
+                ->get(),
+        ]);
+    }
+
     public function get_siswa_ekstra_with_nilai()
     {
         return response()->json([
@@ -32,7 +46,7 @@ class GetDataPenilaianController extends Controller
                 ->values()
         ]);
     }
-    
+
     public function get_siswa_pengayaan()
     {
         $kelas = Kelas::find(request('kelasId'));
@@ -203,6 +217,22 @@ class GetDataPenilaianController extends Controller
                         ->whereMataPelajaranId(request('mataPelajaranId'))
                         ->whereKategoriNilaiId(request('kategoriNilaiId'))
                         ->whereJenisPenilaianId(request('jenisPenilaianId')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
+    public function get_siswa_with_nilai_alquran()
+    {
+        return response()->json([
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'penilaianAlquran' => fn ($q) => $q->whereJenisAlquranId(request('jenisAlquran')),
+                    'penilaianAlquran.user',
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
                 ->get()

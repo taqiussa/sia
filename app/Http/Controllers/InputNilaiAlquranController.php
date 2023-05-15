@@ -19,12 +19,6 @@ class InputNilaiAlquranController extends Controller
             'Guru/InputNilaiAlquran',
             [
                 'initTahun' => $this->data_tahun(),
-                'listJenisAlquran' => JenisAlquran::whereKategoriAlquranId(request('kategoriAlquran'))
-                    ->with([
-                        'penilaian' => fn ($q) => $q->whereNis(request('nis')),
-                        'penilaian.user'
-                    ])
-                    ->get(),
                 'listKategoriAlquran' => KategoriAlquran::orderBy('nama')->get(),
                 'listKelas' => GuruKelas::whereTahun(request('tahun'))
                     ->whereGuruId(auth()->user()->id)
@@ -70,17 +64,7 @@ class InputNilaiAlquranController extends Controller
             ]
         );
 
-        return to_route(
-            'input-nilai-alquran',
-            [
-                'nis' => request('nis'),
-                'kategoriAlquran' => request('kategoriAlquran'),
-                'jenisAlquran' => request('jenisAlquran'),
-                'kelasId' => request('kelasId'),
-                'tahun' => request('tahun'),
-                'nilai' => request('nilai'),
-            ]
-        );
+        return to_route('input-nilai-alquran',);
     }
 
     public function semua()
@@ -103,33 +87,13 @@ class InputNilaiAlquranController extends Controller
             ]);
         }
 
-        return to_route(
-            'input-nilai-alquran',
-            [
-                'nis' => request('nis'),
-                'kategoriAlquran' => request('kategoriAlquran'),
-                'jenisAlquran' => request('jenisAlquran'),
-                'kelasId' => request('kelasId'),
-                'tahun' => request('tahun'),
-                'nilai' => request('nilai'),
-            ]
-        );
+        return to_route('input-nilai-alquran',);
     }
 
     public function hapus()
     {
         PenilaianAlquran::destroy(request('id'));
 
-        return to_route(
-            'input-nilai-alquran',
-            [
-                'nis' => request('nis'),
-                'kategoriAlquran' => request('kategoriAlquran'),
-                'jenisAlquran' => request('jenisAlquran'),
-                'kelasId' => request('kelasId'),
-                'tahun' => request('tahun'),
-                'nilai' => request('nilai'),
-            ]
-        );
+        return to_route('input-nilai-alquran',);
     }
 }

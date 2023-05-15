@@ -1,13 +1,13 @@
 import axios from "axios"
 
-const getListKd = async (tahun, semester, mataPelajaranId) => {
+const getSiswaWithNilaiAlquran = async (tahun, kelasId, jenisAlquran) => {
     try {
         const response = await axios.post(
-            route('get-list-kd',
+            route('get-siswa-with-nilai-alquran',
                 {
                     tahun: tahun,
-                    semester: semester,
-                    mataPelajaranId: mataPelajaranId
+                    kelasId: kelasId,
+                    jenisAlquran: jenisAlquran
                 })
         )
         return response.data;
@@ -17,4 +17,4 @@ const getListKd = async (tahun, semester, mataPelajaranId) => {
     }
 }
 
-export default getListKd
+export default getSiswaWithNilaiAlquran

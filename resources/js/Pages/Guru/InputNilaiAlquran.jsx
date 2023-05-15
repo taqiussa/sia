@@ -9,12 +9,16 @@ import Siswa from '@/Components/Sia/Siswa'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal } from '@/Functions/functions'
+import getListJenisAlquranWithNilaiSiswa from '@/Functions/getListJenisAlquranWithNilaiSiswa'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getSiswa from '@/Functions/getSiswa'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, listKelas, listSiswa }) => {
+const InputNilaiAlquran = ({ initTahun, listKategoriAlquran }) => {
 
     const { data, setData, post, put, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
@@ -23,7 +27,26 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
         kategoriAlquran: '',
         jenisAlquran: '',
         nilai: '',
+        listJenisAlquran: [],
+        listKelas: [],
+        listSiswa: []
     })
+
+    async function getDataNilai() {
+        const response = await getListJenisAlquranWithNilaiSiswa(data.kategoriAlquran, data.nis)
+        setData({ ...data, listJenisAlquran: response.listJenisAlquran })
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, 12)
+        setData({ ...data, listKelas: response.listKelas })
+    }
+
+    async function getDataSiswa() {
+        const response = await getSiswa(data.tahun, data.kelasId)
+        setData({ ...data, listSiswa: response.listSiswa })
+    }
+
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -35,14 +58,8 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
         post(route('input-nilai-alquran.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Nilai')
-                setData({
-                    tahun: data.tahun,
-                    kelasId: data.kelasId,
-                    nis: data.nis,
-                    kategoriAlquran: data.kategoriAlquran,
-                    jenisAlquran: data.jenisAlquran,
-                    nilai: data.nilai
-                })
+                setData({ ...data })
+                trackPromise(getDataNilai())
             }
         })
     }
@@ -53,14 +70,8 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
         put(route('input-nilai-alquran.semua'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Semua Nilai')
-                setData({
-                    tahun: data.tahun,
-                    kelasId: data.kelasId,
-                    nis: data.nis,
-                    kategoriAlquran: data.kategoriAlquran,
-                    jenisAlquran: data.jenisAlquran,
-                    nilai: data.nilai
-                })
+                setData({ ...data })
+                trackPromise(getDataNilai())
             }
         })
 
@@ -82,24 +93,12 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
                     destroy(
                         route('input-nilai-alquran.hapus', {
                             id: id,
-                            tahun: data.tahun,
-                            kelasId: data.kelasId,
-                            nis: data.nis,
-                            kategoriAlquran: data.kategoriAlquran,
-                            jenisAlquran: data.jenisAlquran,
-                            nilai: ''
                         }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Nilai')
-                                setData({
-                                    tahun: data.tahun,
-                                    kelasId: data.kelasId,
-                                    nis: data.nis,
-                                    kategoriAlquran: data.kategoriAlquran,
-                                    jenisAlquran: data.jenisAlquran,
-                                    nilai: ''
-                                })
+                                setData({ ...data })
+                                trackPromise(getDataNilai())
                             }
                         }
                     )
@@ -109,59 +108,41 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
 
     useEffect(() => {
 
+        if (data.tahun) {
+            trackPromise(getDataKelas())
+        }
+    }, [])
+
+    useEffect(() => {
+
         setData({
             tahun: data.tahun,
             kelasId: '',
             nis: '',
             kategoriAlquran: '',
             jenisAlquran: '',
-            nilai: ''
+            nilai: '',
+            listJenisAlquran: [],
+            listKelas: [],
+            listSiswa: []
         })
 
         if (data.tahun) {
-            router.reload({
-                only: ['listKelas'],
-                data:
-                {
-                    tahun: data.tahun
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
         }
     }, [data.tahun])
 
     useEffect(() => {
 
         if (data.tahun && data.kelasId && data.kategoriAlquran && data.nis) {
-            router.reload({
-                only: ['listJenisAlquran'],
-                data:
-                {
-                    tahun: data.tahun,
-                    kategoriAlquran: data.kategoriAlquran,
-                    kelasId: data.kelasId,
-                    nis: data.nis
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataNilai())
         }
 
     }, [data.kategoriAlquran, data.nis])
 
     useEffect(() => {
         if (data.tahun && data.kelasId) {
-            router.reload({
-                only: ['listSiswa'],
-                data:
-                {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId,
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataSiswa())
         }
     }, [data.tahun, data.kelasId])
 
@@ -183,7 +164,7 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
                     name='kelasId'
                     value={data.kelasId}
                     message={errors.kelasId}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                     handleChange={onHandleChange}
                 />
 
@@ -192,7 +173,7 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
                     name='nis'
                     value={data.nis}
                     message={errors.nis}
-                    listSiswa={listSiswa}
+                    listSiswa={data.listSiswa}
                     handleChange={onHandleChange}
                 />
 
@@ -210,7 +191,7 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
                     name='jenisAlquran'
                     value={data.jenisAlquran}
                     message={errors.jenisAlquran}
-                    listJenisAlquran={listJenisAlquran}
+                    listJenisAlquran={data.listJenisAlquran}
                     handleChange={onHandleChange}
                 />
 
@@ -256,7 +237,7 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran, listJenisAlquran, l
                         </tr>
                     </thead>
                     <tbody>
-                        {listJenisAlquran && listJenisAlquran.map((jenis, index) => (
+                        {data.listJenisAlquran && data.listJenisAlquran.map((jenis, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

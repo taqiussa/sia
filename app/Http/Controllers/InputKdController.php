@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisPenilaian;
-use App\Models\KategoriNilai;
 use App\Models\Kd;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
@@ -37,25 +35,27 @@ class InputKdController extends Controller
             'deskripsi' => 'required',
         ]);
 
-        Kd::create([
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'mata_pelajaran_id' => request('mataPelajaranId'),
-            'tingkat' => request('tingkat'),
-            'kategori_nilai_id' => request('kategoriNilaiId'),
-            'jenis_penilaian_id' => request('jenisPenilaianId'),
-            'deskripsi' => request('deskripsi'),
-        ]);
+        Kd::updateOrCreate(
+            [
+                'tahun' => request('tahun'),
+                'semester' => request('semester'),
+                'mata_pelajaran_id' => request('mataPelajaranId'),
+                'tingkat' => request('tingkat'),
+                'kategori_nilai_id' => request('kategoriNilaiId'),
+                'jenis_penilaian_id' => request('jenisPenilaianId'),
+            ],
+            [
+                'deskripsi' => request('deskripsi'),
+            ]
+        );
+
+        return to_route('input-kd');
     }
 
     public function hapus()
     {
         Kd::destroy(request('id'));
 
-        return to_route('input-kd', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-        ]);
+        return to_route('input-kd');
     }
 }

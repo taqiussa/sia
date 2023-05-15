@@ -9,12 +9,13 @@ import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tingkat from '@/Components/Sia/Tingkat'
 import getListJenis from '@/Functions/getListJenis'
-import getListKategori from '@/Functions/getListKategori'
+import getListKd from '@/Functions/getListKd'
 import getListKategoriPerTingkat from '@/Functions/getListKategoriPerTingkat'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
+import { trackPromise } from 'react-promise-tracker'
 
 const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, listKd }) => {
 
@@ -41,8 +42,9 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
         setData({ ...data, listJenis: response.listJenis })
     }
 
-    async function getDataKd(){
-
+    async function getDataKd() {
+        const response = await getListKd(data.tahun, data.semester, data.mataPelajaranId)
+        setData({ ...data, listKd: response.listKd })
     }
 
     const onHandleChange = (e) => {
@@ -56,6 +58,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
             onSuccess: () => {
                 toast.success('Berhasil Simpan KD / TP')
                 setData({ ...data })
+                trackPromise(getDataKd())
             }
         })
     }
@@ -77,22 +80,12 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                         route('input-kd.hapus',
                             {
                                 id: id,
-                                tahun: data.tahun,
-                                semester: data.semester,
-                                mataPelajaranId: data.mataPelajaranId
                             }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus KD/TP')
-                                setData({
-                                    tahun: data.tahun,
-                                    semester: data.semester,
-                                    mataPelajaranId: data.mataPelajaranId,
-                                    tingkat: data.tingkat,
-                                    kategoriNilaiId: data.kategoriNilaiId,
-                                    jenisPenilaianId: data.jenisPenilaianId,
-                                    deskripsi: data.deskripsi
-                                })
+                                setData({ ...data })
+                                trackPromise(getDataKd())
                             }
                         })
             })
@@ -104,16 +97,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
             && data.mataPelajaranId
             && data.tingkat
         )
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId,
-                    tingkat: data.tingkat
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKategori())
 
     }, [data.mataPelajaranId, data.tingkat])
 
@@ -123,16 +107,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
             && data.mataPelajaranId
             && data.tingkat
         )
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
 
     }, [data.kategoriNilaiId])
 
@@ -142,16 +117,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
             && data.semester
             && data.mataPelajaranId
         )
-            router.reload({
-                only: ['listKd'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKd())
     }, [data.tahun, data.semester, data.mataPelajaranId])
     return (
         <>
@@ -197,7 +163,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                     value={data.kategoriNilaiId}
                     message={errors.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
 
                 <JenisPenilaian
@@ -206,7 +172,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                     value={data.jenisPenilaianId}
                     message={errors.jenisPenilaianId}
                     handleChange={onHandleChange}
-                    listJenis={listJenis}
+                    listJenis={data.listJenis}
                 />
 
             </div>
@@ -247,7 +213,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                         </tr>
                     </thead>
                     <tbody>
-                        {listKd && listKd.map((kd, index) => (
+                        {data.listKd && data.listKd.map((kd, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

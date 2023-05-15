@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GuruKelas;
 use App\Models\JenisAlquran;
 use App\Models\PenilaianAlquran;
 use App\Models\Siswa;
@@ -21,24 +20,6 @@ class InputNilaiBilghoibPerKelasController extends Controller
                 'initTahun' => $this->data_tahun(),
                 'listJenisAlquran' => JenisAlquran::whereKategoriAlquranId(EnumKategoriAlquran::BILGHOIB)
                     ->get(),
-                'listKelas' => GuruKelas::whereTahun(request('tahun'))
-                    ->whereGuruId(auth()->user()->id)
-                    ->with([
-                        'kelas' => fn ($q) => $q->select('id', 'nama'),
-                    ])
-                    ->get()
-                    ->sortBy('kelas.nama')
-                    ->values(),
-                'listSiswa' => Siswa::whereTahun(request('tahun'))
-                    ->whereKelasId(request('kelasId'))
-                    ->with([
-                        'penilaianAlquran' => fn ($q) => $q->whereJenisAlquranId(request('jenisAlquran')),
-                        'penilaianAlquran.user',
-                        'user' => fn ($q) => $q->select('nis', 'name')
-                    ])
-                    ->get()
-                    ->sortBy('user.name')
-                    ->values()
             ]
         );
     }
@@ -72,13 +53,13 @@ class InputNilaiBilghoibPerKelasController extends Controller
             );
         }
 
-        return to_route('input-nilai-bilghoib-per-kelas', ['tahun' => request('tahun'), 'kelasId' => request('kelasId'), 'jenisAlquran' => request('jenisAlquran')]);
+        return to_route('input-nilai-bilghoib-per-kelas');
     }
 
     public function hapus()
     {
         PenilaianAlquran::destroy(request('id'));
 
-        return to_route('input-nilai-bilghoib-per-kelas', ['tahun' => request('tahun'), 'kelasId' => request('kelasId'), 'jenisAlquran' => request('jenisAlquran')]);
+        return to_route('input-nilai-bilghoib-per-kelas');
     }
 }

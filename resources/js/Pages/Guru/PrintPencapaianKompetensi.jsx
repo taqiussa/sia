@@ -4,19 +4,34 @@ import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
+import getListKategori from '@/Functions/getListKategori'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKelas, listKategori }) => {
+const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
         semester: initSemester,
         mataPelajaranId: '',
         kelasId: '',
-        kategoriNilaiId: ''
+        kategoriNilaiId: '',
+        listKelas: [],
+        listKategori: []
     })
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({ ...data, listKelas: response.listKelas })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({ ...data, listKategori: response.listKategori })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -25,29 +40,13 @@ const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKel
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
         if (data.tahun && data.kelasId)
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKategori())
     }, [data.tahun, data.kelasId])
 
     return (
@@ -83,7 +82,7 @@ const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKel
                     name='kelasId'
                     value={data.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -91,7 +90,7 @@ const PrintPencapaianKompetensi = ({ initTahun, initSemester, listMapel, listKel
                     name='kategoriNilaiId'
                     value={data.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
             </div>
 

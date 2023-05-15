@@ -23,10 +23,6 @@ class PrintPencapaianKompetensiController extends Controller
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
                 'listMapel' => $this->data_mapel(),
-                'listKelas' => $this->data_kelas(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())
-                    ->orderBy('nama')
-                    ->get(),
             ]
         );
     }

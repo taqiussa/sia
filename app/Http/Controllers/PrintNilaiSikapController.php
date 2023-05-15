@@ -22,7 +22,6 @@ class PrintNilaiSikapController extends Controller
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
                 'listMapel' => $this->data_mapel(),
-                'listKelas' => $this->data_kelas(),
             ]
         );
     }

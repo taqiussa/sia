@@ -138,6 +138,7 @@ class GetDataPenilaianController extends Controller
             ->pluck('nis');
 
         return response()->json([
+            'kkm' => $kkm,
             'remidi' => Remidi::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
                 ->whereMataPelajaranId(request('mataPelajaranId'))

@@ -18,8 +18,11 @@ import PrimaryButton from '@/Components/PrimaryButton'
 import axios from 'axios'
 import getSiswaRemidi from '@/Functions/getSiswaRemidi'
 import Hapus from '@/Components/Sia/Hapus'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getListKategori from '@/Functions/getListKategori'
+import getListJenis from '@/Functions/getListJenis'
 
-const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
+const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         id: '',
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -32,11 +35,15 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         ki: '',
         materi: '',
         catatan: '',
+        listKelas: [],
+        listKategori: [],
+        listJenis: [],
         arrayInput: []
     })
 
     const [listSiswa, setListSiswa] = useState([])
     const [remidi, setRemidi] = useState([])
+    const [kkm, setKkm] = useState([])
     const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
@@ -45,14 +52,10 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
         setListSiswa(response.listSiswa)
         if (response.remidi !== '') {
             setRemidi(response.remidi)
+            setKkm(response.kkm)
             setData({
+                ...data,
                 id: response.remidi.id,
-                tahun: data.tahun,
-                semester: data.semester,
-                mataPelajaranId: data.mataPelajaranId,
-                kelasId: data.kelasId,
-                kategoriNilaiId: data.kategoriNilaiId,
-                jenisPenilaianId: data.jenisPenilaianId,
                 tanggal: response.remidi.tanggal,
                 ki: response.remidi.ki,
                 materi: response.remidi.materi,
@@ -61,21 +64,40 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
             })
         } else {
             setRemidi([])
+            setKkm(response.kkm)
             setData({
+                ...data,
                 id: '',
-                tahun: data.tahun,
-                semester: data.semester,
-                mataPelajaranId: data.mataPelajaranId,
-                kelasId: data.kelasId,
-                kategoriNilaiId: data.kategoriNilaiId,
-                jenisPenilaianId: data.jenisPenilaianId,
-                tanggal: data.tanggal,
                 ki: '',
                 materi: '',
                 catatan: '',
                 arrayInput: []
             })
         }
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listKategori: response.listKategori
+        })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({
+            ...data,
+            listJenis: response.listJenis
+        })
     }
 
     const onHandleChange = (e) => {
@@ -205,60 +227,24 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
     }
 
     useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-            && data.kelasId
-        )
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
 
-    }, [data.mataPelajaranId, data.kelasId])
+        if (data.tahun && data.mataPelajaranId)
+            trackPromise(getDataKelas())
+    }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-        ) {
+
+        if (data.kelasId)
+            trackPromise(getDataKategori())
+    }, [data.kelasId])
+
+    useEffect(() => {
+
+        if (data.kategoriNilaiId) {
             setData('jenisPenilaianId', '')
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
         }
-
-    }, [data.kategoriNilaiId])
-
-    useEffect(() => {
-        if (
-            data.tahun
-            && data.mataPelajaranId
-        )
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
-
-    }, [data.mataPelajaranId])
+    }, [data.semester, data.kategoriNilaiId])
 
     useEffect(() => {
 
@@ -343,7 +329,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -352,7 +338,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     value={data.kategoriNilaiId}
                     message={errors.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
                 <div className="col-span-2">
 
@@ -362,7 +348,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                         value={data.jenisPenilaianId}
                         message={errors.jenisPenilaianId}
                         handleChange={onHandleChange}
-                        listJenis={listJenis}
+                        listJenis={data.listJenis}
                     />
                 </div>
             </div>
@@ -425,7 +411,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel, listKelas, listK
                     </thead>
                     <tbody>
                         {listSiswa && listSiswa
-                            .filter(siswa => siswa.penilaian.nilai < 75 || siswa.remidi.nilai_remidi != null)
+                            .filter(siswa => siswa.penilaian.nilai < kkm || siswa.remidi.nilai_remidi != null)
                             .map((siswa, index) => (
                                 <tr key={siswa.nis} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">

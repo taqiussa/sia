@@ -24,13 +24,7 @@ class InputNilaiRemidiController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
-                'listKelas' => $this->data_kelas(),
                 'listMapel' => $this->data_mapel(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())->orderBy('nama')->get(),
-                'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->orderBy('nama')
-                    ->get()
             ]
         );
     }
@@ -64,15 +58,7 @@ class InputNilaiRemidiController extends Controller
             ]
         );
 
-        return to_route('input-nilai-remidi', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'tanggal' => request('tanggal'),
-            'kelasId' => request('kelasId'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-            'kategoriNilaiId' => request('kategoriNilaiId'),
-            'jenisPenilaianId' => request('jenisPenilaianId'),
-        ]);
+        return to_route('input-nilai-remidi');
     }
 
     public function update()
@@ -152,14 +138,6 @@ class InputNilaiRemidiController extends Controller
 
         RemidiDetail::destroy(request('remidiId'));
 
-        return to_route('input-nilai-remidi', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester'),
-            'tanggal' => request('tanggal'),
-            'kelasId' => request('kelasId'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-            'kategoriNilaiId' => request('kategoriNilaiId'),
-            'jenisPenilaianId' => request('jenisPenilaianId'),
-        ]);
+        return to_route('input-nilai-remidi');
     }
 }

@@ -1,5 +1,5 @@
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import Tahun from '@/Components/Sia/Tahun'
 import Semester from '@/Components/Sia/Semester'
@@ -357,7 +357,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     id='ki'
                     name='ki'
                     label='K.I. (di isi jika perlu)'
-                    value={data.ki ?? ''}
+                    value={data.ki || ''}
                     message={errors.ki}
                     handleChange={onHandleChange}
                 />
@@ -365,7 +365,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     id='materi'
                     name='materi'
                     label='materi (di isi jika perlu)'
-                    value={data.materi ?? ''}
+                    value={data.materi || ''}
                     message={errors.materi}
                     handleChange={onHandleChange}
                 />
@@ -375,7 +375,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     id='catatan'
                     name='catatan'
                     label='catatan (di isi jika perlu)'
-                    value={data.catatan ?? ''}
+                    value={data.catatan || ''}
                     message={errors.catatan}
                     handleChange={onHandleChange}
                 />

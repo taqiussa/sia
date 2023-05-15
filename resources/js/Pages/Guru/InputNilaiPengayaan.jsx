@@ -136,18 +136,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
         e.preventDefault()
 
         axios.put(route('input-nilai-pengayaan.update', {
+            ...data,
             id: id,
-            tanggal: data.tanggal,
-            tahun: data.tahun,
-            semester: data.semester,
-            mataPelajaranId: data.mataPelajaranId,
-            kategoriNilaiId: data.kategoriNilaiId,
-            jenisPenilaianId: data.jenisPenilaianId,
-            ki: data.ki,
-            kd: data.kd,
-            indikator: data.indikator,
-            bentukPelaksanaan: data.bentukPelaksanaan,
-            banyakSoal: data.banyakSoal,
             nis: nis,
             kelasId: kelasId,
             pengayaanId: pengayaanId,
@@ -351,7 +341,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     id='ki'
                     name='ki'
                     label='K.I. (di isi jika perlu)'
-                    value={data.ki}
+                    value={data.ki || ''}
                     message={errors.ki}
                     handleChange={onHandleChange}
                 />
@@ -359,7 +349,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     id='kd'
                     name='kd'
                     label='K.D. (di isi jika perlu)'
-                    value={data.kd}
+                    value={data.kd || ''}
                     message={errors.kd}
                     handleChange={onHandleChange}
                 />
@@ -369,7 +359,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     id='indikator'
                     name='indikator'
                     label='indikator (di isi jika perlu)'
-                    value={data.indikator}
+                    value={data.indikator || ''}
                     message={errors.indikator}
                     handleChange={onHandleChange}
                 />
@@ -379,7 +369,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     id='bentukPelaksanaan'
                     name='bentukPelaksanaan'
                     label='bentuk pelaksanaan (di isi jika perlu)'
-                    value={data.bentukPelaksanaan}
+                    value={data.bentukPelaksanaan || ''}
                     message={errors.bentukPelaksanaan}
                     handleChange={onHandleChange}
                 />
@@ -387,7 +377,7 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     id='banyakSoal'
                     name='banyakSoal'
                     label='banyak soal (di isi jika perlu)'
-                    value={data.banyakSoal}
+                    value={data.banyakSoal || ''}
                     message={errors.banyakSoal}
                     handleChange={onHandleChange}
                 />

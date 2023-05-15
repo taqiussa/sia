@@ -1,11 +1,12 @@
 import axios from "axios"
 
-const getPemasukanTahunan = async (tahun) => {
+const getListKategori = async (tahun, kelasId) => {
     try {
         const response = await axios.post(
-            route('get-pemasukan-tahunan',
+            route('get-list-kategori',
                 {
                     tahun: tahun,
+                    kelasId: kelasId
                 })
         )
         return response.data;
@@ -15,4 +16,4 @@ const getPemasukanTahunan = async (tahun) => {
     }
 }
 
-export default getPemasukanTahunan
+export default getListKategori

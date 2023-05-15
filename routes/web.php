@@ -143,6 +143,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-pembayaran-custom', 'get_pembayaran_custom')->name('get-pembayaran-custom');
         Route::post('get-pembayaran-siswa', 'get_pembayaran_siswa')->name('get-pembayaran-siswa');
         Route::post('get-pengeluaran', 'get_pengeluaran')->name('get-pengeluaran');
+        Route::post('get-pengeluaran-tahunan', 'get_pengeluaran_tahunan')->name('get-pengeluaran-tahunan');
         Route::post('get-penggajian', 'get_penggajian')->name('get-penggajian');
         Route::post('get-pengeluaran-harian', 'get_pengeluaran_harian')->name('get-pengeluaran-harian');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
@@ -151,6 +152,7 @@ Route::middleware('auth')->group(function () {
     // Route Get Data
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
         Route::post('get-siswa', 'get_siswa')->name('get-siswa');
         Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
     });
@@ -158,6 +160,10 @@ Route::middleware('auth')->group(function () {
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
+        Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
+        Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
+        Route::post('get-list-kelas-guru', 'get_list_kelas_guru')->name('get-list-kelas-guru');
+        Route::post('get-list-tugas', 'get_list_tugas')->name('get-list-tugas');
     });
 
     // Route Get Data Ketenagaan

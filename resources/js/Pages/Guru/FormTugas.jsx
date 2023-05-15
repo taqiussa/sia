@@ -7,13 +7,16 @@ import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
+import getListTugas from '@/Functions/getListTugas'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
+const FormTugas = ({ initTahun, listMapel }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
@@ -21,32 +24,25 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
         mataPelajaranId: '',
         jam: '',
         kelasId: '',
-        tugas: ''
+        tugas: '',
+        listKelas: [],
+        listTugas: []
     })
 
-    function reloadListKelas() {
-        router.reload({
-            only: ['listKelas'],
-            data: {
-                tahun: data.tahun,
-                mataPelajaranId: data.mataPelajaranId
-            },
-            replace: true,
-            preserveState: true
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas,
         })
     }
 
-    function reloadListMapelAndTugas() {
-        router.reload({
-            only: ['listMapel', 'listTugas'],
-            data: {
-                tanggal: data.tanggal,
-                tahun: data.tahun
-            },
-            replace: true,
-            preserveState: true
+    async function getDataTugas() {
+        const response = await getListTugas(data.tanggal)
+        setData({
+            ...data,
+            listTugas: response.listTugas
         })
-
     }
 
     const onHandleChange = (e) => {
@@ -59,14 +55,8 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
         post(route('form-tugas.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Simpan Tugas Kelas')
-                setData({
-                    tahun: data.tahun,
-                    tanggal: data.tanggal,
-                    mataPelajaranId: data.mataPelajaranId,
-                    jam: data.jam,
-                    kelasId: data.kelasId,
-                    tugas: data.tugas
-                })
+                setData({ ...data })
+                trackPromise(getDataTugas())
             },
             onError: (e) => {
                 Sweet
@@ -95,20 +85,12 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
                     destroy(
                         route('form-tugas.hapus', {
                             id: id,
-                            tanggal: data.tanggal,
-                            tahun: data.tahun,
-                            mataPelajaranId: data.mataPelajaranId
                         }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Tugas')
-                                setData({
-                                    tanggal: data.tanggal,
-                                    mataPelajaranId: data.mataPelajaranId,
-                                    jam: data.jam,
-                                    kelasId: data.kelasId,
-                                    tugas: data.tugas
-                                })
+                                setData({ ...data })
+                                trackPromise(getDataTugas())
                             }
                         }
                     )
@@ -119,14 +101,17 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            reloadListKelas()
-
+            trackPromise(
+                getDataKelas()
+            )
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
         if (data.tanggal && data.tahun)
-            reloadListMapelAndTugas()
+            trackPromise(
+                getDataTugas()
+            )
     }, [data.tanggal, data.tahun])
 
     return (
@@ -175,7 +160,7 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
                         value={data.kelasId}
                         message={errors.kelasId}
                         handleChange={onHandleChange}
-                        listKelas={listKelas}
+                        listKelas={data.listKelas}
                     />
                 </div>
                 <div>
@@ -215,7 +200,7 @@ const FormTugas = ({ initTahun, listMapel, listKelas, listTugas }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listTugas && listTugas.map((tugas, index) => (
+                        {data.listTugas && data.listTugas.map((tugas, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

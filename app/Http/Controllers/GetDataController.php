@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use App\Models\SiswaEkstra;
 
 class GetDataController extends Controller
 {
@@ -20,6 +21,21 @@ class GetDataController extends Controller
         ]);
     }
 
+    public function get_all_siswa_ekstra()
+    {
+        return response()->json([
+            'listSiswa' => SiswaEkstra::whereTahun(request('tahun'))
+                ->with([
+                    'ekstrakurikuler' => fn ($q) => $q->select('id', 'nama'),
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy(['kelas.nama', 'user.name'])
+                ->values()
+        ]);
+    }
+
     public function get_siswa()
     {
         return response()->json([
@@ -31,6 +47,7 @@ class GetDataController extends Controller
                 ->values()
         ]);
     }
+
 
     public function get_siswa_with_catatan()
     {

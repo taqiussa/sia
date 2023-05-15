@@ -1,16 +1,44 @@
 import InputText from '@/Components/Sia/InputText'
-import Paginator from '@/Components/Sia/Paginator'
 import Tahun from '@/Components/Sia/Tahun'
+import getAllSiswaEkstra from '@/Functions/getAllSiswaEkstra'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
-import React, { useEffect } from 'react'
+import { Head, useForm } from '@inertiajs/react'
+import React, { useEffect, useState } from 'react'
+import ReactPaginate from 'react-paginate'
+import { trackPromise } from 'react-promise-tracker'
 
-const DataSiswaEkstrakurikuler = ({ initTahun, listSiswa, filters }) => {
+const DataSiswaEkstrakurikuler = ({ initTahun }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
-        search: filters.search ?? ''
+        search: '',
+        listSiswa: []
     })
+
+    const [page, setPage] = useState(0);
+    const postsPerPage = 10;
+    const numberOfPostsVisited = page * postsPerPage;
+    const totalPages = Math.ceil(data.listSiswa?.length / postsPerPage);
+    const changePage = ({ selected }) => {
+        setPage(selected);
+    };
+
+    const filteredData = data.listSiswa?.filter((list) => {
+        const searchTerm = data.search.toLowerCase();
+        const user = list.user?.name.toLowerCase();
+        return (
+            user.includes(searchTerm)
+        );
+    });
+
+    async function getData() {
+        const response = await getAllSiswaEkstra(data.tahun)
+        setData({
+            tahun: data.tahun,
+            search: data.search,
+            listSiswa: response.listSiswa
+        })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -18,39 +46,14 @@ const DataSiswaEkstrakurikuler = ({ initTahun, listSiswa, filters }) => {
 
     useEffect(() => {
 
-        if (data.tahun)
-            router.reload({
-                only: ['listSiswa'],
-                data: {
-                    tahun: data.tahun,
-                },
-                replace: true,
-                preserveState: true
-            })
+        if (data.tahun) {
+            trackPromise(
+                getData()
+            )
+        }
 
     }, [data.tahun])
 
-    useEffect(() => {
-
-        const timerId = setTimeout(() => {
-            router.reload(
-                {
-                    only: ['listSiswa'],
-                    data: {
-                        tahun: data.tahun,
-                        search: data.search
-                    },
-                    preserveState: true,
-                    replace: true
-                },
-            )
-        }, 1000)
-
-        return () => {
-            clearTimeout(timerId)
-        }
-
-    }, [data.search])
     return (
         <>
             <Head title='Data Siswa Ekstrakurikuler' />
@@ -64,14 +67,16 @@ const DataSiswaEkstrakurikuler = ({ initTahun, listSiswa, filters }) => {
                     handleChange={onHandleChange}
                 />
 
-                <InputText
-                    id='search'
-                    name='search'
-                    label='cari'
-                    value={data.search}
-                    message={errors.search}
-                    handleChange={onHandleChange}
-                />
+                <div className="col-span-2">
+                    <InputText
+                        id='search'
+                        name='search'
+                        label='cari'
+                        value={data.search}
+                        message={errors.search}
+                        handleChange={onHandleChange}
+                    />
+                </div>
             </div>
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
@@ -92,26 +97,44 @@ const DataSiswaEkstrakurikuler = ({ initTahun, listSiswa, filters }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.data.map((siswa, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1 + ((listSiswa.current_page - 1) * listSiswa.per_page)}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.user?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.kelas?.nama}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.ekstrakurikuler?.nama}
-                                </td>
-                            </tr>
-                        ))}
+                        {data.listSiswa &&
+                            filteredData
+                                .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
+                                .map((siswa, index) => (
+                                    <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                        <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                            {index + 1 + (page * 10)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {siswa.user?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {siswa.kelas?.nama}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {siswa.ekstrakurikuler?.nama}
+                                        </td>
+                                    </tr>
+                                ))}
                     </tbody>
                 </table>
             </div>
-            <Paginator lists={listSiswa} />
+            <ReactPaginate
+                pageRangeDisplayed={3} //The range of buttons pages displayed.
+                previousLabel={"Previous"} //lable for previous page button
+                nextLabel={"Next"} // lable for Next page button
+                pageCount={totalPages} // place here the variable for total number of pages
+                onPageChange={changePage} // place here the trigger event function
+                /// navigation CSS styling ///
+                containerClassName={"flex items-center my-4 space-x-1 text-slate-600"}
+                pageLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-md py-1 px-2 border"}
+                previousLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-l-md py-1 px-2 border"}
+                nextLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-r-md py-1 px-2 border"}
+                disabledLinkClassName={"text-gray-300 cursor-not-allowed hover:bg-white"}
+                activeLinkClassName={"focus:shadow-outline transition-colors duration-150 bg-emerald-500 text-emerald-100 cursor-pointer"}
+                /// end navigation styling ///
+                renderOnZeroPageCount={null}
+            />
         </>
     )
 }

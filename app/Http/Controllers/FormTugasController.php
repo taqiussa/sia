@@ -16,16 +16,6 @@ class FormTugasController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'listMapel' => $this->data_mapel(),
-                'listKelas' => $this->data_kelas(),
-                'listTugas' => Badalan::whereTanggal(request('tanggal'))
-                    ->whereUserId(auth()->user()->id)
-                    ->with([
-                        'badal' => fn ($q) => $q->select('id', 'name'),
-                        'kelas' => fn ($q) => $q->select('id', 'nama'),
-                        'mapel' => fn ($q) => $q->select('id', 'nama'),
-                    ])
-                    ->orderBy('jam')
-                    ->get()
             ]
         );
     }
@@ -34,14 +24,7 @@ class FormTugasController extends Controller
     {
         Badalan::destroy(request('id'));
 
-        return to_route('form-tugas', [
-            'tahun' => request('tahun'),
-            'tanggal' => request('tanggal'),
-            'kelasId' => request('kelasId'),
-            'mataPelajaranId' => request('mataPelajaranId'),
-            'jam' => request('jam'),
-            'tugas' => request('tugas')
-        ]);
+        return to_route('form-tugas');
     }
 
     public function simpan()
@@ -89,17 +72,7 @@ class FormTugasController extends Controller
                 ]
             );
 
-            return to_route(
-                'form-tugas',
-                [
-                    'tahun' => request('tahun'),
-                    'tanggal' => request('tanggal'),
-                    'kelasId' => request('kelasId'),
-                    'mataPelajaranId' => request('mataPelajaranId'),
-                    'jam' => request('jam'),
-                    'tugas' => request('tugas')
-                ]
-            );
+            return to_route('form-tugas');
         }
     }
 }

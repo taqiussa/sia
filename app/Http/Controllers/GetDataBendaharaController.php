@@ -136,22 +136,28 @@ class GetDataBendaharaController extends Controller
 
     public function get_pemasukan_tahunan()
     {
+        $pemasukan =  Pemasukan::whereTahun(request('tahun'))
+            ->with([
+                'kategori' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->latest()
+            ->get();
+
+        $pembayaran = Pembayaran::whereTahun(request('tahun'))
+            ->with([
+                'gunabayar' => fn ($q) => $q->select('id', 'nama'),
+                'kelas' => fn ($q) => $q->select('id', 'nama'),
+                'siswa' => fn ($q) => $q->select('nis', 'name'),
+                'user' => fn ($q) => $q->select('id', 'name'),
+            ])
+            ->get();
+
         return response()->json([
-            'listPemasukan' => Pemasukan::whereTahun(request('tahun'))
-                ->with([
-                    'kategori' => fn ($q) => $q->select('id', 'nama'),
-                    'user' => fn ($q) => $q->select('id', 'name')
-                ])
-                ->latest()
-                ->get(),
-            'listPembayaran' => Pembayaran::whereTahun(request('tahun'))
-                ->with([
-                    'gunabayar' => fn ($q) => $q->select('id', 'nama'),
-                    'kelas' => fn ($q) => $q->select('id', 'nama'),
-                    'siswa' => fn ($q) => $q->select('nis', 'name'),
-                    'user' => fn ($q) => $q->select('id', 'name'),
-                ])
-                ->get()
+            'listPemasukan' => $pemasukan,
+            'listPembayaran' => $pembayaran,
+            'subtotalPemasukan' => $pemasukan->sum('jumlah'),
+            'subtotalPembayaran' => $pembayaran->sum('jumlah')
         ]);
     }
 
@@ -275,6 +281,20 @@ class GetDataBendaharaController extends Controller
     public function get_pengeluaran_harian()
     {
         $pengeluaran = Pengeluaran::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+            ->with([
+                'kategori' => fn ($q) => $q->select('id', 'nama'),
+                'user' => fn ($q) => $q->select('id', 'name'),
+            ]);
+
+        return response()->json([
+            'listPengeluaran' => $pengeluaran->get(),
+            'total' => $pengeluaran->sum('jumlah')
+        ]);
+    }
+    
+    public function get_pengeluaran_tahunan()
+    {
+        $pengeluaran = Pengeluaran::whereTahun(request('tahun'))
             ->with([
                 'kategori' => fn ($q) => $q->select('id', 'nama'),
                 'user' => fn ($q) => $q->select('id', 'name'),

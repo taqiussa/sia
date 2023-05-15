@@ -1,17 +1,38 @@
-import Paginator from '@/Components/Sia/Paginator'
 import PrintLink from '@/Components/Sia/PrintLink'
 import PrintLinkMerah from '@/Components/Sia/PrintLinkMerah'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal, rupiah } from '@/Functions/functions'
+import getPengeluaranTahunan from '@/Functions/getPengeluaranTahunan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
-import React, { useEffect } from 'react'
+import { Head, useForm } from '@inertiajs/react'
+import React, { useEffect, useState } from 'react'
+import ReactPaginate from 'react-paginate'
+import { trackPromise } from 'react-promise-tracker'
 
-const RekapTahunanPengeluaran = ({ initTahun, listPengeluaran, total }) => {
+const RekapTahunanPengeluaran = ({ initTahun }) => {
 
     const { data, setData, errors } = useForm({
-        tahun: initTahun
+        tahun: initTahun,
+        listPengeluaran: [],
+        total: 0
     })
+
+    const [page, setPage] = useState(0);
+    const postsPerPage = 10;
+    const numberOfPostsVisited = page * postsPerPage;
+    const totalPages = Math.ceil(data.listPengeluaran?.length / postsPerPage);
+    const changePage = ({ selected }) => {
+        setPage(selected);
+    };
+
+    async function getData() {
+        const response = await getPengeluaranTahunan(data.tahun)
+        setData({
+            tahun: data.tahun,
+            listPengeluaran: response.listPengeluaran,
+            total: response.total
+        })
+    }
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value)
@@ -19,15 +40,8 @@ const RekapTahunanPengeluaran = ({ initTahun, listPengeluaran, total }) => {
 
     useEffect(() => {
         if (data.tahun) {
-            router.reload(
-                {
-                    only: ['listPengeluaran', 'total'],
-                    data: {
-                        tahun: data.tahun
-                    },
-                    preserveState: true,
-                    replace: true
-                },
+            trackPromise(
+                getData()
             )
         }
 
@@ -89,43 +103,60 @@ const RekapTahunanPengeluaran = ({ initTahun, listPengeluaran, total }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listPengeluaran &&
-                            listPengeluaran.data.map((list, index) => (
-                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                        {index + 1}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {hariTanggal(list.tanggal)}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.kategori?.nama}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.keterangan}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {list.user?.name}
-                                    </td>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {rupiah(list.jumlah)}
-                                    </td>
-                                </tr>
-                            ))}
+                        {data.listPengeluaran &&
+                            data.listPengeluaran
+                                .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
+                                .map((list, index) => (
+                                    <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                        <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                            {index + 1}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {hariTanggal(list.tanggal)}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.kategori?.nama}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.keterangan}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {list.user?.name}
+                                        </td>
+                                        <td className="py-2 px-2 font-medium text-slate-600">
+                                            {rupiah(list.jumlah)}
+                                        </td>
+                                    </tr>
+                                ))}
                         <tr>
                             <td className="py-2 px-2 font-bold text-xl text-slate-600 bg-slate-300" colSpan={5}>
                                 Total
                             </td>
                             <td className="py-2 px-2 font-bold text-xl text-slate-600 bg-slate-300">
-                                {rupiah(total)}
+                                {rupiah(data.total)}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             {
-                listPengeluaran.data.length > 0 &&
-                <Paginator lists={listPengeluaran} />
+                data.listPengeluaran.length > 0 &&
+                <ReactPaginate
+                    pageRangeDisplayed={3} //The range of buttons pages displayed.
+                    previousLabel={"Previous"} //lable for previous page button
+                    nextLabel={"Next"} // lable for Next page button
+                    pageCount={totalPages} // place here the variable for total number of pages
+                    onPageChange={changePage} // place here the trigger event function
+                    /// navigation CSS styling ///
+                    containerClassName={"flex items-center my-4 space-x-1 text-slate-600"}
+                    pageLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-md py-1 px-2 border"}
+                    previousLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-l-md py-1 px-2 border"}
+                    nextLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-r-md py-1 px-2 border"}
+                    disabledLinkClassName={"text-gray-300 cursor-not-allowed hover:bg-white"}
+                    activeLinkClassName={"focus:shadow-outline transition-colors duration-150 bg-emerald-500 text-emerald-100 cursor-pointer"}
+                    /// end navigation styling ///
+                    renderOnZeroPageCount={null}
+                />
             }
         </>
     )

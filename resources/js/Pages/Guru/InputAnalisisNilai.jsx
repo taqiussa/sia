@@ -6,14 +6,17 @@ import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
+import getListJenis from '@/Functions/getListJenis'
+import getListKategori from '@/Functions/getListKategori'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
 import getSiswaWithAnalisisNilai from '@/Functions/getSiswaWithAnalisisNilai'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
+const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
 
     const { data, setData, errors, post, processing } = useForm({
         tahun: initTahun,
@@ -22,6 +25,9 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
         kelasId: '',
         kategoriNilaiId: '',
         jenisPenilaianId: '',
+        listKelas: [],
+        listKategori: [],
+        listJenis: [],
         arrayInput: []
     })
 
@@ -32,6 +38,30 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
     async function getDataSiswa() {
         const response = await getSiswaWithAnalisisNilai(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listKategori: response.listKategori
+        })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({
+            ...data,
+            listJenis: response.listJenis
+        })
     }
 
     const onHandleChange = (e) => {
@@ -205,45 +235,20 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
         if (data.kelasId)
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKategori())
     }, [data.kelasId])
 
     useEffect(() => {
 
         if (data.kategoriNilaiId) {
             setData('jenisPenilaianId', '')
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
         }
     }, [data.semester, data.kategoriNilaiId])
 
@@ -304,7 +309,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -313,7 +318,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                     value={data.kategoriNilaiId}
                     message={errors.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
 
                 <JenisPenilaian
@@ -322,7 +327,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                     value={data.jenisPenilaianId}
                     message={errors.jenisPenilaianId}
                     handleChange={onHandleChange}
-                    listJenis={listJenis}
+                    listJenis={data.listJenis}
                 />
 
             </div>
@@ -378,34 +383,34 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                                                             id={`no${no}`}
                                                             name={`no${no}`}
                                                             label={`no ${no}`}
-                                                            value={siswa.analisis_penilaian?.[`no_${no}`]}
+                                                            value={siswa.analisis_penilaian?.[`no_${no}`] || ''}
                                                             className='w-auto max-w-[60px]'
-                                                            handleChange={(e) => handleDynamicPengetahuan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian.id,
-                                                                siswa.analisis_penilaian.no_1 ?? '',
-                                                                siswa.analisis_penilaian.no_2 ?? '',
-                                                                siswa.analisis_penilaian.no_3 ?? '',
-                                                                siswa.analisis_penilaian.no_4 ?? '',
-                                                                siswa.analisis_penilaian.no_5 ?? '',
-                                                                siswa.analisis_penilaian.no_6 ?? '',
-                                                                siswa.analisis_penilaian.no_7 ?? '',
-                                                                siswa.analisis_penilaian.no_8 ?? '',
-                                                                siswa.analisis_penilaian.no_9 ?? '',
-                                                                siswa.analisis_penilaian.no_10 ?? '',
+                                                            handleChange={(e) => handleDynamicPengetahuan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian?.id,
+                                                                siswa.analisis_penilaian?.no_1 || '',
+                                                                siswa.analisis_penilaian?.no_2 || '',
+                                                                siswa.analisis_penilaian?.no_3 || '',
+                                                                siswa.analisis_penilaian?.no_4 || '',
+                                                                siswa.analisis_penilaian?.no_5 || '',
+                                                                siswa.analisis_penilaian?.no_6 || '',
+                                                                siswa.analisis_penilaian?.no_7 || '',
+                                                                siswa.analisis_penilaian?.no_8 || '',
+                                                                siswa.analisis_penilaian?.no_9 || '',
+                                                                siswa.analisis_penilaian?.no_10 || '',
                                                                 siswa.penilaian.id,
                                                                 siswa.penilaian.nilai,
                                                                 siswa.user.name
                                                             )}
-                                                            handleBlur={(e) => onHandleBlurPengetahuan(e, siswa.nis, siswa.analisis_penilaian.id,
-                                                                siswa.analisis_penilaian.no_1 ?? '',
-                                                                siswa.analisis_penilaian.no_2 ?? '',
-                                                                siswa.analisis_penilaian.no_3 ?? '',
-                                                                siswa.analisis_penilaian.no_4 ?? '',
-                                                                siswa.analisis_penilaian.no_5 ?? '',
-                                                                siswa.analisis_penilaian.no_6 ?? '',
-                                                                siswa.analisis_penilaian.no_7 ?? '',
-                                                                siswa.analisis_penilaian.no_8 ?? '',
-                                                                siswa.analisis_penilaian.no_9 ?? '',
-                                                                siswa.analisis_penilaian.no_10 ?? '',
+                                                            handleBlur={(e) => onHandleBlurPengetahuan(e, siswa.nis, siswa.analisis_penilaian?.id,
+                                                                siswa.analisis_penilaian?.no_1 || '',
+                                                                siswa.analisis_penilaian?.no_2 || '',
+                                                                siswa.analisis_penilaian?.no_3 || '',
+                                                                siswa.analisis_penilaian?.no_4 || '',
+                                                                siswa.analisis_penilaian?.no_5 || '',
+                                                                siswa.analisis_penilaian?.no_6 || '',
+                                                                siswa.analisis_penilaian?.no_7 || '',
+                                                                siswa.analisis_penilaian?.no_8 || '',
+                                                                siswa.analisis_penilaian?.no_9 || '',
+                                                                siswa.analisis_penilaian?.no_10 || '',
                                                                 siswa.penilaian.id
                                                             )}
                                                         />
@@ -428,22 +433,22 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                                                             id={`no${no}`}
                                                             name={`no${no}`}
                                                             label={`no ${no}`}
-                                                            value={siswa.analisis_penilaian?.[`no_${no}`]}
+                                                            value={siswa.analisis_penilaian?.[`no_${no}`] || ''}
                                                             className='w-auto max-w-[60px]'
-                                                            handleChange={(e) => handleDynamicKeterampilan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian.id,
-                                                                siswa.analisis_penilaian.no_1 ?? '',
-                                                                siswa.analisis_penilaian.no_2 ?? '',
-                                                                siswa.analisis_penilaian.no_3 ?? '',
-                                                                siswa.analisis_penilaian.no_4 ?? '',
+                                                            handleChange={(e) => handleDynamicKeterampilan(e, index, siswa.nis, siswa.kelas_id, siswa.analisis_penilaian?.id,
+                                                                siswa.analisis_penilaian?.no_1 || '',
+                                                                siswa.analisis_penilaian?.no_2 || '',
+                                                                siswa.analisis_penilaian?.no_3 || '',
+                                                                siswa.analisis_penilaian?.no_4 || '',
                                                                 siswa.penilaian.id,
                                                                 siswa.penilaian.nilai,
                                                                 siswa.user.name
                                                             )}
-                                                            handleBlur={(e) => onHandleBlurKeterampilan(e, siswa.nis, siswa.analisis_penilaian.id,
-                                                                siswa.analisis_penilaian.no_1 ?? '',
-                                                                siswa.analisis_penilaian.no_2 ?? '',
-                                                                siswa.analisis_penilaian.no_3 ?? '',
-                                                                siswa.analisis_penilaian.no_4 ?? '',
+                                                            handleBlur={(e) => onHandleBlurKeterampilan(e, siswa.nis, siswa.analisis_penilaian?.id,
+                                                                siswa.analisis_penilaian?.no_1 || '',
+                                                                siswa.analisis_penilaian?.no_2 || '',
+                                                                siswa.analisis_penilaian?.no_3 || '',
+                                                                siswa.analisis_penilaian?.no_4 || '',
                                                                 siswa.penilaian.id
                                                             )}
                                                         />
@@ -458,7 +463,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, lis
                                 }
 
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.penilaian.nilai}
+                                    {siswa.penilaian?.nilai}
                                 </td>
                             </tr>
                         ))}

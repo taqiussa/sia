@@ -41,17 +41,9 @@ trait SiswaTrait
                 'orangTua',
                 'user',
             ])
-            ->paginate(10)
-            ->withQueryString()
-            ->through(fn ($q) => [
-                'id' => $q->id,
-                'nis' => $q->nis,
-                'alamat' => $q->alamat,
-                'biodata' => $q->biodata,
-                'kelas' => $q->kelas,
-                'orangTua' => $q->orangTua,
-                'user' => $q->user
-            ]);
+            ->get()
+            ->sortBy(['user.name'])
+            ->values();
     }
     public function data_siswa_belum_ekstra()
     {

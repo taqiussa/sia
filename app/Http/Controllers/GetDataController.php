@@ -26,6 +26,13 @@ class GetDataController extends Controller
         ]);
     }
 
+    public function get_all_siswa_with_biodata()
+    {
+        return response()->json([
+            'listSiswa' => $this->data_all_siswa_with_biodata()
+        ]);
+    }
+
     public function get_all_siswa_belum_ekstra()
     {
         return response()->json([
@@ -108,6 +115,13 @@ class GetDataController extends Controller
                 ->get()
                 ->sortBy('user.name')
                 ->values()
+        ]);
+    }
+
+    public function get_siswa_with_skor()
+    {
+        return response()->json([
+            'listSiswa' => $this->data_siswa_with_skors()
         ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Kd;
 use App\Models\Badalan;
 use App\Models\WaliKelas;
 use App\Traits\InitTrait;
+use App\Models\Penggajian;
 use App\Models\KategoriNilai;
 use App\Models\JenisPenilaian;
 
@@ -83,6 +84,16 @@ class GetDataGuruController extends Controller
                 ])
                 ->orderBy('jam')
                 ->get()
+        ]);
+    }
+
+    public function get_slip_gaji()
+    {
+        return response()->json([
+            'penggajian' => Penggajian::whereTahun(request('tahun'))
+                ->whereBulan(request('bulan'))
+                ->whereUserId(auth()->user()->id)
+                ->first()
         ]);
     }
 }

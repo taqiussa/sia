@@ -8,12 +8,10 @@ use App\Models\Siswa;
 use App\Models\User;
 use App\Models\WajibBayar;
 use App\Traits\InitTrait;
-use App\Traits\SiswaTrait;
 
 class RekapPembayaranSiswaController extends Controller
 {
     use InitTrait;
-    use SiswaTrait;
 
     public function index()
     {
@@ -22,7 +20,6 @@ class RekapPembayaranSiswaController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'listKelas' => Kelas::orderBy('nama')->get(),
-                'listSiswa' => $this->data_siswa_per_kelas()
             ]
         );
     }

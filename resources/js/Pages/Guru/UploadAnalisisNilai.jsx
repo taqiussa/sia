@@ -7,14 +7,17 @@ import Kelas from '@/Components/Sia/Kelas'
 import MataPelajaran from '@/Components/Sia/MataPelajaran'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
+import getListJenis from '@/Functions/getListJenis'
+import getListKategori from '@/Functions/getListKategori'
+import getListKelasGuru from '@/Functions/getListKelasGuru'
 import getSiswaWithAnalisisNilai from '@/Functions/getSiswaWithAnalisisNilai'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, listKategori, listJenis }) => {
+const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
 
     const { data, setData, errors, post, processing } = useForm({
         tahun: initTahun,
@@ -23,7 +26,10 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
         kelasId: '',
         kategoriNilaiId: '',
         jenisPenilaianId: '',
-        fileUpload: ''
+        fileUpload: '',
+        listKelas: [],
+        listKategori: [],
+        listJenis: []
     })
 
     const [listSiswa, setListSiswa] = useState([])
@@ -31,6 +37,30 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
     async function getDataSiswa() {
         const response = await getSiswaWithAnalisisNilai(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
+    }
+
+    async function getDataKelas() {
+        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
+        setData({
+            ...data,
+            listKelas: response.listKelas
+        })
+    }
+
+    async function getDataKategori() {
+        const response = await getListKategori(data.tahun, data.kelasId)
+        setData({
+            ...data,
+            listKategori: response.listKategori
+        })
+    }
+
+    async function getDataJenis() {
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        setData({
+            ...data,
+            listJenis: response.listJenis
+        })
     }
 
     const onHandleChange = (e) => {
@@ -43,16 +73,8 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
         post(route('upload-analisis-nilai.upload'), {
             onSuccess: () => {
                 toast.success('Berhasil Upload Analisis')
-                setData({
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId,
-                    jenisPenilaianId: data.jenisPenilaianId,
-                    kelasId: data.kelasId,
-                    mataPelajaranId: data.mataPelajaranId
-                })
-
-                getDataSiswa()
+                setData({...data})
+                trackPromise(getDataSiswa())
             }
         })
     }
@@ -80,47 +102,23 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
     useEffect(() => {
 
         if (data.tahun && data.mataPelajaranId)
-            router.reload({
-                only: ['listKelas'],
-                data: {
-                    tahun: data.tahun,
-                    mataPelajaranId: data.mataPelajaranId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKelas())
     }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
         if (data.kelasId)
-            router.reload({
-                only: ['listKategori'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKategori())
     }, [data.kelasId])
 
     useEffect(() => {
 
         if (data.kategoriNilaiId) {
             setData('jenisPenilaianId', '')
-            router.reload({
-                only: ['listJenis'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    kategoriNilaiId: data.kategoriNilaiId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataJenis())
         }
     }, [data.semester, data.kategoriNilaiId])
+
 
     return (
         <>
@@ -159,7 +157,7 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={listKelas}
+                    listKelas={data.listKelas}
                 />
 
                 <KategoriNilai
@@ -168,7 +166,7 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
                     value={data.kategoriNilaiId}
                     message={errors.kategoriNilaiId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listKategori={data.listKategori}
                 />
 
                 <JenisPenilaian
@@ -177,7 +175,7 @@ const UploadAnalisisNilai = ({ initTahun, initSemester, listMapel, listKelas, li
                     value={data.jenisPenilaianId}
                     message={errors.jenisPenilaianId}
                     handleChange={onHandleChange}
-                    listJenis={listJenis}
+                    listJenis={data.listJenis}
                 />
 
             </div>

@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Penggajian;
 use App\Traits\InitTrait;
-use Illuminate\Http\Request;
-
 class SlipGajiController extends Controller
 {
     use InitTrait;
@@ -13,14 +10,10 @@ class SlipGajiController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         return inertia('SlipGaji', [
             'initTahun' => $this->data_tahun(),
-            'penggajian' => Penggajian::whereTahun(request('tahun'))
-                ->whereBulan(request('bulan'))
-                ->whereUserId(auth()->user()->id)
-                ->first()
         ]);
     }
 }

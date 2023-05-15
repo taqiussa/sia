@@ -17,6 +17,7 @@ use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetDataAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
+use App\Http\Controllers\GetDataBkController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\GetDataGuruController;
 use App\Http\Controllers\GetDataKetenagaanController;
@@ -137,11 +138,13 @@ Route::middleware('auth')->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
         Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
         Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
+        Route::post('get-all-siswa-with-biodata', 'get_all_siswa_with_biodata')->name('get-all-siswa-with-biodata');
         Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
         Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
         Route::post('get-siswa', 'get_siswa')->name('get-siswa');
         Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
         Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
+        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
     });
 
     // Route Get Data Bendahara
@@ -161,6 +164,10 @@ Route::middleware('auth')->group(function () {
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
 
+    // Route Get Data Bimbingan
+    Route::controller(GetDataBkController::class)->group(function () {
+        Route::post('get-rekap-bimbingan', 'get_rekap_bimbingan')->name('get-rekap-bimbingan');
+    });
 
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
@@ -171,6 +178,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-list-kd', 'get_list_kd')->name('get-list-kd');
         Route::post('get-list-kelas-guru', 'get_list_kelas_guru')->name('get-list-kelas-guru');
         Route::post('get-list-tugas', 'get_list_tugas')->name('get-list-tugas');
+        Route::post('get-slip-gaji', 'get_slip_gaji')->name('get-slip-gaji');
     });
 
     // Route Get Data Ketenagaan
@@ -196,7 +204,7 @@ Route::middleware('auth')->group(function () {
     // Route Get Data Skor
     Route::controller(GetDataSkorController::class)->group(function () {
         // Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
-        // Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
+        Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
 

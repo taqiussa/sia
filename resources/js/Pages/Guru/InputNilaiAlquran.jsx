@@ -108,13 +108,6 @@ const InputNilaiAlquran = ({ initTahun, listKategoriAlquran }) => {
 
     useEffect(() => {
 
-        if (data.tahun) {
-            trackPromise(getDataKelas())
-        }
-    }, [])
-
-    useEffect(() => {
-
         setData({
             tahun: data.tahun,
             kelasId: '',

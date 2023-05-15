@@ -2,19 +2,26 @@ import Bulan from '@/Components/Sia/Bulan'
 import Tahun from '@/Components/Sia/Tahun'
 import { namaBulan } from '@/Functions/functions'
 import { rupiah } from '@/Functions/functions'
+import getSlipGaji from '@/Functions/getSlipGaji'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const SlipGaji = ({ initTahun, penggajian }) => {
+const SlipGaji = ({ initTahun }) => {
 
     const { data, setData, errors, processing } = useForm({
         tahun: initTahun,
-        bulan: moment(new Date()).format('MM')
+        bulan: moment(new Date()).format('MM'),
+        penggajian: []
     })
 
+    async function getData() {
+        const response = await getSlipGaji(data.tahun, data.bulan)
+        setData({ ...data, penggajian: response.penggajian })
+    }
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -22,17 +29,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
     useEffect(() => {
 
         if (data.tahun && data.bulan) {
-            router.reload(
-                {
-                    only: ['penggajian'],
-                    data: {
-                        tahun: data.tahun,
-                        bulan: data.bulan
-                    },
-                    preserveState: true,
-                    replace: true
-                }
-            )
+            trackPromise(getData())
         }
 
     }, [data.tahun, data.bulan])
@@ -71,7 +68,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.gaji_pokok)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.gaji_pokok)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -80,7 +77,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.tunjangan_jabatan)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.tunjangan_jabatan)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -89,7 +86,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.kelebihan_jam)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.kelebihan_jam)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -98,7 +95,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.tunjangan_pendidikan)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.tunjangan_pendidikan)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -107,16 +104,16 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.subsidi_kuliah)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.subsidi_kuliah)}</div>
                                 </div>
                             </td>
                         </tr>
                         <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                            <td className="py-2 px-2">6. transport ({penggajian?.jumlah_hadir ?? 0})</td>
+                            <td className="py-2 px-2">6. transport ({data.penggajian?.jumlah_hadir ?? 0})</td>
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.tunjangan_transport)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.tunjangan_transport)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -125,7 +122,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.tmt)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.tmt)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -134,7 +131,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.jumlah_pendapatan)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.jumlah_pendapatan)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -149,7 +146,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.wajib)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.wajib)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -158,7 +155,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.pokok)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.pokok)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -167,25 +164,25 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.shr)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.shr)}</div>
                                 </div>
                             </td>
                         </tr>
                         <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                            <td className="py-2 px-2">4. angsuran BPD/BRI ({penggajian?.angsuran_bpd_ke ?? '-'})</td>
+                            <td className="py-2 px-2">4. angsuran BPD/BRI ({data.penggajian?.angsuran_bpd_ke ?? '-'})</td>
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.angsuran_bpd)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.angsuran_bpd)}</div>
                                 </div>
                             </td>
                         </tr>
                         <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                            <td className="py-2 px-2">5. angsuran koperasi ({penggajian?.angsuran_koperasi_ke ?? '-'})</td>
+                            <td className="py-2 px-2">5. angsuran koperasi ({data.penggajian?.angsuran_koperasi_ke ?? '-'})</td>
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.angsuran_koperasi)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.angsuran_koperasi)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -194,7 +191,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.bon)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.bon)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -203,7 +200,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.dplk)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.dplk)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -212,7 +209,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.bpjs)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.bpjs)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -221,7 +218,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.jumlah_potongan)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.jumlah_potongan)}</div>
                                 </div>
                             </td>
                         </tr>
@@ -230,7 +227,7 @@ const SlipGaji = ({ initTahun, penggajian }) => {
                             <td className="py-2 px-2">
                                 <div className="flex justify-between">
                                     <div>:</div>
-                                    <div className="text-right">{rupiah(penggajian?.jumlah_terima)}</div>
+                                    <div className="text-right">{rupiah(data.penggajian?.jumlah_terima)}</div>
                                 </div>
                             </td>
                         </tr>

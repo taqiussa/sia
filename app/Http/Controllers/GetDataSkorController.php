@@ -20,4 +20,20 @@ class GetDataSkorController extends Controller
                 ->get()
         ]);
     }
+
+    public function get_siswa_with_skor_wali_kelas()
+    {
+        return response()->json([
+            'listData' => PenilaianSkor::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'siswa' => fn ($q) => $q->select('nis', 'name'),
+                    'skors' => fn ($q) => $q->select('id', 'keterangan', 'skor'),
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->latest()
+                ->get()
+        ]);
+    }
 }

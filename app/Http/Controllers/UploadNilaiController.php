@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Traits\InitTrait;
-use App\Traits\SiswaTrait;
 use App\Exports\ExportNilai;
 use App\Imports\ImportNilai;
 use App\Models\KategoriNilai;
@@ -15,7 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class UploadNilaiController extends Controller
 {
     use InitTrait;
-    use SiswaTrait;
 
     public function index()
     {
@@ -24,12 +22,7 @@ class UploadNilaiController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'initSemester' => $this->data_semester(),
-                'listKelas' => $this->data_kelas(),
                 'listMapel' => $this->data_mapel(),
-                'listKategori' => KategoriNilai::whereIn('id', $this->data_kategori_nilai())->orderBy('nama')->get(),
-                'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->orderBy('nama')->get(),
             ]
         );
     }
@@ -51,13 +44,6 @@ class UploadNilaiController extends Controller
 
         Excel::import(new ImportNilai(), request('fileUpload'));
 
-        to_route('upload-nilai', [
-            'tahun' => request('tahun'),
-            'kelasId' => request('kelasId'),
-            'semester' => request('semester'),
-            'kategoriNilaiId' => request('kategoriNilaiId'),
-            'jenisPenilaianId' => request('jenisPenilaianid'),
-            'mataPelajaranId' => request('mataPelajaranId')
-        ]);
+        to_route('upload-nilai');
     }
 }

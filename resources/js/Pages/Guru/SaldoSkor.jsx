@@ -1,16 +1,24 @@
 import Kelas from '@/Components/Sia/Kelas'
 import Tahun from '@/Components/Sia/Tahun'
 import { penjumlahan } from '@/Functions/functions'
+import getSiswaWithSkor from '@/Functions/getSiswaWithSkor'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const SaldoSkor = ({ initTahun, listKelas, listSiswa }) => {
+const SaldoSkor = ({ initTahun, listKelas }) => {
 
     const { data, setData, processing } = useForm({
         tahun: initTahun,
-        kelasId: ''
+        kelasId: '',
+        listSiswa: []
     })
+
+    async function getDataSkor() {
+        const response = await getSiswaWithSkor(data.tahun, data.kelasId)
+        setData({ ...data, listSiswa: response.listSiswa })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -18,15 +26,7 @@ const SaldoSkor = ({ initTahun, listKelas, listSiswa }) => {
 
     useEffect(() => {
         if (data.tahun && data.kelasId)
-            router.reload({
-                only: ['listSiswa'],
-                data: {
-                    tahun: data.tahun,
-                    kelasId: data.kelasId
-                },
-                replace: true,
-                preserveState: true,
-            })
+            trackPromise(getDataSkor())
     }, [data.tahun, data.kelasId])
 
     return (
@@ -71,7 +71,7 @@ const SaldoSkor = ({ initTahun, listKelas, listSiswa }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

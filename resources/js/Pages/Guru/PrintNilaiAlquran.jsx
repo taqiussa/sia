@@ -40,12 +40,6 @@ const PrintNilaiAlquran = ({ initTahun }) => {
     }
 
     useEffect(() => {
-
-        trackPromise(getDataKelas())
-
-    }, [])
-
-    useEffect(() => {
         if (data.tahun) {
             trackPromise(
                 getDataKelas()

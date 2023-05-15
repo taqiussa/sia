@@ -85,13 +85,6 @@ const InputNilaiBilghoibPerKelas = ({ initTahun, listJenisAlquran }) => {
             trackPromise(getDataKelas())
         }
 
-    }, [])
-
-    useEffect(() => {
-        if (data.tahun) {
-            trackPromise(getDataKelas())
-        }
-
         if (data.tahun && data.kelasId && data.jenisAlquran) {
             trackPromise(getDataSiswa())
         }

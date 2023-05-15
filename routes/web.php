@@ -135,9 +135,12 @@ Route::middleware('auth')->group(function () {
     // Route Get Data
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
         Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
         Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
+        Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
         Route::post('get-siswa', 'get_siswa')->name('get-siswa');
+        Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
         Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
     });
 

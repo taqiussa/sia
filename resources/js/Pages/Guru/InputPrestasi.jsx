@@ -5,12 +5,15 @@ import SearchableSelect from '@/Components/Sia/SearchableSelect'
 import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
+import getAllSiswa from '@/Functions/getAllSiswa'
+import getPrestasi from '@/Functions/getPrestasi'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm, usePage } from '@inertiajs/react'
-import React, { useEffect } from 'react'
+import { Head, useForm, usePage } from '@inertiajs/react'
+import React, { useEffect, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => {
+const InputPrestasi = ({ initTahun, initSemester }) => {
 
     const { auth } = usePage().props
 
@@ -19,8 +22,28 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
         semester: initSemester,
         nis: '',
         prestasi: '',
-        keterangan: ''
+        keterangan: '',
+        listPrestasi: [],
     })
+
+    const [listSiswa, setListSiswa] = useState([])
+    const optionSiswa = listSiswa.map((siswa) => ({
+        value: siswa.nis,
+        label: `${siswa.user?.name} - ${siswa.kelas?.nama}`
+    }))
+
+    async function getDataSiswa() {
+        const response = await getAllSiswa(data.tahun)
+        setListSiswa(response.listSiswa)
+    }
+
+    async function getDataPrestasi() {
+        const response = await getPrestasi(data.tahun, data.semester)
+        setData({
+            ...data,
+            listPrestasi: response.listPrestasi
+        })
+    }
 
     const optionsSiswa = listSiswa.map((siswa) => ({
         value: siswa.nis,
@@ -38,6 +61,7 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
             onSuccess: () => {
                 toast.success('Berhasil Simpan Prestasi')
                 setData({ ...data })
+                trackPromise(getDataPrestasi())
             }
         })
     }
@@ -59,13 +83,13 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
                         route('input-prestasi.hapus',
                             {
                                 id: id,
-                                tahun: data.tahun,
-                                semester: data.semester
                             }
                         ),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Prestasi')
+                                trackPromise(getDataPrestasi())
+
                             }
                         }
                     )
@@ -75,27 +99,13 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
 
     useEffect(() => {
         if (data.tahun)
-            router.reload({
-                only: ['listSiswa'],
-                data: {
-                    tahun: data.tahun
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataSiswa())
     }, [data.tahun])
 
     useEffect(() => {
         if (data.tahun && data.semester)
-            router.reload({
-                only: ['listPrestasi'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataPrestasi())
+
     }, [data.tahun, data.semester])
 
     return (
@@ -124,7 +134,7 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
                         id='nis'
                         name='nis'
                         label='siswa'
-                        options={optionsSiswa}
+                        options={optionSiswa}
                         value={data.nis}
                         message={errors.nis}
                         onChange={(e) => setData('nis', e)}
@@ -179,7 +189,7 @@ const InputPrestasi = ({ initTahun, initSemester, listSiswa, listPrestasi }) => 
                         </tr>
                     </thead>
                     <tbody>
-                        {listPrestasi && listPrestasi.map((prestasi, index) => (
+                        {data.listPrestasi && data.listPrestasi.map((prestasi, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

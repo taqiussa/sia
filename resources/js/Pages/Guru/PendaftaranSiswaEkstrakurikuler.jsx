@@ -5,24 +5,45 @@ import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import SearchableSelect from '@/Components/Sia/SearchableSelect'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
+import getAllSiswaBelumEkstra from '@/Functions/getAllSiswaBelumEkstra'
+import getSiswaEkstra from '@/Functions/getSiswaEkstra'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listSiswa, listSiswaBelum }) => {
+const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         ekstrakurikulerId: '',
         jenisKelamin: '',
         nis: '',
+        listSiswa: [],
+        listSiswaBelum: []
     })
 
-    const optionsSiswa = listSiswaBelum.map((siswa) => ({
+    const optionsSiswa = data.listSiswaBelum.map((siswa) => ({
         value: siswa.nis,
         label: `${siswa.user?.name} - ${siswa.kelas?.nama}`
     }))
+
+    async function getDataSiswaBelum() {
+        const response = await getAllSiswaBelumEkstra(data.tahun)
+        setData({
+            ...data,
+            listSiswaBelum: response.listSiswaBelum
+        })
+    }
+
+    async function getDataSiswaEkstra() {
+        const response = await getSiswaEkstra(data.tahun, data.ekstrakurikulerId, data.jenisKelamin)
+        setData({
+            ...data,
+            listSiswa: response.listSiswa
+        })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -34,12 +55,8 @@ const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listS
         post(route('pendaftaran-siswa-ekstrakurikuler.simpan'), {
             onSuccess: () => {
                 toast.success('Berhasil Mendaftarkan Siswa Ekstra')
-                setData({
-                    tahun: data.tahun,
-                    ekstrakurikulerId: data.ekstrakurikulerId,
-                    jenisKelamin: data.jenisKelamin,
-                    nis: ''
-                })
+                setData({ ...data })
+                trackPromise(getDataSiswaEkstra())
             }
         })
     }
@@ -61,13 +78,12 @@ const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listS
                         route('pendaftaran-siswa-ekstrakurikuler.hapus',
                             {
                                 id: id,
-                                tahun: data.tahun,
-                                ekstrakurikulerId: data.ekstrakurikulerId,
-                                jenisKelamin: data.jenisKelamin
                             }),
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Siswa')
+                                setData({ ...data })
+                                trackPromise(getDataSiswaEkstra())
                             }
                         })
             })
@@ -76,30 +92,14 @@ const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listS
     useEffect(() => {
 
         if (data.tahun && data.ekstrakurikulerId && data.jenisKelamin)
-            router.reload({
-                only: ['listSiswa'],
-                data: {
-                    tahun: data.tahun,
-                    ekstrakurikulerId: data.ekstrakurikulerId,
-                    jenisKelamin: data.jenisKelamin
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataSiswaEkstra())
 
     }, [data.tahun, data.ekstrakurikulerId, data.jenisKelamin])
 
     useEffect(() => {
 
         if (data.tahun)
-            router.reload({
-                only: ['listSiswaBelum'],
-                data: {
-                    tahun: data.tahun,
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataSiswaBelum())
 
     }, [data.tahun])
 
@@ -168,7 +168,7 @@ const PendaftaranSiswaEkstrakurikuler = ({ initTahun, listEkstrakurikuler, listS
                         </tr>
                     </thead>
                     <tbody>
-                        {listSiswa && listSiswa.map((siswa, index) => (
+                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

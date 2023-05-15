@@ -20,8 +20,6 @@ class PendaftaranSiswaEkstrakurikulerController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'listEkstrakurikuler' => Ekstrakurikuler::orderBy('nama')->get(),
-                'listSiswa' => $this->data_siswa_ekstra(),
-                'listSiswaBelum' => $this->data_siswa_belum_ekstra()
             ]
         );
     }
@@ -46,21 +44,13 @@ class PendaftaranSiswaEkstrakurikulerController extends Controller
             'nis' => request('nis')
         ]);
 
-        return to_route('pendaftaran-siswa-ekstrakurikuler', [
-            'tahun' => request('tahun'),
-            'ekstrakurikulerId' => request('ekstrakurikulerId'),
-            'jenisKelamin' => request('jenisKelamin')
-        ]);
+        return to_route('pendaftaran-siswa-ekstrakurikuler');
     }
 
     public function hapus()
     {
         SiswaEkstra::destroy(request('id'));
 
-        return to_route('pendaftaran-siswa-ekstrakurikuler', [
-            'tahun' => request('tahun'),
-            'ekstrakurikulerId' => request('ekstrakurikulerId'),
-            'jenisKelamin' => request('jenisKelamin')
-        ]);
+        return to_route('pendaftaran-siswa-ekstrakurikuler');
     }
 }

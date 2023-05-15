@@ -18,16 +18,6 @@ class InputPrestasiController extends Controller
             'initTahun' => $this->data_tahun(),
             'initSemester' => $this->data_semester(),
             'listSiswa' => $this->data_all_siswa(),
-            'listPrestasi' => Prestasi::whereTahun(request('tahun'))
-                ->whereSemester(request('semester'))
-                ->with([
-                    'guru' => fn ($q) => $q->select('id', 'name'),
-                    'kelas' => fn ($q) => $q->select('id', 'nama'),
-                    'user' => fn ($q) => $q->select('nis', 'name')
-                ])
-                ->get()
-                ->sortBy('user.name')
-                ->values()
         ]);
     }
 
@@ -55,19 +45,14 @@ class InputPrestasiController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-        return to_route('input-prestasi', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester')
-        ]);
+        return to_route('input-prestasi');
+
     }
 
     public function hapus()
     {
         Prestasi::destroy(request('id'));
 
-        return to_route('input-prestasi', [
-            'tahun' => request('tahun'),
-            'semester' => request('semester')
-        ]);
+        return to_route('input-prestasi');
     }
 }

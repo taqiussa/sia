@@ -1,13 +1,46 @@
+import DetailLink from '@/Components/Sia/DetailLink'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import React from 'react'
 
 const DetailBimbingan = ({ bimbingan }) => {
+
+    const { auth } = usePage().props
+
     return (
         <>
             <Head title='Detail Bimbingan' />
             <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">
                 detail bimbingan dan konseling
+            </div>
+            <div className='mb-5'>
+                {!auth.roles.includes('Siswa') ?
+                    <DetailLink href={route('rekap-bimbingan')} label={
+                        <div className='inline-flex items-center'>
+                            <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24">
+
+                                <path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+
+                            </svg>
+                            <div>
+                                Kembali
+                            </div>
+                        </div>
+                    } />
+                    :
+                    <DetailLink href={route('data-bimbingan')} label={
+                        <div className='inline-flex items-center'>
+                            <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24">
+
+                                <path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+
+                            </svg>
+                            <div>
+                                Kembali
+                            </div>
+                        </div>
+                    } />
+                }
             </div>
             <div className="lg:flex lg:justify-center">
                 <div className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">

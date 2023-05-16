@@ -625,6 +625,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     // Route Rekap Bimbingan
     Route::controller(RekapBimbinganController::class)->group(function () {
         Route::get('rekap-bimbingan', 'index')->name('rekap-bimbingan');
+        Route::get('rekap-bimbingan/detail', 'detail')->name('rekap-bimbingan.detail');
         Route::delete('rekap-bimbingan', 'hapus')->name('rekap-bimbingan.hapus');
     });
 

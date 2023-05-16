@@ -1,4 +1,6 @@
 import BentukBimbingan from '@/Components/Sia/BentukBimbingan'
+import DetailIcon from '@/Components/Sia/DetailIcon'
+import DetailLink from '@/Components/Sia/DetailLink'
 import Hapus from '@/Components/Sia/Hapus'
 import InputText from '@/Components/Sia/InputText'
 import Sweet from '@/Components/Sia/Sweet'
@@ -82,7 +84,7 @@ const RekapBimbingan = ({ initTahun }) => {
 
   return (
     <>
-      <Head title='Data pembayaran Siswa' />
+      <Head title='Rekap Bimbingan' />
       <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap bimbingan</div>
       <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-3'>
 
@@ -169,10 +171,17 @@ const RekapBimbingan = ({ initTahun }) => {
                     <td className="py-2 px-2 font-medium text-slate-600">
                       {list.bk?.user?.name}
                     </td>
-                    <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
-                      <Hapus
-                        onClick={() => handleDelete(list.id)}
-                      />
+                    <td className="py-2 px-2 font-medium text-slate-600">
+                      <div className="self-center inline-flex items-center space-x-3">
+                        <div>
+                          <DetailIcon href={route('rekap-bimbingan.detail', { id: list.id })} />
+                        </div>
+                        <div>
+                          <Hapus
+                            onClick={() => handleDelete(list.id)}
+                          />
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))}

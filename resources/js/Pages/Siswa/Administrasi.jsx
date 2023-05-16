@@ -12,11 +12,11 @@ const Administrasi = ({ listData, wajibBayar }) => {
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
-                            <th scope='col' className="py-3 px-2">
-                                Pembayaran
+                            <th scope='col' className="py-3 px-2 text-left">
+                                PEMBAYARAN
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Jumlah
+                                JUMLAH
                             </th>
                         </tr>
                     </thead>

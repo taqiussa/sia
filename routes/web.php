@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AbsensiEkstrakurikulerController;
 use App\Http\Controllers\AbsensiUjianController;
+use App\Http\Controllers\AdministrasiController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
@@ -107,6 +108,14 @@ Route::get('/dashboard', function () {
 // Group Data
 Route::middleware('auth')->group(function () {
 
+    // Sidebar Siswa
+
+    // Route Administrasi
+    Route::get('administrasi', AdministrasiController::class)->name('administrasi');
+
+
+    // End Sidebar Siswa
+
     // Route Bendahara Print Controller
     Route::controller(BendaharaPrintController::class)->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
@@ -155,6 +164,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataBkController::class)->group(function () {
         Route::post('get-rekap-bimbingan', 'get_rekap_bimbingan')->name('get-rekap-bimbingan');
         Route::post('get-rekap-kehadiran', 'get_rekap_kehadiran')->name('get-rekap-kehadiran');
+        Route::post('get-rekap-skor', 'get_rekap_skor')->name('get-rekap-skor');
     });
     
     // Route Get Data

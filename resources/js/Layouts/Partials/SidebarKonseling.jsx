@@ -13,6 +13,7 @@ const SidebarKonseling = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('cek-list-absensi')} active={route().current('cek-list-absensi')} label='cek list absensi' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-bimbingan')} active={route().current('rekap-bimbingan')} label='rekap bimbingan' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-kehadiran')} active={route().current('rekap-kehadiran')} label='rekap kehadiran' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-skor')} active={route().current('rekap-skor')} label='rekap skor' />
             </div>
         </div>
     )

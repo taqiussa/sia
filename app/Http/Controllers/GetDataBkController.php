@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\BkDetail;
+use App\Models\PenilaianSkor;
 
 class GetDataBkController extends Controller
 {
@@ -35,5 +36,20 @@ class GetDataBkController extends Controller
                     ->get(),
             ]
         );
+    }
+
+    public function get_rekap_skor()
+    {
+        return response()->json([
+            'listRekapSkor' => PenilaianSkor::whereTahun(request('tahun'))
+                ->with([
+                    'kelas' => fn ($q) => $q->select('id', 'nama'),
+                    'siswa' => fn ($q) => $q->select('nis', 'name'),
+                    'skors' => fn ($q) => $q->select('id', 'keterangan', 'skor'),
+                    'user' => fn ($q) => $q->select('id', 'name'),
+                ])
+                ->latest()
+                ->get()
+        ]);
     }
 }

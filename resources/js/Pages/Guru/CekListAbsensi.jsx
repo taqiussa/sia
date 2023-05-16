@@ -34,7 +34,7 @@ const CekListAbsensi = () => {
     return (
         <>
             <Head title='Cek List Absensi' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 upperacase mb-2">
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center font-bold text-lg text-slate-600 uppercase mb-2">
                 cek list absensi kelas
             </div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>

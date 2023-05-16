@@ -9,6 +9,9 @@ const SidebarSiswa = ({ closeSide }) => {
             </div>
             <div>
                 <SidebarLink closeSide={closeSide} href={route('administrasi')} active={route().current('administrasi')} label='administrasi' />
+                <SidebarLink closeSide={closeSide} href={route('alquran-bilghoib')} active={route().current('alquran-bilghoib')} label="al qur'an bilghoib" />
+                <SidebarLink closeSide={closeSide} href={route('alquran-binnadzor')} active={route().current('alquran-binnadzor')} label="al qur'an binnadzor" />
+                <SidebarLink closeSide={closeSide} href={route('data-bimbingan')} active={route().current('data-bimbingan')} label="data bimbingan" />
             </div>
         </div>
     )

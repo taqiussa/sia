@@ -58,15 +58,15 @@ class BimbinganIndividuController extends Controller
         if (request()->hasFile('fotoDokumen')) {
             $imageDokumen = request()->file('fotoDokumen');
             $imageDokumenName = time() . '.' . $imageDokumen->getClientOriginalExtension();
-            $imageDokumen->move(storage_path('app/public/foto_dokumen'), $imageDokumenName);
+            $imageDokumen->move(storage_path('app/public/fotodokumen'), $imageDokumenName);
         }
 
         $bimbingan->details()->create([
             'tanggal' => request('tanggal'),
             'kelas_id' => request('kelasId'),
             'nis' => request('nis'),
-            'foto' => $imageName,
-            'foto_dokumen' => $imageDokumenName,
+            'foto' => $imageName ? 'foto/' . $imageName : '',
+            'foto_dokumen' => $imageDokumenName ? 'fotodokumen/' . $imageDokumenName : '',
             'bentuk_bimbingan' => 'Individu',
             'jenis_bimbingan' => request('jenisBimbingan'),
             'tahun' => request('tahun'),

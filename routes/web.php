@@ -4,6 +4,8 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AbsensiEkstrakurikulerController;
 use App\Http\Controllers\AbsensiUjianController;
 use App\Http\Controllers\AdministrasiController;
+use App\Http\Controllers\AlquranBilghoibController;
+use App\Http\Controllers\AlquranBinnadzorController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\BimbinganIndividuController;
 use App\Http\Controllers\BiodataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekListAbsensiController;
+use App\Http\Controllers\DataBimbinganController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
@@ -113,6 +116,17 @@ Route::middleware('auth')->group(function () {
     // Route Administrasi
     Route::get('administrasi', AdministrasiController::class)->name('administrasi');
 
+    // Route Al Qur'an Bilghoib
+    Route::get('alquran-bilghoib', AlquranBilghoibController::class)->name('alquran-bilghoib');
+
+    // Route Al Qur'an Binnadzor
+    Route::get('alquran-binnadzor', AlquranBinnadzorController::class)->name('alquran-binnadzor');
+
+    // Route Data Bimbingan
+    Route::controller(DataBimbinganController::class)->group(function (){
+        Route::get('data-bimbingan', 'index')->name('data-bimbingan');
+        Route::get('data-bimbingan/detail', 'detail')->name('data-bimbingan.detail');
+    });
 
     // End Sidebar Siswa
 
@@ -159,14 +173,14 @@ Route::middleware('auth')->group(function () {
         Route::post('get-pengeluaran-harian', 'get_pengeluaran_harian')->name('get-pengeluaran-harian');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
-    
+
     // Route Get Data BK
     Route::controller(GetDataBkController::class)->group(function () {
         Route::post('get-rekap-bimbingan', 'get_rekap_bimbingan')->name('get-rekap-bimbingan');
         Route::post('get-rekap-kehadiran', 'get_rekap_kehadiran')->name('get-rekap-kehadiran');
         Route::post('get-rekap-skor', 'get_rekap_skor')->name('get-rekap-skor');
     });
-    
+
     // Route Get Data
     Route::controller(GetDataController::class)->group(function () {
         Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');

@@ -383,7 +383,7 @@ const AturWajibBayar = ({ initTahun }) => {
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {dataSiswa.pembayarans && dataSiswa.pembayarans
-                                        .some((bayar) => bayar.gunabayar_id === gunabayar.id) ?
+                                        .some((bayar) => bayar.gunabayar_id == gunabayar.id) ?
                                         (
                                             <div className='text-emerald-600'>
                                                 <Icon path={mdiCheckCircle} size={1} />

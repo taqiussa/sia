@@ -18,7 +18,7 @@ import { mdiCheckCircle } from '@mdi/js'
 import Checkbox from '@/Components/Checkbox'
 import PrintIcon from '@/Components/Sia/PrintIcon'
 
-const AturWajibBayar = ({ initTahun }) => {
+const InputPembayaranSiswa = ({ initTahun }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
@@ -383,7 +383,7 @@ const AturWajibBayar = ({ initTahun }) => {
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {dataSiswa.pembayarans && dataSiswa.pembayarans
-                                        .some((bayar) => bayar.gunabayar_id == gunabayar.id) ?
+                                        .some((bayar) => bayar.gunabayar_id === gunabayar.id) ?
                                         (
                                             <div className='text-emerald-600'>
                                                 <Icon path={mdiCheckCircle} size={1} />
@@ -467,5 +467,5 @@ const AturWajibBayar = ({ initTahun }) => {
 
 }
 
-AturWajibBayar.layout = page => <AppLayout children={page} />
-export default AturWajibBayar
+InputPembayaranSiswa.layout = page => <AppLayout children={page} />
+export default InputPembayaranSiswa

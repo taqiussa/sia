@@ -8,6 +8,7 @@ use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
+use App\Http\Controllers\BiodataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DataPemasukanController;
@@ -166,6 +167,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
         Route::post('get-siswa', 'get_siswa')->name('get-siswa');
         Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
+        Route::post('get-siswa-with-biodata', 'get_siswa_with_biodata')->name('get-siswa-with-biodata');
         Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
         Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
     });
@@ -335,6 +337,11 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('absensi-ujian', 'index')->name('absensi-ujian');
         Route::post('absensi-ujian/nihil', 'nihil')->name('absensi-ujian.nihil');
         Route::post('absensi-ujian/simpan', 'simpan')->name('absensi-ujian.simpan');
+    });
+
+    // Route Biodata Siswa
+    Route::controller(BiodataSiswaController::class)->group(function () {
+        Route::get('biodata-siswa', 'index')->name('biodata-siswa');
     });
 
     // Route Bimbingan Individu

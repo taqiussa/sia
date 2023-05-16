@@ -102,6 +102,21 @@ class GetDataController extends Controller
         ]);
     }
 
+    public function get_siswa_with_biodata()
+    {
+        return response()->json([
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'alamat',
+                    'biodata',
+                    'orangTua',
+                    'user'
+                ])
+                ->get()
+        ]);
+    }
+
     public function get_siswa_with_catatan()
     {
         return response()->json([

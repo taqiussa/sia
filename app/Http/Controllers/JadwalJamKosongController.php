@@ -21,11 +21,6 @@ class JadwalJamKosongController extends Controller
                     ->where('username', '!=', 'administrator')
                     ->orderBy('name')
                     ->get(),
-                'listJadwal' => JamKosong::whereUserId(request('userId'))
-                    ->orderBy('semester')
-                    ->orderBy('hari')
-                    ->orderBy('jam')
-                    ->get()
             ]
         );
     }

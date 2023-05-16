@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Badalan;
-use App\Models\User;
-use App\Traits\InitTrait;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Badalan;
+use App\Models\JamKosong;
+use App\Traits\InitTrait;
 
 class GetDataKetenagaanController extends Controller
 {
@@ -60,6 +61,34 @@ class GetDataKetenagaanController extends Controller
             'listGuruSudahBadal' => Badalan::whereTanggal(request('tanggal'))
                 ->where('badal_id', '!=', null)
                 ->get()
+        ]);
+    }
+
+    public function get_list_jadwal_kosong()
+    {
+        return response()->json([
+            'listJadwal' => JamKosong::whereUserId(request('userId'))
+                ->whereTahun(request('tahun'))
+                ->orderBy('semester')
+                ->orderBy('hari')
+                ->orderBy('jam')
+                ->get()
+        ]);
+    }
+
+    public function get_rekap_jam_kosong()
+    {
+        return response()->json([
+            'listJamKosong' => JamKosong::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereHari(request('hari'))
+                ->whereJam(request('jam'))
+                ->with([
+                    'user' => fn ($q) => $q->select('id', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
         ]);
     }
 }

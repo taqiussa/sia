@@ -7,20 +7,28 @@ import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import { namaHari } from '@/Functions/functions'
+import getListJadwalJamKosong from '@/Functions/getListJadwalJamKosong'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
+const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         semester: initSemester,
         userId: '',
         hari: '',
-        jam: ''
+        jam: '',
+        listJadwal: []
     })
+
+    async function getDataKosong() {
+        const response = await getListJadwalJamKosong(data.tahun, data.userId)
+        setData({ ...data, listJadwal: response.listJadwal })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -35,13 +43,8 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Jam Kosong')
-                    setData({
-                        tahun: data.tahun,
-                        semester: data.semester,
-                        userId: data.userId,
-                        hari: data.hari,
-                        jam: data.jam
-                    })
+                    setData({ ...data })
+                    getDataKosong()
                 }
             }
         )
@@ -68,13 +71,8 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Jadwal Jam Kosong')
-                                setData({
-                                    tahun: data.tahun,
-                                    semester: data.semester,
-                                    userId: data.userId,
-                                    hari: data.hari,
-                                    jam: data.jam
-                                })
+                                setData({ ...data })
+                                getDataKosong()
                             }
                         }
                     )
@@ -85,16 +83,7 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
     useEffect(() => {
 
         if (data.userId)
-            router.reload({
-                only: ['listJadwal'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    userId: data.userId
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKosong())
 
     }, [data.userId])
 
@@ -172,7 +161,7 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser, listJadwal }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listJadwal && listJadwal.map((jadwal, index) => (
+                        {data.listJadwal && data.listJadwal.map((jadwal, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

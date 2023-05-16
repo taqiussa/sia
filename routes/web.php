@@ -133,20 +133,6 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
     });
 
-    // Route Get Data
-    Route::controller(GetDataController::class)->group(function () {
-        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
-        Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
-        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
-        Route::post('get-all-siswa-with-biodata', 'get_all_siswa_with_biodata')->name('get-all-siswa-with-biodata');
-        Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
-        Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
-        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
-        Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
-        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
-        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
-    });
-
     // Route Get Data Bendahara
     Route::controller(GetDataBendaharaController::class)->group(function () {
         Route::post('get-kas-bulanan', 'get_kas_bulanan')->name('get-kas-bulanan');
@@ -163,10 +149,25 @@ Route::middleware('auth')->group(function () {
         Route::post('get-pengeluaran-harian', 'get_pengeluaran_harian')->name('get-pengeluaran-harian');
         Route::post('get-wajib-bayar', 'get_wajib_bayar')->name('get-wajib-bayar');
     });
-
-    // Route Get Data Bimbingan
+    
+    // Route Get Data BK
     Route::controller(GetDataBkController::class)->group(function () {
         Route::post('get-rekap-bimbingan', 'get_rekap_bimbingan')->name('get-rekap-bimbingan');
+        Route::post('get-rekap-kehadiran', 'get_rekap_kehadiran')->name('get-rekap-kehadiran');
+    });
+    
+    // Route Get Data
+    Route::controller(GetDataController::class)->group(function () {
+        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
+        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
+        Route::post('get-all-siswa-with-biodata', 'get_all_siswa_with_biodata')->name('get-all-siswa-with-biodata');
+        Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
+        Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
+        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
+        Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
+        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
+        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
     });
 
     // Route Get Data Guru
@@ -186,7 +187,9 @@ Route::middleware('auth')->group(function () {
         Route::post('get-guru-izin', 'get_guru_izin')->name('get-guru-izin');
         Route::post('get-guru-kosong', 'get_guru_kosong')->name('get-guru-kosong');
         Route::post('get-guru-sudah-badal', 'get_guru_sudah_badal')->name('get-guru-sudah-badal');
+        Route::post('get-list-jadwal-kosong', 'get_list_jadwal_kosong')->name('get-list-jadwal-kosong');
         Route::post('get-permintaan-badal', 'get_permintaan_badal')->name('get-permintaan-badal');
+        Route::post('get-rekap-jam-kosong', 'get_rekap_jam_kosong')->name('get-rekap-jam-kosong');
     });
 
     // Route Get Data Penilaian

@@ -3,18 +3,26 @@ import Jam from '@/Components/Sia/Jam'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
 import { namaHari } from '@/Functions/functions'
+import getRekapJamKosong from '@/Functions/getRekapJamKosong'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const RekapJamKosong = ({ initTahun, initSemester, listJamKosong }) => {
+const RekapJamKosong = ({ initTahun, initSemester }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
         semester: initSemester,
         hari: '',
-        jam: ''
+        jam: '',
+        listJamKosong: []
     })
+
+    async function getData() {
+        const response = await getRekapJamKosong(data.tahun, data.semester, data.hari, data.jam)
+        setData({ ...data, listJamKosong: response.listJamKosong })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -27,15 +35,7 @@ const RekapJamKosong = ({ initTahun, initSemester, listJamKosong }) => {
             && data.hari
             && data.jam
         )
-            router.reload({
-                only: ['listJamKosong'],
-                data: {
-                    tahun: data.tahun,
-                    semester: data.semester,
-                    hari: data.hari,
-                    jam: data.jam
-                }
-            })
+            trackPromise(getData())
     }, [data.tahun, data.semester, data.hari, data.jam])
     return (
         <>
@@ -90,7 +90,7 @@ const RekapJamKosong = ({ initTahun, initSemester, listJamKosong }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listJamKosong && listJamKosong.map((kosong, index) => (
+                        {data.listJamKosong && data.listJamKosong.map((kosong, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

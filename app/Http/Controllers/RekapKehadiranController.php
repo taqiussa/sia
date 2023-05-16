@@ -17,9 +17,6 @@ class RekapKehadiranController extends Controller
     public function index()
     {
         return inertia('Guru/RekapKehadiran', [
-            'listAbsensi' => Absensi::whereTanggal(request('tanggal'))
-                ->whereJam(request('jam'))
-                ->get(),
             'totalSiswa' => Siswa::whereTahun($this->data_tahun())
                 ->count()
         ]);

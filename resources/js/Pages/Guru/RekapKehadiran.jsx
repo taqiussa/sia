@@ -1,32 +1,33 @@
 import Jam from '@/Components/Sia/Jam'
 import Tanggal from '@/Components/Sia/Tanggal'
+import getRekapKehadiran from '@/Functions/getRekapKehadiran'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, Link, router, useForm } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import moment from 'moment/moment'
 import React, { useEffect } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
-const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
+const RekapKehadiran = ({ totalSiswa }) => {
 
     const { data, setData } = useForm({
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        jam: ''
+        jam: '',
+        listAbsensi: [],
     })
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
 
+    async function getDataKehadiran() {
+        const response = await getRekapKehadiran(data.tanggal, data.jam)
+        setData({ ...data, listAbsensi: response.listAbsensi })
+
+    }
+
     useEffect(() => {
         if (data.tanggal && data.jam)
-            router.reload({
-                only: ['listAbsensi'],
-                data: {
-                    tanggal: data.tanggal,
-                    jam: data.jam
-                },
-                replace: true,
-                preserveState: true
-            })
+            trackPromise(getDataKehadiran())
     }, [data.tanggal, data.jam])
 
 
@@ -65,8 +66,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Hadir
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 1).length}
-
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 1).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 &nbsp;
@@ -91,7 +91,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Izin
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 3).length}
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 3).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 Detail
@@ -116,8 +116,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Sakit
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 2).length}
-
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 2).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 Detail
@@ -142,7 +141,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Alpha
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 4).length}
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 4).length}
 
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
@@ -168,8 +167,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Bolos
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 5).length}
-
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 5).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 Detail
@@ -194,8 +192,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Pulang
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.filter(absensi => absensi.kehadiran_id == 6).length}
-
+                                {data.listAbsensi.filter(absensi => absensi.kehadiran_id == 6).length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 Detail
@@ -224,7 +221,6 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                         </div>
                     </div>
                     <div
-
                         className="flex items-center p-4 bg-white rounded-lg shadow-xs border border-indigo-500 shadow-md shadow-indigo-500">
                         <div className="p-3 mr-4 text-indigo-500 bg-indigo-100  rounded-full">
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -237,7 +233,7 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                                 Total Absensi
                             </p>
                             <p className="text-lg font-semibold text-gray-700">
-                                {listAbsensi.length}
+                                {data.listAbsensi.length}
                             </p>
                             <p className="mb-2 text-sm font-medium text-gray-600">
                                 &nbsp;
@@ -246,8 +242,6 @@ const RekapKehadiran = ({ listAbsensi, totalSiswa }) => {
                     </div>
                 </div>
             </div>
-
-
         </>
     )
 }

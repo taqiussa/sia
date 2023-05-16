@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Absensi;
 use App\Models\BkDetail;
-
 
 class GetDataBkController extends Controller
 {
@@ -28,6 +28,12 @@ class GetDataBkController extends Controller
 
     public function get_rekap_kehadiran()
     {
-        
+        return response()->json(
+            [
+                'listAbsensi' => Absensi::whereTanggal(request('tanggal'))
+                    ->whereJam(request('jam'))
+                    ->get(),
+            ]
+        );
     }
 }

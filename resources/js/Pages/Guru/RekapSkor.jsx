@@ -7,7 +7,6 @@ import { hariTanggal } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
-import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
 const RekapSkor = ({ initTahun, listRekapSkor }) => {
@@ -44,7 +43,15 @@ const RekapSkor = ({ initTahun, listRekapSkor }) => {
                                     tahun: data.tahun,
                                     search: data.search
                                 })
-                                trackPromise(getData())
+                                router.reload({
+                                    only: ['listRekapSkor'],
+                                    data: {
+                                        tahun: data.tahun,
+                                        search: data.search
+                                    },
+                                    replace: true,
+                                    preserveState: true
+                                })
                             }
                         }
                     )

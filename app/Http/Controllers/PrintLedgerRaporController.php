@@ -43,6 +43,6 @@ class PrintLedgerRaporController extends Controller
             'totalMapel' => $this->total_mapel($kelas->tingkat),
             'listJenis' => $listJenis
         ];
-        return view('print.guru.print-ledger-pts', $data);
+        return view('print.guru.print-ledger-rapor', $data);
     }
 }

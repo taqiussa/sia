@@ -57,7 +57,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
     }
 
     async function getDataJenis() {
-        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId, data.kelasId)
         setData({
             ...data,
             listJenis: response.listJenis

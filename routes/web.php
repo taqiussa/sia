@@ -432,10 +432,10 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
 
     // Route Input Nilai Al Qur'an
     Route::controller(InputNilaiAlquranController::class)->group(function () {
-        Route::get('input-nila-alquran', 'index')->name('input-nilai-alquran');
-        Route::post('input-nila-alquran', 'simpan')->name('input-nilai-alquran.simpan');
-        Route::put('input-nila-alquran', 'semua')->name('input-nilai-alquran.semua');
-        Route::delete('input-nila-alquran', 'hapus')->name('input-nilai-alquran.hapus');
+        Route::get('input-nilai-alquran', 'index')->name('input-nilai-alquran');
+        Route::post('input-nilai-alquran', 'simpan')->name('input-nilai-alquran.simpan');
+        Route::put('input-nilai-alquran', 'semua')->name('input-nilai-alquran.semua');
+        Route::delete('input-nilai-alquran', 'hapus')->name('input-nilai-alquran.hapus');
     });
 
     // Route Input Nilai Bilghoib Per Kelas

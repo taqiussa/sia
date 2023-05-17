@@ -16,8 +16,12 @@ trait InitTrait
 
     public function data_jenis_penilaian()
     {
+        $tingkat = Kelas::find(request('kelasId'))
+            ->tingkat;
+
         return PenilaianRapor::whereTahun(request('tahun'))
             ->whereSemester(request('semester'))
+            ->whereTingkat($tingkat)
             ->pluck('jenis_penilaian_id');
     }
 

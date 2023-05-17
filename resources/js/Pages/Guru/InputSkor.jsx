@@ -60,15 +60,8 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Skor')
-                    setData({
-                        tanggal: data.tanggal,
-                        tahun: data.tahun,
-                        semester: data.semester,
-                        nis: data.nis,
-                        skorId: ''
-                    })
-
-                    getDataSkor()
+                    setData({ ...data })
+                    trackPromise(getDataSkor())
                 }
             }
         )
@@ -95,15 +88,8 @@ const InputSkor = ({ initTahun, initSemester, listSkor }) => {
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Skor Siswa')
-                                setData({
-                                    tanggal: data.tanggal,
-                                    tahun: data.tahun,
-                                    semester: data.semester,
-                                    nis: data.nis,
-                                    skorId: ''
-                                })
-
-                                getDataSkor()
+                                setData({ ...data })
+                                trackPromise(getDataSkor())
                             }
                         }
                     )

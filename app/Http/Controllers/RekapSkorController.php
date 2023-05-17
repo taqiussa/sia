@@ -42,4 +42,11 @@ class RekapSkorController extends Controller
             ]
         );
     }
+
+    public function hapus()
+    {
+        PenilaianSkor::destroy(request('id'));
+
+        return to_route('rekap-skor');
+    }
 }

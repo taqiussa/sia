@@ -27,7 +27,7 @@
     <table class="w-full pt-3 text-[7px]">
         <thead>
             <tr>
-                <th class="border border-collapse border-black" rowspan="3">No</th>
+                <th class="border border-collapse border-black" rowspan="3">Ranking</th>
                 <th class="border border-collapse border-black" rowspan="3">NIS</th>
                 <th class="border border-collapse border-black" rowspan="3">Nama</th>
                 <th class="border border-collapse border-black" colspan="{{ $totalMapel }}">Mata Pelajaran dan KKM</th>
@@ -45,9 +45,40 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($listSiswa as $siswa)
+            @php
+                $siswaRankings = $listSiswa
+                    ->map(function ($siswa) use ($listJenis) {
+                        $sumAvg = floor(
+                            $siswa->penilaians
+                                ->whereIn('jenis_penilaian_id', $listJenis)
+                                ->groupBy('mata_pelajaran_id')
+                                ->map(function ($group, $key) {
+                                    $avg = $group->avg('nilai');
+                                    $floorAvg = floor($avg);
+                                    return [
+                                        'mata_pelajaran_id' => $key,
+                                        'avg' => $avg,
+                                        'floor_avg' => $floorAvg,
+                                    ];
+                                })
+                                ->sum('avg'),
+                        );
+                        return [
+                            'siswa' => $siswa,
+                            'sum_avg' => $sumAvg,
+                        ];
+                    })
+                    ->sortByDesc('sum_avg')
+                    ->values();
+            @endphp
+
+            @foreach ($siswaRankings as $rank => $siswaRank)
+                @php
+                    $siswa = $siswaRank['siswa'];
+                    $sumAvg = $siswaRank['sum_avg'];
+                @endphp
                 <tr>
-                    <td class="border border-collapse border-black text-center px-1">{{ $loop->iteration }}</td>
+                    <td class="border border-collapse border-black text-center px-1">{{ $rank + 1 }}</td>
                     <td class="border border-collapse border-black text-center px-1">{{ $siswa->nis }}</td>
                     <td class="border border-collapse border-black px-2 whitespace-nowrap">{{ $siswa->user?->name }}</td>
 
@@ -67,17 +98,7 @@
                     @endforeach
 
                     <td class="border border-collapse border-black text-center px-1">
-                        {{ floor(
-                            $siswa->penilaians->whereIn('jenis_penilaian_id', $listJenis)->groupBy('mata_pelajaran_id')->map(function ($group, $key) {
-                                    $avg = $group->avg('nilai');
-                                    $floorAvg = floor($avg);
-                                    return [
-                                        'mata_pelajaran_id' => $key,
-                                        'avg' => $avg,
-                                        'floor_avg' => $floorAvg,
-                                    ];
-                                })->sum('avg'),
-                        ) }}
+                        {{ $sumAvg }}
                     </td>
                 </tr>
             @endforeach

@@ -47,6 +47,7 @@ use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\InputPrestasiController;
 use App\Http\Controllers\InputSkorBirrulWalidainController;
 use App\Http\Controllers\InputSkorController;
+use App\Http\Controllers\InputSkorKelas;
 use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\KasTahunanController;
@@ -123,7 +124,7 @@ Route::middleware('auth')->group(function () {
     Route::get('alquran-binnadzor', AlquranBinnadzorController::class)->name('alquran-binnadzor');
 
     // Route Data Bimbingan
-    Route::controller(DataBimbinganController::class)->group(function (){
+    Route::controller(DataBimbinganController::class)->group(function () {
         Route::get('data-bimbingan', 'index')->name('data-bimbingan');
         Route::get('data-bimbingan/detail', 'detail')->name('data-bimbingan.detail');
     });
@@ -499,6 +500,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('input-skor-birrul-walidain', 'index')->name('input-skor-birrul-walidain');
         Route::post('input-skor-birrul-walidain', 'simpan')->name('input-skor-birrul-walidain.simpan');
         Route::delete('input-skor-birrul-walidain', 'hapus')->name('input-skor-birrul-walidain.hapus');
+    });
+
+    // Route Input Skor Kelas
+    Route::controller(InputSkorKelas::class)->group(function () {
+        Route::get('input-skor-kelas', 'index')->name('input-skor-kelas');
+        Route::post('input-skor-kelas', 'simpan')->name('input-skor-kelas.simpan');
     });
 
     // Route Jadwal Jam Kosong

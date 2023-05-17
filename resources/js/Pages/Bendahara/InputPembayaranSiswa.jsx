@@ -26,14 +26,14 @@ const InputPembayaranSiswa = ({ initTahun }) => {
         jumlah: 0,
         total: 0,
         nis: '',
+        dataSiswa: [],
+        listPembayaran: [],
+        listTransaksi: [],
+        wajibBayar: 0,
         arrayInput: []
     })
 
-    const [dataSiswa, setDataSiswa] = useState([])
-    const [listPembayaran, setListPembayaran] = useState([])
     const [listSiswa, setListSiswa] = useState([])
-    const [listTransaksi, setListTransaksi] = useState([])
-    const [wajibBayar, setWajibBayar] = useState(0)
 
     const listGunabayar = arrayGunabayar()
     const optionsSiswa = listSiswa.map((siswa) => ({
@@ -54,12 +54,15 @@ const InputPembayaranSiswa = ({ initTahun }) => {
 
     async function getDataPembayaranSiswa() {
         const response = await getPembayaranSiswa(data.tahun, data.nis)
-        setDataSiswa(response.dataSiswa)
-        setListPembayaran(response.listPembayaran)
-        setWajibBayar(response.wajibBayar)
-        setData('jumlah', response.jumlah)
-        setData('arrayInput', [])
-        setListTransaksi([])
+        setData({
+            ...data,
+            dataSiswa: response.dataSiswa,
+            listPembayaran: response.listPembayaran,
+            wajibBayar: response.wajibBayar,
+            jumlah: response.jumlah,
+            listTransaksi: [],
+            arrayInput: [],
+        })
     }
 
     const onHandleChange = (event) => {
@@ -74,8 +77,11 @@ const InputPembayaranSiswa = ({ initTahun }) => {
         } else {
             updatedArrayInput = updatedArrayInput.filter(item => item !== value);
         }
-        setData({ ...data, arrayInput: updatedArrayInput });
-        setListTransaksi(updatedArrayInput)
+        setData({
+            ...data,
+            arrayInput: updatedArrayInput,
+            listTransaksi: updatedArrayInput
+        });
 
     }
 
@@ -87,19 +93,15 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Pembayaran Siswa')
                     setData({
-                        tahun: data.tahun,
-                        tanggal: data.tanggal,
-                        nis: data.nis,
-                        jumlah: '',
-                        total: '',
-                        arrayInput: []
+                        ...data,
+                        arrayInput: [],
+                        listTransaksi: []
                     })
                     getDataPembayaranSiswa()
                     checkboxRefs.current.forEach((check) => {
                         if (check.current !== null)
                             check.current.checked = false
                     })
-                    setListTransaksi([])
                 },
                 onError: (error) => {
                     Sweet.fire({
@@ -130,14 +132,10 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Data Pembayaran Siswa')
                                 setData({
-                                    tahun: data.tahun,
-                                    tanggal: data.tanggal,
-                                    nis: data.nis,
-                                    jumlah: '',
-                                    total: '',
+                                    ...data,
+                                    listTransaksi: [],
                                     arrayInput: []
                                 })
-                                setListTransaksi([])
                                 getDataPembayaranSiswa()
                             }
                         }
@@ -168,12 +166,13 @@ const InputPembayaranSiswa = ({ initTahun }) => {
     }, [data.tahun, data.nis])
 
     useEffect(() => {
-        const totalJumlah = listTransaksi.reduce((acc, curr) => {
-            return acc + data.jumlah
-        }, 0)
+        if (data.listTransaksi.length > 0) {
+            setData('total', data.listTransaksi.length * data.jumlah)
+        } else {
+            setData('total', 0)
+        }
+    }, [data.listTransaksi])
 
-        setData('total', totalJumlah)
-    }, [listTransaksi])
     return (
         <>
             <Head title='Input Pembayaran Siswa' />
@@ -233,16 +232,16 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                 <tbody>
                                     <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                            {dataSiswa.nis}
+                                            {data.dataSiswa.nis}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {dataSiswa.user?.name}
+                                            {data.dataSiswa.user?.name}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {dataSiswa.kelas?.nama}
+                                            {data.dataSiswa.kelas?.nama}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {dataSiswa.alamat?.desa}
+                                            {data.dataSiswa.alamat?.desa}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -250,7 +249,7 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                             Wajib Bayar
                                         </td>
                                         <td className="py-2 px-2 font-medium text-yellow-600">
-                                            {rupiah(wajibBayar)}
+                                            {rupiah(data.wajibBayar)}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -258,7 +257,7 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                             Total Bayar
                                         </td>
                                         <td className="py-2 px-2 font-medium text-emerald-600">
-                                            {rupiah(dataSiswa.totalBayar)}
+                                            {rupiah(data.dataSiswa.totalBayar)}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
@@ -266,7 +265,7 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                             Kurang Bayar
                                         </td>
                                         <td className="py-2 px-2 font-medium text-red-600">
-                                            {rupiah(wajibBayar - dataSiswa.totalBayar)}
+                                            {rupiah(data.wajibBayar - data.dataSiswa.totalBayar)}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -290,7 +289,7 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {listTransaksi && listTransaksi.map((transaksi, index) => (
+                                {data.listTransaksi && data.listTransaksi.map((transaksi, index) => (
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                             {index + 1}
@@ -361,29 +360,29 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                                     {gunabayar.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSiswa.pembayarans && dataSiswa.pembayarans
+                                    {data.dataSiswa.pembayarans && data.dataSiswa.pembayarans
                                         .filter((bayar) => bayar.gunabayar_id == gunabayar.id)
                                         .map((bayar, index) => (
                                             <div key={index}>{hariTanggal(bayar.tanggal)}</div>
                                         ))}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSiswa.pembayarans && dataSiswa.pembayarans
+                                    {data.dataSiswa.pembayarans && data.dataSiswa.pembayarans
                                         .filter((bayar) => bayar.gunabayar_id == gunabayar.id)
                                         .map((bayar, index) => (
                                             <div key={index}>{rupiah(bayar.jumlah)}</div>
                                         ))}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSiswa.pembayarans && dataSiswa.pembayarans
+                                    {data.dataSiswa.pembayarans && data.dataSiswa.pembayarans
                                         .filter((bayar) => bayar.gunabayar_id == gunabayar.id)
                                         .map((bayar, index) => (
                                             <div key={index}>{bayar.user?.name}</div>
                                         ))}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {dataSiswa.pembayarans && dataSiswa.pembayarans
-                                        .some((bayar) => bayar.gunabayar_id === gunabayar.id) ?
+                                    {data.dataSiswa.pembayarans && data.dataSiswa.pembayarans
+                                        .some((bayar) => bayar.gunabayar_id == gunabayar.id) ?
                                         (
                                             <div className='text-emerald-600'>
                                                 <Icon path={mdiCheckCircle} size={1} />
@@ -431,7 +430,7 @@ const InputPembayaranSiswa = ({ initTahun }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listPembayaran && listPembayaran.map((bayar, index) => (
+                        {data.listPembayaran && data.listPembayaran.map((bayar, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}

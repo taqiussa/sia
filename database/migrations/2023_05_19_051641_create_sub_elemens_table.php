@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('users', function (Blueprint $table) {
-        //     $table->string('foto')->nullable();
-        // });
+        Schema::create('sub_elemens', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('elemen_id');
+            $table->string('nama');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('foto');
-        });
+        Schema::dropIfExists('sub_elemens');
     }
 };

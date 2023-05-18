@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kepala_sekolahs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->string('tahun', 30);
-            $table->timestamps();
-        });
+        // Schema::create('kepala_sekolahs', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('user_id');
+        //     $table->string('tahun', 30);
+        //     $table->timestamps();
+        // });
     }
 
     /**

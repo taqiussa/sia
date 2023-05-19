@@ -12,6 +12,7 @@ use App\Http\Controllers\AturNamaDimensiController;
 use App\Http\Controllers\AturNamaElemenController;
 use App\Http\Controllers\AturNamaProyekController;
 use App\Http\Controllers\AturNamaSubElemenController;
+use App\Http\Controllers\AturPenilaianProyekController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
@@ -204,11 +205,14 @@ Route::middleware('auth')->group(function () {
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
+        Route::post('get-list-aturan-proyek', 'get_list_aturan_proyek')->name('get-list-aturan-proyek');
+        Route::post('get-list-elemen', 'get_list_elemen')->name('get-list-elemen');
         Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
         Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
         Route::post('get-list-kategori-per-tingkat', 'get_list_kategori_per_tingkat')->name('get-list-kategori-per-tingkat');
         Route::post('get-list-kd', 'get_list_kd')->name('get-list-kd');
         Route::post('get-list-kelas-guru', 'get_list_kelas_guru')->name('get-list-kelas-guru');
+        Route::post('get-list-sub-elemen', 'get_list_sub_elemen')->name('get-list-sub-elemen');
         Route::post('get-list-tugas', 'get_list_tugas')->name('get-list-tugas');
         Route::post('get-slip-gaji', 'get_slip_gaji')->name('get-slip-gaji');
     });
@@ -373,6 +377,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('atur-nama-sub-elemen', 'index')->name('atur-nama-sub-elemen');
         Route::post('atur-nama-sub-elemen', 'simpan')->name('atur-nama-sub-elemen.simpan');
         Route::delete('atur-nama-sub-elemen', 'hapus')->name('atur-nama-sub-elemen.hapus');
+    });
+
+    // Route Atur Penilaian Proyek
+    Route::controller(AturPenilaianProyekController::class)->group(function () {
+        Route::get('atur-penilaian-proyek', 'index')->name('atur-penilaian-proyek');
+        Route::post('atur-penilaian-proyek', 'simpan')->name('atur-penilaian-proyek.simpan');
+        Route::delete('atur-penilaian-proyek', 'hapus')->name('atur-penilaian-proyek.hapus');
     });
 
     // Route Absensi

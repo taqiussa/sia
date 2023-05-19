@@ -12,6 +12,7 @@ const SidebarKurikulum = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('atur-nama-elemen')} active={route().current('atur-nama-elemen')} label='atur nama elemen' />
                 <SidebarLink closeSide={closeSide} href={route('atur-nama-proyek')} active={route().current('atur-nama-proyek')} label='atur nama proyek' />
                 <SidebarLink closeSide={closeSide} href={route('atur-nama-sub-elemen')} active={route().current('atur-nama-sub-elemen')} label='atur nama sub elemen' />
+                <SidebarLink closeSide={closeSide} href={route('atur-penilaian-proyek')} active={route().current('atur-penilaian-proyek')} label='atur penilaian proyek' />
             </div>
         </div>
     )

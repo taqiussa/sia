@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisPenilaian;
-use App\Models\KategoriNilai;
 use App\Models\Kelas;
 use App\Models\Kkm;
 use App\Models\Penilaian;
@@ -58,27 +56,6 @@ class InputNilaiRemidiController extends Controller
             ]
         );
 
-        return to_route('input-nilai-remidi');
-    }
-
-    public function update()
-    {
-        $remidi = Remidi::updateOrCreate(
-            ['id' => request('remidiId')],
-            [
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'ki' => request('ki'),
-                'materi' => request('materi'),
-                'catatan' => request('catatan'),
-            ]
-        );
-
         $kelas = Kelas::find(request('kelasId'));
 
         $kkm = Kkm::whereTahun(request('tahun'))
@@ -86,40 +63,43 @@ class InputNilaiRemidiController extends Controller
             ->whereTingkat($kelas->tingkat)
             ->value('kkm');
 
-        RemidiDetail::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'remidi_id' => $remidi->id,
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'nis' => request('nis'),
-                'nilai_awal' => request('nilaiAwal'),
-                'nilai_akhir' => $kkm,
-                'nilai_remidi' => request('nilaiRemidi'),
-            ]
-        );
+        $listSiswa = request('arrayInput');
 
-        Penilaian::whereTahun(request('tahun'))
-            ->whereSemester(request('semester'))
-            ->whereMataPelajaranId(request('mataPelajaranId'))
-            ->whereKategoriNilaiId(request('kategoriNilaiId'))
-            ->whereJenisPenilaianId(request('jenisPenilaianId'))
-            ->whereKelasId(request('kelasId'))
-            ->whereNis(request('nis'))
-            ->update([
-                'nilai' => $kkm
-            ]);
+        foreach ($listSiswa as $siswa) {
+            if ($siswa['remidi'] != null) {
 
-        return response()->json([
-            'listSiswa' => $this->data_siswa_with_nilai_remidi(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
+                RemidiDetail::updateOrCreate(
+                    ['id' => $siswa['remidi']['id'] ?? null],
+                    [
+                        'remidi_id' => $siswa['remidi']['remidi_id'],
+                        'tahun' => request('tahun'),
+                        'semester' => request('semester'),
+                        'tanggal' => request('tanggal'),
+                        'kelas_id' => request('kelasId'),
+                        'mata_pelajaran_id' => request('mataPelajaranId'),
+                        'kategori_nilai_id' => request('kategoriNilaiId'),
+                        'jenis_penilaian_id' => request('jenisPenilaianId'),
+                        'nis' => $siswa['nis'],
+                        'nilai_awal' => $siswa['remidi']['nilai_awal'],
+                        'nilai_akhir' => $kkm,
+                        'nilai_remidi' => $siswa['remidi']['nilai_remidi'] ?? null,
+                    ]
+                );
+
+                Penilaian::whereTahun(request('tahun'))
+                    ->whereSemester(request('semester'))
+                    ->whereMataPelajaranId(request('mataPelajaranId'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                    ->whereKelasId(request('kelasId'))
+                    ->whereNis($siswa['nis'])
+                    ->update([
+                        'nilai' => $kkm
+                    ]);
+            }
+        }
+
+        return to_route('input-nilai-remidi');
     }
 
     public function hapus()

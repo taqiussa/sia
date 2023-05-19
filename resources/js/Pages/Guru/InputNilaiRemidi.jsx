@@ -8,19 +8,18 @@ import Kelas from '@/Components/Sia/Kelas'
 import KategoriNilai from '@/Components/Sia/KategoriNilai'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import { trackPromise } from 'react-promise-tracker'
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
 import Tanggal from '@/Components/Sia/Tanggal'
 import moment from 'moment'
 import InputArea from '@/Components/Sia/InputArea'
 import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
-import axios from 'axios'
 import getSiswaRemidi from '@/Functions/getSiswaRemidi'
 import Hapus from '@/Components/Sia/Hapus'
 import getListKelasGuru from '@/Functions/getListKelasGuru'
 import getListKategori from '@/Functions/getListKategori'
 import getListJenis from '@/Functions/getListJenis'
+import InputText from '@/Components/Sia/InputText'
 
 const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
@@ -44,7 +43,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
     const [listSiswa, setListSiswa] = useState([])
     const [remidi, setRemidi] = useState([])
     const [kkm, setKkm] = useState([])
-    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -125,50 +123,8 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
             }
         })
 
-        setMessage([]);
         setListSiswa(newList);
         setCount(count + 1);
-    }
-
-    const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, nilaiAkhir, remidiId) => {
-        e.preventDefault()
-
-        axios.put(route('input-nilai-remidi.update', {
-            id: id,
-            tanggal: data.tanggal,
-            tahun: data.tahun,
-            semester: data.semester,
-            mataPelajaranId: data.mataPelajaranId,
-            kategoriNilaiId: data.kategoriNilaiId,
-            jenisPenilaianId: data.jenisPenilaianId,
-            ki: data.ki,
-            materi: data.materi,
-            catatan: data.catatan,
-            nis: nis,
-            kelasId: kelasId,
-            remidiId: remidiId,
-            nilaiAwal: nilaiAwal,
-            nilaiAkhir: nilaiAkhir,
-            nilaiRemidi: e.target.value,
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
-
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.response.data.message
-                    })
-            })
     }
 
     const submit = (e) => {
@@ -223,7 +179,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     )
             })
 
-
     }
 
     useEffect(() => {
@@ -271,18 +226,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
         })
 
     }, [count])
-
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
-
 
     return (
         <>
@@ -380,11 +323,6 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     handleChange={onHandleChange}
                 />
             </div>
-            <PrimaryButton
-                children='simpan'
-                onClick={submit}
-                disabled={processing}
-            />
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
@@ -425,28 +363,26 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         <div className='flex flex-col'>
-                                            <InputTextBlur
+
+                                            <InputText
                                                 id='remidi'
                                                 name='remidi'
                                                 className='w-auto max-w-[60px]'
                                                 value={siswa.remidi?.nilai_remidi ?? ''}
                                                 handleChange={(e) => handleDynamic(e, index, siswa.remidi?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian?.nilai, siswa.remidi?.nilai_awal ?? siswa.penilaian?.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
-                                                handleBlur={(e) => onHandleBlur(e, siswa.remidi?.id, siswa.nis, siswa.kelas_id, siswa.remidi?.nilai_awal ?? siswa.penilaian.nilai, siswa.remidi?.nilai_akhir, siswa.remidi?.remidi_id ?? remidi.id)}
                                             />
-                                            {message && message.nis == siswa.nis &&
-                                                (
-                                                    <span className='text-emerald-500'>{message.message}</span>
-                                                )}
+
                                             {data.arrayInput.length > 0 && data.arrayInput[index]?.remidi?.nilai_remidi > 100 && (
                                                 <span className='text-red-500'>Nilai Maksimal 100</span>
                                             )}
+
                                         </div>
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         {siswa.remidi?.nilai_akhir}
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
-                                        {siswa.remidi?.nilai_awal && (
+                                        {siswa.remidi?.id && (
                                             <Hapus onClick={() => handleDelete(siswa.remidi.id, siswa.remidi.nilai_awal, siswa.nis, siswa.kelas_id)} />
                                         )}
                                     </td>
@@ -455,6 +391,13 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                         }
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-end py-5">
+                <PrimaryButton
+                    children='simpan'
+                    onClick={submit}
+                    disabled={processing}
+                />
             </div>
         </>
     )

@@ -218,8 +218,6 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
             arrayInput: [...listSiswa],
         })
 
-        console.log(data.arrayInput)
-
     }, [count])
 
 
@@ -338,11 +336,6 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                     handleChange={onHandleChange}
                 />
             </div>
-            <PrimaryButton
-                children='simpan'
-                onClick={submit}
-                disabled={processing}
-            />
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">

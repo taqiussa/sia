@@ -6,12 +6,12 @@ import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
-import Dimensi from '@/Components/Sia/Dimensi'
+import Elemen from '@/Components/Sia/Elemen'
 
-const AturNamaElemen = ({ listDimensi, listElemen }) => {
+const AturNamaSubElemen = ({ listElemen, listSubElemen }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
-        dimensiId: '',
+        elemenId: '',
         nama: '',
     })
 
@@ -22,10 +22,10 @@ const AturNamaElemen = ({ listDimensi, listElemen }) => {
     const submit = (e) => {
         e.preventDefault()
         post(
-            route('atur-nama-elemen.simpan'),
+            route('atur-nama-sub-elemen.simpan'),
             {
                 onSuccess: () => {
-                    toast.success('Berhasil Simpan Elemen')
+                    toast.success('Berhasil Simpan Sub Elemen')
                     setData({ ...data })
                 },
                 onError: (error) => {
@@ -52,10 +52,10 @@ const AturNamaElemen = ({ listDimensi, listElemen }) => {
             .then((result) => {
                 if (result.isConfirmed)
                     destroy(
-                        route('atur-nama-elemen.hapus', { id: id }),
+                        route('atur-nama-sub-elemen.hapus', { id: id }),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus Data Elemen')
+                                toast.success('Berhasil Hapus Data Sub Elemen')
                                 setData({ ...data })
                             }
                         }
@@ -65,24 +65,24 @@ const AturNamaElemen = ({ listDimensi, listElemen }) => {
 
     return (
         <>
-            <Head title='Atur Nama Elemen' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur nama elemen</div>
+            <Head title='Atur Nama Sub Elemen' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur nama sub elemen</div>
             <form onSubmit={submit} className='space-y-3 mb-3'>
                 <div className='grid grid-cols-3 gap-2'>
 
-                    <Dimensi
-                        id="dimensiId"
-                        name="dimensiId"
-                        value={data.dimensiId}
-                        message={errors.dimensiId}
+                    <Elemen
+                        id="elemenId"
+                        name="elemenId"
+                        value={data.elemenId}
+                        message={errors.elemenId}
                         isFocused={true}
                         handleChange={onHandleChange}
-                        listDimensi={listDimensi}
+                        listElemen={listElemen}
                     />
 
                     <InputText
                         id="nama"
-                        label="nama elemen"
+                        label="nama sub elemen"
                         name="nama"
                         value={data.nama}
                         message={errors.nama}
@@ -106,24 +106,30 @@ const AturNamaElemen = ({ listDimensi, listElemen }) => {
                                 Nama Elemen
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
+                                Nama Sub Elemen
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {listElemen && listElemen.map((elemen, index) => (
+                        {listSubElemen && listSubElemen.map((sub, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {elemen.dimensi?.nama}
+                                    {sub.elemen?.dimensi?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {elemen.nama}
+                                    {sub.elemen?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus onClick={() => handleDelete(elemen.id)} />
+                                    {sub.nama}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    <Hapus onClick={() => handleDelete(sub.id)} />
                                 </td>
                             </tr>
                         ))}
@@ -135,5 +141,5 @@ const AturNamaElemen = ({ listDimensi, listElemen }) => {
 
 }
 
-AturNamaElemen.layout = page => <AppLayout children={page} />
-export default AturNamaElemen
+AturNamaSubElemen.layout = page => <AppLayout children={page} />
+export default AturNamaSubElemen

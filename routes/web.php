@@ -9,7 +9,9 @@ use App\Http\Controllers\AlquranBinnadzorController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\AturNamaDimensiController;
+use App\Http\Controllers\AturNamaElemenController;
 use App\Http\Controllers\AturNamaProyekController;
+use App\Http\Controllers\AturNamaSubElemenController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
@@ -352,11 +354,25 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('atur-nama-dimensi', 'hapus')->name('atur-nama-dimensi.hapus');
     });
 
+    // Route Atur Nama Elemen
+    Route::controller(AturNamaElemenController::class)->group(function () {
+        Route::get('atur-nama-elemen', 'index')->name('atur-nama-elemen');
+        Route::post('atur-nama-elemen', 'simpan')->name('atur-nama-elemen.simpan');
+        Route::delete('atur-nama-elemen', 'hapus')->name('atur-nama-elemen.hapus');
+    });
+
     // Route Atur Nama Proyek
     Route::controller(AturNamaProyekController::class)->group(function () {
         Route::get('atur-nama-proyek', 'index')->name('atur-nama-proyek');
         Route::post('atur-nama-proyek', 'simpan')->name('atur-nama-proyek.simpan');
         Route::delete('atur-nama-proyek', 'hapus')->name('atur-nama-proyek.hapus');
+    });
+
+    // Route Atur Nama Sub Elemen
+    Route::controller(AturNamaSubElemenController::class)->group(function () {
+        Route::get('atur-nama-sub-elemen', 'index')->name('atur-nama-sub-elemen');
+        Route::post('atur-nama-sub-elemen', 'simpan')->name('atur-nama-sub-elemen.simpan');
+        Route::delete('atur-nama-sub-elemen', 'hapus')->name('atur-nama-sub-elemen.hapus');
     });
 
     // Route Absensi

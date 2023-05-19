@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dimensi;
 use App\Models\Elemen;
 
 class AturNamaElemenController extends Controller
@@ -9,20 +10,27 @@ class AturNamaElemenController extends Controller
     public function index()
     {
         return inertia(
-            'Guru/AturNamaProyek',
+            'Guru/AturNamaElemen',
             [
-                'listProyek' => Elemen::orderBy('nama')->get()
+                'listDimensi' => Dimensi::orderBy('nama')->get(),
+                'listElemen' => Elemen::with('dimensi')->orderBy('nama')->get()
             ]
         );
     }
 
     public function simpan()
     {
-        $validate = request()->validate(['nama' => 'required']);
+        request()->validate([
+            'dimensiId' => 'required',
+            'nama' => 'required'
+        ]);
 
-        Elemen::create($validate);
+        Elemen::create([
+            'nama' => request('nama'),
+            'dimensi_id' => request('dimensiId')
+        ]);
 
-        return to_route('atur-nama-proyek');
+        return to_route('atur-nama-elemen');
     }
 
     public function hapus()
@@ -31,6 +39,6 @@ class AturNamaElemenController extends Controller
 
         Elemen::destroy(request('id'));
 
-        return to_route('atur-nama-proyek');
+        return to_route('atur-nama-elemen');
     }
 }

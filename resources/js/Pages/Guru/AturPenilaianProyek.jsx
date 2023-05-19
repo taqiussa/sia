@@ -203,6 +203,9 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                 Nama Proyek
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
+                                Judul Proyek
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
                                 Nama Dimensi
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
@@ -210,6 +213,9 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nama Sub Elemen
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Capaian
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
@@ -226,6 +232,9 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                     {atur.proyek?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
+                                    {atur.judul}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
                                     {atur.dimensi?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
@@ -233,6 +242,9 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {atur.subElemen?.nama}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {atur.capaian}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <Hapus onClick={() => handleDelete(atur.id)} />

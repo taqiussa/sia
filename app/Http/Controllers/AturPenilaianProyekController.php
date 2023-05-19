@@ -49,7 +49,7 @@ class AturPenilaianProyekController extends Controller
 
     public function hapus()
     {
-        request()->validate(['id' => request('id')]);
+        request()->validate(['id' => 'required']);
 
         AturanProyek::destroy(request('id'));
 

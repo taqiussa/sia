@@ -27,6 +27,7 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
         elemenId: '',
         subElemenId: '',
         judul: '',
+        deskripsi: '',
         capaian: '',
         listElemen: [],
         listSubElemen: [],
@@ -177,6 +178,16 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                     name="judul"
                     value={data.judul}
                     message={errors.judul}
+                    isFocused={true}
+                    handleChange={onHandleChange}
+                />
+
+                <InputArea
+                    id="deskripsi"
+                    label="deskripsi"
+                    name="deskripsi"
+                    value={data.deskripsi}
+                    message={errors.deskripsi}
                     isFocused={true}
                     handleChange={onHandleChange}
                 />

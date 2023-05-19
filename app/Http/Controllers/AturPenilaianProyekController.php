@@ -30,6 +30,7 @@ class AturPenilaianProyekController extends Controller
             'subElemenId' => 'required',
             'judul' => 'required',
             'capaian' => 'required',
+            'deskripsi' => 'required'
         ]);
 
         AturanProyek::create([
@@ -40,6 +41,7 @@ class AturPenilaianProyekController extends Controller
             'sub_elemen_id' => request('subElemenId'),
             'judul' => request('judul'),
             'capaian' => request('capaian'),
+            'deskripsi' => request('deskripsi'),
         ]);
 
         return to_route('atur-penilaian-proyek');

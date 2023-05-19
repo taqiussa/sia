@@ -17,6 +17,27 @@ class GetDataGuruController extends Controller
 {
     use InitTrait;
 
+    public function get_aturan_per_proyek()
+    {
+        return response()->json([
+            'aturan' => AturanProyek::whereTahun(request('tahun'))
+                ->whereProyekId(request('proyekId'))
+                ->first() ?? null
+        ]);
+    }
+
+    public function get_aturan_per_sub_elemen()
+    {
+        return response()->json([
+            'aturan' => AturanProyek::whereTahun(request('tahun'))
+                ->whereProyekId(request('proyekId'))
+                ->whereDimensiId(request('dimensiId'))
+                ->whereElemenId(request('elemenId'))
+                ->whereSubElemenId(request('subElemenId'))
+                ->first() ?? null
+        ]);
+    }
+
     public function get_kelas_wali_kelas()
     {
         return response()->json([

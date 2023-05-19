@@ -34,7 +34,11 @@ class AturPenilaianProyekController extends Controller
             'catatan' => 'required'
         ]);
 
-        AturanProyek::create([
+        AturanProyek::updateOrCreate(
+            [
+                'id' => request('idAturan')
+            ],
+            [
             'tahun' => request('tahun'),
             'proyek_id' => request('proyekId'),
             'dimensi_id' => request('dimensiId'),

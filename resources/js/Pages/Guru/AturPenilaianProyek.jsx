@@ -17,10 +17,13 @@ import Proyek from '@/Components/Sia/Proyek'
 import Dimensi from '@/Components/Sia/Dimensi'
 import SubElemen from '@/Components/Sia/SubElemen'
 import InputArea from '@/Components/Sia/InputArea'
+import getAturanPerProyek from '@/Functions/getAturanPerProyek'
+import getAturanPerSubElemen from '@/Functions/getAturanPerSubElemen'
 
 const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
+        idAturan: '',
         tahun: initTahun,
         proyekId: '',
         dimensiId: '',
@@ -44,6 +47,15 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
         setData({ ...data, listAturanProyek: response.listAturanProyek })
     }
 
+    async function getDataPerProyek() {
+        const response = await getAturanPerProyek(data.tahun, data.proyekId)
+        setData({
+            ...data,
+            judul: response.aturan?.judul || '',
+            deskripsi: response.aturan?.deskripsi || ''
+        })
+    }
+
     async function getDataElemen() {
         const response = await getListElemen(data.dimensiId)
         setData({ ...data, listElemen: response.listElemen })
@@ -54,6 +66,16 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
         setData({ ...data, listSubElemen: response.listSubElemen })
     }
 
+    async function getDataPerSubElemen() {
+        const response = await getAturanPerSubElemen(data.tahun, data.proyekId, data.dimensiId, data.elemenId, data.subElemenId)
+        setData({
+            ...data,
+            idAturan: response.aturan?.id || '',
+            capaian: response.aturan?.capaian || '',
+            catatan: response.aturan?.catatan || ''
+        })
+    }
+
     const submit = (e) => {
         e.preventDefault()
         post(
@@ -62,7 +84,10 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Penilaian Proyek')
                     setData({ ...data })
-                    getData()
+                    trackPromise
+                        (
+                            getData(),
+                        )
                 },
                 onError: (error) => {
                     Sweet.fire({
@@ -75,12 +100,12 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
             }
         )
     }
-    
+
     const handleDelete = (id) => {
         Sweet
             .fire({
                 title: 'Anda yakin menghapus?',
-                text: "Hapus dimensi!",
+                text: "Hapus Aturan Proyek!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -94,7 +119,10 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus Data Penilaian Proyek')
                                 setData({ ...data })
-                                getData()
+                                trackPromise
+                                    (
+                                        getData(),
+                                    )
                             }
                         }
                     )
@@ -102,24 +130,81 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
     }
 
     useEffect(() => {
-        if (data.tahun)
+        if (data.tahun) {
             trackPromise(getData())
+        } else {
+            setData({
+                ...data,
+                listAturanProyek: []
+            })
+        }
     }, [data.tahun])
 
     useEffect(() => {
-        if (data.dimensiId)
+        if (data.tahun && data.proyekId) {
+            trackPromise(getDataPerProyek())
+        } else {
+            setData({
+                ...data,
+                judul: '',
+                deskripsi: ''
+            })
+        }
+    }, [data.tahun, data.proyekId])
+
+    useEffect(() => {
+        if (
+            data.tahun
+            && data.proyekId
+            && data.dimensiId
+        ) {
             trackPromise(getDataElemen())
+        } else {
+            setData({
+                ...data,
+                listElemen: []
+            })
+        }
     }, [data.dimensiId])
 
     useEffect(() => {
-        if (data.elemenId)
+        if (
+            data.tahun
+            && data.proyekId
+            && data.dimensiId
+            && data.elemenId
+        ) {
             trackPromise(getDataSubElemen())
+        } else {
+            setData({
+                ...data,
+                listSubElemen: []
+            })
+        }
     }, [data.elemenId])
+
+    useEffect(() => {
+        if (
+            data.tahun
+            && data.proyekId
+            && data.dimensiId
+            && data.elemenId
+            && data.subElemenId
+        ) {
+            trackPromise(getDataPerSubElemen())
+        } else {
+            setData({
+                ...data,
+                capaian: '',
+                catatan: ''
+            })
+        }
+    }, [data.subElemenId])
 
     return (
         <>
-            <Head title='Atur Nama Sub Elemen' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur nama sub elemen</div>
+            <Head title='Atur Penilaian Projek' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur penilaian projek</div>
             <form onSubmit={submit} className='space-y-3 mb-3'>
                 <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
 
@@ -141,6 +226,30 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                         handleChange={onHandleChange}
                         listProyek={listProyek}
                     />
+
+                </div>
+
+                <InputText
+                    id="judul"
+                    label="judul projek"
+                    name="judul"
+                    value={data.judul}
+                    message={errors.judul}
+                    isFocused={true}
+                    handleChange={onHandleChange}
+                />
+
+                <InputArea
+                    id="deskripsi"
+                    label="deskripsi projek"
+                    name="deskripsi"
+                    value={data.deskripsi}
+                    message={errors.deskripsi}
+                    isFocused={true}
+                    handleChange={onHandleChange}
+                />
+
+                <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 py-2'>
 
                     <Dimensi
                         id="dimensiId"
@@ -174,25 +283,6 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
 
                 </div>
 
-                <InputText
-                    id="judul"
-                    label="judul"
-                    name="judul"
-                    value={data.judul}
-                    message={errors.judul}
-                    isFocused={true}
-                    handleChange={onHandleChange}
-                />
-
-                <InputArea
-                    id="deskripsi"
-                    label="deskripsi"
-                    name="deskripsi"
-                    value={data.deskripsi}
-                    message={errors.deskripsi}
-                    isFocused={true}
-                    handleChange={onHandleChange}
-                />
 
                 <InputArea
                     id="catatan"

@@ -205,6 +205,8 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Guru
     Route::controller(GetDataGuruController::class)->group(function () {
+        Route::post('get-aturan-per-proyek', 'get_aturan_per_proyek')->name('get-aturan-per-proyek');
+        Route::post('get-aturan-per-sub-elemen', 'get_aturan_per_sub_elemen')->name('get-aturan-per-sub-elemen');
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
         Route::post('get-list-aturan-proyek', 'get_list_aturan_proyek')->name('get-list-aturan-proyek');
         Route::post('get-list-dimensi', 'get_list_dimensi')->name('get-list-dimensi');

@@ -6,6 +6,7 @@ import SidebarBendahara from './Partials/SidebarBendahara';
 import SidebarGuru from './Partials/SidebarGuru';
 import SidebarKetenagaan from './Partials/SidebarKetenagaan';
 import SidebarKonseling from './Partials/SidebarKonseling';
+import SidebarKurikulum from './Partials/SidebarKurikulum';
 import SidebarSiswa from './Partials/SidebarSiswa';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
@@ -51,6 +52,10 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarKonseling closeSide={closeSide} />
                             }
 
+                            {auth.roles.includes('Kurikulum') &&
+                                <SidebarKurikulum closeSide={closeSide} />
+                            }
+
                             {/* {auth.roles.includes('Karyawan') &&
                                 <SidebarKaryawan closeSide={closeSide} />
                             }
@@ -67,9 +72,6 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarKonseling closeSide={closeSide} />
                             }
 
-                            {auth.roles.includes('Kurikulum') &&
-                                <SidebarKurikulum closeSide={closeSide} />
-                            }
 
                             {auth.roles.includes('Tata Usaha') &&
                                 <SidebarTataUsaha closeSide={closeSide} />

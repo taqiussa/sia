@@ -8,6 +8,8 @@ use App\Http\Controllers\AlquranBilghoibController;
 use App\Http\Controllers\AlquranBinnadzorController;
 use App\Http\Controllers\AturKategoriPemasukanController;
 use App\Http\Controllers\AturKategoriPengeluaranController;
+use App\Http\Controllers\AturNamaDimensiController;
+use App\Http\Controllers\AturNamaProyekController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
@@ -249,13 +251,6 @@ Route::middleware([
     'auth', 'role:Bendahara|Kepala Sekolah'
 ])->group(function () {
 
-    // Route Atur Wajib Bayar
-    Route::controller(AturWajibBayarController::class)->group(function () {
-        Route::get('atur-wajib-bayar', 'index')->name('atur-wajib-bayar');
-        Route::post('atur-wajib-bayar', 'simpan')->name('atur-wajib-bayar.simpan');
-        Route::delete('atur-wajib-bayar', 'hapus')->name('atur-wajib-bayar.hapus');
-    });
-
     // Route Atur Kategori Pemasukan
     Route::controller(AturKategoriPemasukanController::class)->group(function () {
         Route::get('atur-kategori-pemasukan', 'index')->name('atur-kategori-pemasukan');
@@ -268,6 +263,13 @@ Route::middleware([
         Route::get('atur-kategori-pengeluaran', 'index')->name('atur-kategori-pengeluaran');
         Route::post('atur-kategori-pengeluaran', 'simpan')->name('atur-kategori-pengeluaran.simpan');
         Route::delete('atur-kategori-pengeluaran', 'hapus')->name('atur-kategori-pengeluaran.hapus');
+    });
+
+    // Route Atur Wajib Bayar
+    Route::controller(AturWajibBayarController::class)->group(function () {
+        Route::get('atur-wajib-bayar', 'index')->name('atur-wajib-bayar');
+        Route::post('atur-wajib-bayar', 'simpan')->name('atur-wajib-bayar.simpan');
+        Route::delete('atur-wajib-bayar', 'hapus')->name('atur-wajib-bayar.hapus');
     });
 
     //Route Data Pemasukan
@@ -342,6 +344,20 @@ Route::middleware([
 
 // Group Guru dan Karyawan
 Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {
+
+    // Route Atur Nama Dimensi
+    Route::controller(AturNamaDimensiController::class)->group(function () {
+        Route::get('atur-nama-dimensi', 'index')->name('atur-nama-dimensi');
+        Route::post('atur-nama-dimensi', 'simpan')->name('atur-nama-dimensi.simpan');
+        Route::delete('atur-nama-dimensi', 'hapus')->name('atur-nama-dimensi.hapus');
+    });
+
+    // Route Atur Nama Proyek
+    Route::controller(AturNamaProyekController::class)->group(function () {
+        Route::get('atur-nama-proyek', 'index')->name('atur-nama-proyek');
+        Route::post('atur-nama-proyek', 'simpan')->name('atur-nama-proyek.simpan');
+        Route::delete('atur-nama-proyek', 'hapus')->name('atur-nama-proyek.hapus');
+    });
 
     // Route Absensi
     Route::controller(AbsensiController::class)->group(function () {

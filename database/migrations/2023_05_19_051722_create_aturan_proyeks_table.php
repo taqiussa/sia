@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('dimensi_id');
             $table->foreignId('elemen_id');
             $table->foreignId('sub_elemen_id');
+            $table->string('tema');
             $table->string('judul');
             $table->text('capaian');
             $table->timestamps();

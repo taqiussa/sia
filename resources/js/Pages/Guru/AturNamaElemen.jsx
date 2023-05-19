@@ -7,9 +7,10 @@ import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
 
-const AturNamaProyek = ({ listProyek }) => {
+const AturNamaElemen = ({ listDimensi, listElemen }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
+        dimensiId: '',
         nama: '',
     })
 
@@ -20,10 +21,10 @@ const AturNamaProyek = ({ listProyek }) => {
     const submit = (e) => {
         e.preventDefault()
         post(
-            route('atur-nama-proyek.simpan'),
+            route('atur-nama-dimensi.simpan'),
             {
                 onSuccess: () => {
-                    toast.success('Berhasil Simpan Proyek')
+                    toast.success('Berhasil Simpan Dimensi')
                     setData({ ...data })
                 },
                 onError: (error) => {
@@ -41,7 +42,7 @@ const AturNamaProyek = ({ listProyek }) => {
         Sweet
             .fire({
                 title: 'Anda yakin menghapus?',
-                text: "Hapus Proyek!",
+                text: "Hapus dimensi!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -50,10 +51,10 @@ const AturNamaProyek = ({ listProyek }) => {
             .then((result) => {
                 if (result.isConfirmed)
                     destroy(
-                        route('atur-nama-proyek.hapus', { id: id }),
+                        route('atur-nama-dimensi.hapus', { id: id }),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus Data Proyek')
+                                toast.success('Berhasil Hapus Data Dimensi')
                                 setData({ ...data })
                             }
                         }
@@ -63,13 +64,13 @@ const AturNamaProyek = ({ listProyek }) => {
 
     return (
         <>
-            <Head title='Atur Nama Proyek' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur nama Proyek</div>
+            <Head title='Atur Nama Dimensi' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">atur nama dimensi</div>
             <form onSubmit={submit} className='space-y-3 mb-3'>
                 <div className='grid grid-cols-3 gap-2'>
                     <InputText
                         id="nama"
-                        label="nama proyek"
+                        label="nama dimensi"
                         name="nama"
                         value={data.nama}
                         message={errors.nama}
@@ -87,7 +88,7 @@ const AturNamaProyek = ({ listProyek }) => {
                                 No
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Nama Proyek
+                                Nama Dimensi
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
@@ -95,16 +96,16 @@ const AturNamaProyek = ({ listProyek }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listProyek && listProyek.map((proyek, index) => (
+                        {listDimensi && listDimensi.map((dimensi, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {proyek.nama}
+                                    {dimensi.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus onClick={() => handleDelete(proyek.id)} />
+                                    <Hapus onClick={() => handleDelete(dimensi.id)} />
                                 </td>
                             </tr>
                         ))}
@@ -116,5 +117,5 @@ const AturNamaProyek = ({ listProyek }) => {
 
 }
 
-AturNamaProyek.layout = page => <AppLayout children={page} />
-export default AturNamaProyek
+AturNamaElemen.layout = page => <AppLayout children={page} />
+export default AturNamaElemen

@@ -27,21 +27,21 @@
         <table class="w-4/5 border border-black">
             <thead>
                 <tr>
-                    <th class="pl-3 text-left border-b border-black">Guna Bayar</th>
-                    <th class="pl-3 text-left border-b border-black">Jumlah</th>
+                    <th class="pl-3 text-left">Guna Bayar</th>
+                    <th class="pl-3 text-left">Jumlah</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($list_pembayaran as $pembayaran)
                     <tr>
-                        <td class="pl-3 border-b border-black">{{ $loop->iteration . '. ' . $pembayaran->gunabayar->nama }}
+                        <td class="pl-3">{{ $loop->iteration . '. ' . $pembayaran->gunabayar->nama }}
                         </td>
-                        <td class="pl-3 border-b border-black">{{ rupiah($pembayaran->jumlah) }}</td>
+                        <td class="pl-3">{{ rupiah($pembayaran->jumlah) }}</td>
                     </tr>
                 @endforeach
                 <tr>
-                    <td class="pl-3 border-b border-black font-bold">Total</td>
-                    <td class="pl-3 border-b border-black font-bold">{{ rupiah($transaksi->jumlah) }}</td>
+                    <td class="pl-3 font-bold">Total</td>
+                    <td class="pl-3 font-bold">{{ rupiah($transaksi->jumlah) }}</td>
                 </tr>
             </tbody>
         </table>

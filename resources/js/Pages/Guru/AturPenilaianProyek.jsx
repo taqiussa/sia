@@ -75,6 +75,7 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
             }
         )
     }
+    
     const handleDelete = (id) => {
         Sweet
             .fire({

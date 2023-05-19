@@ -1,23 +1,22 @@
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
-import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
-import KategoriNilai from '@/Components/Sia/KategoriNilai'
+import PrimaryButton from '@/Components/PrimaryButton'
+import Dimensi from '@/Components/Sia/Dimensi'
+import Hapus from '@/Components/Sia/Hapus'
+import InputText from '@/Components/Sia/InputText'
 import Kelas from '@/Components/Sia/Kelas'
-import MataPelajaran from '@/Components/Sia/MataPelajaran'
-import Semester from '@/Components/Sia/Semester'
+import Proyek from '@/Components/Sia/Proyek'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
-import getListJenis from '@/Functions/getListJenis'
-import getListKategori from '@/Functions/getListKategori'
-import getListKelasGuru from '@/Functions/getListKelasGuru'
-import getSiswaWithNilai from '@/Functions/getSiswaWithNilai'
+import getListDimensi from '@/Functions/getListDimensi'
+import getSiswaWithNilaiProyek from '@/Functions/getSiswaWithNilaiProyek'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
+import { toast } from 'react-toastify'
 
 const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
 
-    const { data, setData, post, errors, processing } = useForm({
+    const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
         kelasId: '',
         proyekId: '',
@@ -32,28 +31,59 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
-        const response = await getSiswaWithNilai(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
+        const response = await getSiswaWithNilaiProyek(data.tahun, data.kelasId, data.proyekId, data.dimensiId)
         setListSiswa(response.listSiswa)
     }
 
-    async function getDataKategori() {
-        const response = await getListKategori(data.tahun, data.kelasId)
+    async function getDataDimensi() {
+        const response = await getListDimensi(data.tahun, data.proyekId)
         setData({
             ...data,
-            listKategori: response.listKategori
-        })
-    }
-
-    async function getDataJenis() {
-        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId, data.kelasId)
-        setData({
-            ...data,
-            listJenis: response.listJenis
+            listDimensi: response.listDimensi
         })
     }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
+    }
+
+    const submit = (e) => {
+        e.preventDefault()
+        post(
+            route('input-nilai-proyek.simpan'),
+            {
+                onSuccess: () => {
+                    toast.success('Berhasil Simpan Penilaian Proyek')
+                    setData({ ...data })
+                    getDataSiswa()
+                },
+            }
+        )
+    }
+
+    const handleDelete = (id) => {
+        Sweet
+            .fire({
+                title: 'Anda yakin menghapus?',
+                text: "Hapus Nilai Proyek!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            })
+            .then((result) => {
+                if (result.isConfirmed)
+                    destroy(
+                        route('input-nilai-proyek.hapus', { id: id }),
+                        {
+                            onSuccess: () => {
+                                toast.success('Berhasil Hapus Data Penilaian Proyek')
+                                setData({ ...data })
+                                getDataSiswa()
+                            }
+                        }
+                    )
+            })
     }
 
     const handleDynamic = (e, index, id, nis, namaSiswa, kelasId) => {
@@ -65,7 +95,7 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
             user: {
                 name: namaSiswa
             },
-            penilaian: {
+            penilaian_proyek: {
                 id: id,
                 nilai: e.target.value
             }
@@ -79,75 +109,32 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
 
     }
 
-    const onHandleBlur = (e, id, nis, kelasId) => {
-        e.preventDefault()
-
-        axios.post(route('input-nilai.simpan', {
-            id: id,
-            tahun: data.tahun,
-            semester: data.semester,
-            mataPelajaranId: data.mataPelajaranId,
-            kategoriNilaiId: data.kategoriNilaiId,
-            jenisPenilaianId: data.jenisPenilaianId,
-            nis: nis,
-            kelasId: kelasId,
-            nilai: e.target.value,
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.response.data.message
-                    })
-            })
-    }
-
     useEffect(() => {
 
-        if (data.tahun && data.mataPelajaranId)
-            trackPromise(getDataKelas())
-    }, [data.tahun, data.mataPelajaranId])
-
-    useEffect(() => {
-
-        if (data.kelasId)
-            trackPromise(getDataKategori())
-    }, [data.kelasId])
-
-    useEffect(() => {
-
-        if (data.kategoriNilaiId) {
-            setData('jenisPenilaianId', '')
-            trackPromise(getDataJenis())
+        if (data.tahun && data.proyekId) {
+            setData({ ...data, dimensiId: '' })
+            trackPromise(getDataDimensi())
         }
-    }, [data.semester, data.kategoriNilaiId])
+    }, [data.tahun, data.proyekId])
 
     useEffect(() => {
 
         if (
             data.tahun
-            && data.semester
-            && data.mataPelajaranId
+            && data.proyekId
+            && data.dimensiId
             && data.kelasId
-            && data.kategoriNilaiId
-            && data.jenisPenilaianId
-        )
+        ) {
+
             trackPromise(
                 getDataSiswa()
             )
+        } else {
+            setListSiswa([])
+        }
 
 
-    }, [data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId])
+    }, [data.tahun, data.proyekId, data.dimensiId, data.kelasId])
 
     useEffect(() => {
 
@@ -158,21 +145,10 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
 
     }, [count])
 
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
-
     return (
         <>
-            <Head title='Input Nilai' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">input nilai</div>
+            <Head title='Input Nilai Proyek' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">input nilai proyek</div>
             <div className='lg:grid lg:grid-cols-6 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
@@ -182,48 +158,31 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                     handleChange={onHandleChange}
                 />
 
-                <Semester
-                    id='semester'
-                    name='semester'
-                    value={data.semester}
-                    message={errors.semester}
-                    handleChange={onHandleChange}
-                />
-
-                <MataPelajaran
-                    id='mataPelajaranId'
-                    name='mataPelajaranId'
-                    value={data.mataPelajaranId}
-                    message={errors.mataPelajaranId}
-                    handleChange={onHandleChange}
-                    listMapel={listMapel}
-                />
-
                 <Kelas
                     id='kelasId'
                     name='kelasId'
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={data.listKelas}
+                    listKelas={listKelas}
                 />
 
-                <KategoriNilai
-                    id='kategoriNilaiId'
-                    name='kategoriNilaiId'
-                    value={data.kategoriNilaiId}
-                    message={errors.kategoriNilaiId}
+                <Proyek
+                    id='proyekId'
+                    name='proyekId'
+                    value={data.proyekId}
+                    message={errors.proyekId}
                     handleChange={onHandleChange}
-                    listKategori={data.listKategori}
+                    listProyek={listProyek}
                 />
 
-                <JenisPenilaian
-                    id='jenisPenilaianId'
-                    name='jenisPenilaianId'
-                    value={data.jenisPenilaianId}
-                    message={errors.jenisPenilaianId}
+                <Dimensi
+                    id='dimensiId'
+                    name='dimensiId'
+                    value={data.dimensiId}
+                    message={errors.dimensiId}
                     handleChange={onHandleChange}
-                    listJenis={data.listJenis}
+                    listDimensi={data.listDimensi}
                 />
             </div>
 
@@ -240,6 +199,9 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nilai
                             </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -253,15 +215,13 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <div className='flex flex-col'>
-
-                                        <InputTextBlur
+                                        <InputText
                                             id='penilaian'
                                             name='penilaian'
                                             message={errors.penilaian}
                                             className='w-auto max-w-[60px]'
-                                            value={siswa.penilaian.nilai ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.penilaian.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.penilaian.id, siswa.nis, siswa.kelas_id)}
+                                            value={siswa.penilaian_proyek?.nilai ?? ''}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.penilaian_proyek?.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
                                         />
 
                                         {message && message.nis == siswa.nis &&
@@ -269,16 +229,26 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                                                 <span className='text-emerald-500'>{message.message}</span>
                                             )}
 
-                                        {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian.nilai > 100 && (
+                                        {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian_proyek?.nilai > 100 && (
                                             <span className='text-red-500'>Nilai Maksimal 100</span>
                                         )}
 
                                     </div>
                                 </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {siswa.penilaian_proyek?.nilai &&
+                                        <Hapus
+                                            onClick={() => handleDelete(siswa.penilaian_proyek?.id)}
+                                        />
+                                    }
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-end pt-5">
+                <PrimaryButton children='simpan' onClick={submit} disabled={processing} />
             </div>
         </>
     )

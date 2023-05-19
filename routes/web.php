@@ -44,6 +44,7 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\InputNilaiController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiPengayaanController;
+use App\Http\Controllers\InputNilaiProyekController;
 use App\Http\Controllers\InputNilaiRemidiController;
 use App\Http\Controllers\InputNilaiSikapController;
 use App\Http\Controllers\InputPemasukanController;
@@ -206,6 +207,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataGuruController::class)->group(function () {
         Route::post('get-kelas-wali-kelas', 'get_kelas_wali_kelas')->name('get-kelas-wali-kelas');
         Route::post('get-list-aturan-proyek', 'get_list_aturan_proyek')->name('get-list-aturan-proyek');
+        Route::post('get-list-dimensi', 'get_list_dimensi')->name('get-list-dimensi');
         Route::post('get-list-elemen', 'get_list_elemen')->name('get-list-elemen');
         Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
         Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
@@ -236,6 +238,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-analisis-nilai', 'get_siswa_with_analisis_nilai')->name('get-siswa-with-analisis-nilai');
         Route::post('get-siswa-with-nilai', 'get_siswa_with_nilai')->name('get-siswa-with-nilai');
         Route::post('get-siswa-with-nilai-alquran', 'get_siswa_with_nilai_alquran')->name('get-siswa-with-nilai-alquran');
+        Route::post('get-siswa-with-nilai-proyek', 'get_siswa_with_nilai_proyek')->name('get-siswa-with-nilai-proyek');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
     });
 
@@ -501,6 +504,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiEkstrakurikulerController::class)->group(function () {
         Route::get('input-nilai-ekstrakurikuler', 'index')->name('input-nilai-ekstrakurikuler');
         Route::post('input-nilai-ekstrakurikuler', 'simpan')->name('input-nilai-ekstrakurikuler.simpan');
+    });
+
+    // Route Input Nilai Pengayaan
+    Route::controller(InputNilaiProyekController::class)->group(function () {
+        Route::get('input-nilai-proyek', 'index')->name('input-nilai-proyek');
+        Route::post('input-nilai-proyek', 'simpan')->name('input-nilai-proyek.simpan');
+        Route::put('input-nilai-proyek', 'update')->name('input-nilai-proyek.update');
+        Route::delete('input-nilai-proyek', 'hapus')->name('input-nilai-proyek.hapus');
     });
 
     // Route Input Nilai Pengayaan

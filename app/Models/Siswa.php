@@ -183,6 +183,26 @@ class Siswa extends Model
     }
 
     /**
+     * Get the penilaianProyek that owns the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function penilaianProyek(): BelongsTo
+    {
+        return $this->belongsTo(PenilaianProyek::class, 'nis', 'nis')->withDefault();
+    }
+
+    /**
+     * Get all of the penilaianProyeks for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaianProyeks(): HasMany
+    {
+        return $this->hasMany(PenilaianProyek::class, 'nis', 'nis');
+    }
+
+    /**
      * Get the penilaianSikap that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

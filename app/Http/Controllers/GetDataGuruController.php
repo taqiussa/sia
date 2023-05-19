@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AturanProyek;
 use App\Models\Kd;
 use App\Models\Badalan;
+use App\Models\Dimensi;
 use App\Models\Elemen;
 use App\Traits\InitTrait;
 use App\Models\Penggajian;
@@ -20,6 +21,35 @@ class GetDataGuruController extends Controller
     {
         return response()->json([
             'kelasId' => $this->data_kelas_wali_kelas()
+        ]);
+    }
+
+    public function get_list_aturan_proyek()
+    {
+        return response()->json([
+            'listAturanProyek' => AturanProyek::whereTahun(request('tahun'))
+                ->with([
+                    'dimensi',
+                    'elemen',
+                    'proyek',
+                    'subElemen'
+                ])
+                ->get()
+                ->sortBy(['proyek.nama', 'dimensi.nama', 'elemen.nama', 'subElemen.nama'])
+                ->values()
+        ]);
+    }
+
+    public function get_list_dimensi()
+    {
+        $id = AturanProyek::whereTahun(request('tahun'))
+            ->whereProyekId(request('proyekId'))
+            ->pluck('dimensi_id');
+
+        return response()->json([
+            'listDimensi' => Dimensi::whereIn('id', $id)
+                ->orderBy('nama')
+                ->get()
         ]);
     }
 
@@ -80,22 +110,6 @@ class GetDataGuruController extends Controller
     {
         return response()->json([
             'listKelas' => $this->data_kelas()
-        ]);
-    }
-
-    public function get_list_aturan_proyek()
-    {
-        return response()->json([
-            'listAturanProyek' => AturanProyek::whereTahun(request('tahun'))
-                ->with([
-                    'dimensi',
-                    'elemen',
-                    'proyek',
-                    'subElemen'
-                ])
-                ->get()
-                ->sortBy(['proyek.nama', 'dimensi.nama', 'elemen.nama', 'subElemen.nama'])
-                ->values()
         ]);
     }
 

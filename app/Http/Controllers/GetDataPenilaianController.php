@@ -242,6 +242,23 @@ class GetDataPenilaianController extends Controller
         ]);
     }
 
+    public function get_siswa_with_nilai_proyek()
+    {
+        return response()->json([
+            'listSiswa' => Siswa::whereTahun(request('tahun'))
+                ->whereKelasId(request('kelasId'))
+                ->with([
+                    'penilaianProyek'  => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereProyekId(request('proyekId'))
+                        ->whereDimensiId(request('dimensiId')),
+                    'user' => fn ($q) => $q->select('nis', 'name')
+                ])
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
     public function get_siswa_with_nilai_sikap()
     {
         return response()->json([

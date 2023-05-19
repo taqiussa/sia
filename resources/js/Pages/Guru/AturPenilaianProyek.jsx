@@ -241,7 +241,7 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                     {atur.elemen?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {atur.subElemen?.nama}
+                                    {atur.sub_elemen?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {atur.capaian}

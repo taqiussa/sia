@@ -1,7 +1,6 @@
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
 import InputText from '@/Components/Sia/InputText'
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import KategoriNilai from '@/Components/Sia/KategoriNilai'
 import Kelas from '@/Components/Sia/Kelas'

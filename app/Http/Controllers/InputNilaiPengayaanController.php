@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
-use App\Models\KategoriNilai;
-use App\Models\JenisPenilaian;
 use App\Models\Pengayaan;
 use App\Models\PengayaanDetail;
 
@@ -38,69 +36,52 @@ class InputNilaiPengayaanController extends Controller
             'jenisPenilaianId' => 'required',
         ]);
 
-        Pengayaan::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'ki' => request('ki'),
-                'kd' => request('kd'),
-                'indikator' => request('indikator'),
-                'bentuk_pelaksanaan' => request('bentukPelaksanaan'),
-                'banyak_soal' => request('banyakSoal')
-            ]
-        );
+        try {
+            Pengayaan::updateOrCreate(
+                ['id' => request('id')],
+                [
+                    'tahun' => request('tahun'),
+                    'semester' => request('semester'),
+                    'tanggal' => request('tanggal'),
+                    'kelas_id' => request('kelasId'),
+                    'mata_pelajaran_id' => request('mataPelajaranId'),
+                    'kategori_nilai_id' => request('kategoriNilaiId'),
+                    'jenis_penilaian_id' => request('jenisPenilaianId'),
+                    'ki' => request('ki'),
+                    'kd' => request('kd'),
+                    'indikator' => request('indikator'),
+                    'bentuk_pelaksanaan' => request('bentukPelaksanaan'),
+                    'banyak_soal' => request('banyakSoal')
+                ]
+            );
 
+            $listSiswa = request('arrayInput');
+
+            foreach ($listSiswa as $siswa) {
+                $siswa['pengayaan'] ?
+                    PengayaanDetail::updateOrCreate(
+                        ['id' => $siswa['pengayaan']['id'] ?? null],
+                        [
+                            'pengayaan_id' => $siswa['pengayaan']['pengayaan_id'],
+                            'nis' => $siswa['nis'],
+                            'nilai_awal' => $siswa['penilaian']['nilai'],
+                            'nilai_pengayaan' => $siswa['pengayaan']['nilai_pengayaan'] ?? null,
+                            'tahun' => request('tahun'),
+                            'semester' => request('semester'),
+                            'tanggal' => request('tanggal'),
+                            'kelas_id' => request('kelasId'),
+                            'mata_pelajaran_id' => request('mataPelajaranId'),
+                            'kategori_nilai_id' => request('kategoriNilaiId'),
+                            'jenis_penilaian_id' => request('jenisPenilaianId'),
+                        ]
+                    )
+                    :
+                    null;
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
         return to_route('input-nilai-pengayaan');
-    }
-
-    public function update()
-    {
-        $pengayaan = Pengayaan::updateOrCreate(
-            ['id' => request('pengayaanId')],
-            [
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'ki' => request('ki'),
-                'kd' => request('kd'),
-                'indikator' => request('indikator'),
-                'bentuk_pelaksanaan' => request('bentukPelaksanaan'),
-                'banyak_soal' => request('banyakSoal')
-            ]
-        );
-
-        PengayaanDetail::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'pengayaan_id' => $pengayaan->id,
-                'nis' => request('nis'),
-                'nilai_awal' => request('nilaiAwal'),
-                'nilai_pengayaan' => request('nilaiPengayaan'),
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-            ]
-        );
-
-        return response()->json([
-            'listSiswa' => $this->data_siswa_with_nilai_pengayaan(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
     }
 
     public function hapus()

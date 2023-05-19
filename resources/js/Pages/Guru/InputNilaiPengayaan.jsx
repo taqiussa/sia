@@ -9,18 +9,17 @@ import KategoriNilai from '@/Components/Sia/KategoriNilai'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import getSiswaPengayaan from '@/Functions/getSiswaPengayaan'
 import { trackPromise } from 'react-promise-tracker'
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
 import Tanggal from '@/Components/Sia/Tanggal'
 import moment from 'moment'
 import InputArea from '@/Components/Sia/InputArea'
 import Sweet from '@/Components/Sia/Sweet'
 import { toast } from 'react-toastify'
 import PrimaryButton from '@/Components/PrimaryButton'
-import axios from 'axios'
 import Hapus from '@/Components/Sia/Hapus'
 import getListKelasGuru from '@/Functions/getListKelasGuru'
 import getListKategori from '@/Functions/getListKategori'
 import getListJenis from '@/Functions/getListJenis'
+import InputText from '@/Components/Sia/InputText'
 
 const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
@@ -45,7 +44,6 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
 
     const [listSiswa, setListSiswa] = useState([])
     const [pengayaan, setPengayaan] = useState([])
-    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -127,41 +125,8 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
             }
         })
 
-        setMessage([])
         setListSiswa(newList)
         setCount(count + 1)
-    }
-
-    const onHandleBlur = (e, id, nis, kelasId, nilaiAwal, pengayaanId) => {
-        e.preventDefault()
-
-        axios.put(route('input-nilai-pengayaan.update', {
-            ...data,
-            id: id,
-            nis: nis,
-            kelasId: kelasId,
-            pengayaanId: pengayaanId,
-            nilaiAwal: nilaiAwal,
-            nilaiPengayaan: e.target.value,
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
-
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.response.data.message
-                    })
-            })
     }
 
     const submit = (e) => {
@@ -253,19 +218,10 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
             arrayInput: [...listSiswa],
         })
 
+        console.log(data.arrayInput)
 
     }, [count])
 
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
 
 
     return (
@@ -423,19 +379,14 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                                     </td>
                                     <td className="py-2 px-2 font-medium text-slate-600">
                                         <div className='flex flex-col'>
-                                            <InputTextBlur
+
+                                            <InputText
                                                 id='pengayaan'
                                                 name='pengayaan'
                                                 className='w-auto max-w-[60px]'
                                                 value={siswa.pengayaan.nilai_pengayaan ?? ''}
                                                 handleChange={(e) => handleDynamic(e, index, siswa.pengayaan?.id, siswa.nis, siswa.user.name, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
-                                                handleBlur={(e) => onHandleBlur(e, siswa.pengayaan?.id, siswa.nis, siswa.kelas_id, siswa.penilaian.nilai, siswa.pengayaan?.pengayaan_id ?? pengayaan.id)}
                                             />
-
-                                            {message && message.nis == siswa.nis &&
-                                                (
-                                                    <span className='text-emerald-500'>{message.message}</span>
-                                                )}
 
                                             {data.arrayInput.length > 0 && data.arrayInput[index]?.pengayaan.nilai_pengayaan > 100 && (
                                                 <span className='text-red-500'>Nilai Maksimal 100</span>
@@ -452,6 +403,9 @@ const InputNilaiPengayaan = ({ initTahun, initSemester, listMapel }) => {
                             ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-end py-5">
+                <PrimaryButton children='simpan' onClick={submit} disabled={processing} />
             </div>
         </>
     )

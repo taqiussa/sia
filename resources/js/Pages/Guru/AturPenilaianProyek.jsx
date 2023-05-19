@@ -28,6 +28,7 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
         subElemenId: '',
         judul: '',
         deskripsi: '',
+        catatan: '',
         capaian: '',
         listElemen: [],
         listSubElemen: [],
@@ -193,6 +194,16 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                 />
 
                 <InputArea
+                    id="catatan"
+                    label="catatan proses"
+                    name="catatan"
+                    value={data.catatan}
+                    message={errors.catatan}
+                    isFocused={true}
+                    handleChange={onHandleChange}
+                />
+
+                <InputArea
                     id="capaian"
                     label="capaian"
                     name="capaian"
@@ -217,7 +228,13 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                 Judul Proyek
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
+                                Deskripsi
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
                                 Nama Dimensi
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Catatan Proses
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nama Elemen
@@ -246,7 +263,13 @@ const AturPenilaianProyek = ({ initTahun, listProyek, listDimensi }) => {
                                     {atur.judul}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
+                                    {atur.deskripsi}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
                                     {atur.dimensi?.nama}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {atur.catatan}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {atur.elemen?.nama}

@@ -472,6 +472,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiController::class)->group(function () {
         Route::get('input-nilai', 'index')->name('input-nilai');
         Route::post('input-nilai', 'simpan')->name('input-nilai.simpan');
+        Route::delete('input-nilai', 'hapus')->name('input-nilai.hapus');
     });
 
     // Route Input Nilai Al Qur'an

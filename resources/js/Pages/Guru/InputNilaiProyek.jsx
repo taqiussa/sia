@@ -1,4 +1,3 @@
-import Hapus from '@/Components/Sia/Hapus'
 import InputTextBlur from '@/Components/Sia/InputTextBlur'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import KategoriNilai from '@/Components/Sia/KategoriNilai'
@@ -16,18 +15,15 @@ import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const InputNilai = ({ initTahun, initSemester, listMapel }) => {
+const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
 
     const { data, setData, post, errors, processing } = useForm({
         tahun: initTahun,
-        semester: initSemester,
-        mataPelajaranId: '',
         kelasId: '',
-        kategoriNilaiId: '',
-        jenisPenilaianId: '',
-        listKelas: [],
+        proyekId: '',
+        dimensiId: '',
         listKategori: [],
-        listJenis: [],
+        listDimensi: [],
         arrayInput: []
     })
 
@@ -38,14 +34,6 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
     async function getDataSiswa() {
         const response = await getSiswaWithNilai(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriNilaiId, data.jenisPenilaianId)
         setListSiswa(response.listSiswa)
-    }
-
-    async function getDataKelas() {
-        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
-        setData({
-            ...data,
-            listKelas: response.listKelas
-        })
     }
 
     async function getDataKategori() {
@@ -252,9 +240,6 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nilai
                             </th>
-                            <th scope='col' className="py-3 px-2 text-left">
-                                Aksi
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -289,12 +274,6 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
                                         )}
 
                                     </div>
-                                    <td className="py-2 px-2 font-medium text-slate-600">
-                                        {
-                                            siswa.penilaian?.id &&
-                                            <Hapus onClick={() => handleDelete(siswa.penilaian?.id)} />
-                                        }
-                                    </td>
                                 </td>
                             </tr>
                         ))}
@@ -305,5 +284,5 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
     )
 }
 
-InputNilai.layout = page => <AppLayout children={page} />
-export default InputNilai
+InputNilaiProyek.layout = page => <AppLayout children={page} />
+export default InputNilaiProyek

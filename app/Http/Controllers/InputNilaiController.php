@@ -49,4 +49,11 @@ class InputNilaiController extends Controller
             'nis' => request('nis')
         ]);
     }
+
+    public function hapus()
+    {
+        Penilaian::destroy(request('id'));
+
+        return to_route('input-nilai');
+    }
 }

@@ -2,9 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Traits\InitTrait;
 
 class InputNilaiProyekController extends Controller
 {
-    //
+    use InitTrait;
+
+    public function index()
+    {
+    }
+
+    public function simpan()
+    {
+    }
+
+    public function hapus()
+    {
+        
+    }
 }

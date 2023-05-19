@@ -27,7 +27,6 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
     })
 
     const [listSiswa, setListSiswa] = useState([])
-    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -100,8 +99,6 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                 nilai: e.target.value
             }
         })
-
-        setMessage([])
 
         setListSiswa(newList)
 
@@ -224,11 +221,6 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                                             handleChange={(e) => handleDynamic(e, index, siswa.penilaian_proyek?.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
                                         />
 
-                                        {message && message.nis == siswa.nis &&
-                                            (
-                                                <span className='text-emerald-500'>{message.message}</span>
-                                            )}
-
                                         {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian_proyek?.nilai > 100 && (
                                             <span className='text-red-500'>Nilai Maksimal 100</span>
                                         )}
@@ -236,7 +228,7 @@ const InputNilaiProyek = ({ initTahun, listKelas, listProyek }) => {
                                     </div>
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.penilaian_proyek?.nilai &&
+                                    {siswa.penilaian_proyek?.id && siswa.penilaian_proyek?.nilai &&
                                         <Hapus
                                             onClick={() => handleDelete(siswa.penilaian_proyek?.id)}
                                         />

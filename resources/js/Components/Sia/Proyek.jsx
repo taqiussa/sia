@@ -20,7 +20,7 @@ export default forwardRef(function Proyek(
     return (
         <div className='flex flex-col text-slate-600 capitalize'>
             <div>
-                proyek
+                Proyek
             </div>
             <div>
                 <select

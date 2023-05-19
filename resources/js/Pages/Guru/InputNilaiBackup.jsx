@@ -1,6 +1,4 @@
-import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
-import InputText from '@/Components/Sia/InputText'
 import InputTextBlur from '@/Components/Sia/InputTextBlur'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import KategoriNilai from '@/Components/Sia/KategoriNilai'
@@ -17,11 +15,10 @@ import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
-import { toast } from 'react-toastify'
 
-const InputNilai = ({ initTahun, initSemester, listMapel }) => {
+const InputNilaiBackup = ({ initTahun, initSemester, listMapel }) => {
 
-    const { data, setData, post, errors, processing, delete: destroy } = useForm({
+    const { data, setData, post, errors, processing } = useForm({
         tahun: initTahun,
         semester: initSemester,
         mataPelajaranId: '',
@@ -35,6 +32,7 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
     })
 
     const [listSiswa, setListSiswa] = useState([])
+    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -70,45 +68,6 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
         setData(e.target.name, e.target.value)
     }
 
-    const submit = (e) => {
-        e.preventDefault()
-        post(
-            route('input-nilai.simpan'),
-            {
-                onSuccess: () => {
-                    toast.success('Berhasil Simpan Penilaian')
-                    setData({ ...data })
-                    getDataSiswa()
-                },
-            }
-        )
-    }
-
-    const handleDelete = (id) => {
-        Sweet
-            .fire({
-                title: 'Anda yakin menghapus?',
-                text: "Hapus Nilai!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            })
-            .then((result) => {
-                if (result.isConfirmed)
-                    destroy(
-                        route('input-nilai.hapus', { id: id }),
-                        {
-                            onSuccess: () => {
-                                toast.success('Berhasil Hapus Data Penilaian')
-                                setData({ ...data })
-                                getDataSiswa()
-                            }
-                        }
-                    )
-            })
-    }
-
     const handleDynamic = (e, index, id, nis, namaSiswa, kelasId) => {
 
         const newList = [...listSiswa]
@@ -124,11 +83,45 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
             }
         })
 
+        setMessage([])
 
         setListSiswa(newList)
 
         setCount(count + 1)
 
+    }
+
+    const onHandleBlur = (e, id, nis, kelasId) => {
+        e.preventDefault()
+
+        axios.post(route('input-nilai.simpan', {
+            id: id,
+            tahun: data.tahun,
+            semester: data.semester,
+            mataPelajaranId: data.mataPelajaranId,
+            kategoriNilaiId: data.kategoriNilaiId,
+            jenisPenilaianId: data.jenisPenilaianId,
+            nis: nis,
+            kelasId: kelasId,
+            nilai: e.target.value,
+        }))
+            .then(response => {
+
+                setListSiswa(response.data.listSiswa)
+
+                setMessage({
+                    nis: response.data.nis,
+                    message: response.data.message
+                })
+            })
+            .catch(error => {
+                Sweet
+                    .fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.message
+                    })
+            })
     }
 
     useEffect(() => {
@@ -176,6 +169,17 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
         })
 
     }, [count])
+
+    useEffect(() => {
+
+        const timeoutId = setTimeout(() => {
+            setMessage([]);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [message])
 
     return (
         <>
@@ -265,38 +269,41 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <div className='flex flex-col'>
 
-                                        <InputText
+                                        <InputTextBlur
                                             id='penilaian'
                                             name='penilaian'
                                             message={errors.penilaian}
                                             className='w-auto max-w-[60px]'
                                             value={siswa.penilaian.nilai ?? ''}
                                             handleChange={(e) => handleDynamic(e, index, siswa.penilaian.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
+                                            handleBlur={(e) => onHandleBlur(e, siswa.penilaian.id, siswa.nis, siswa.kelas_id)}
                                         />
+
+                                        {message && message.nis == siswa.nis &&
+                                            (
+                                                <span className='text-emerald-500'>{message.message}</span>
+                                            )}
 
                                         {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian.nilai > 100 && (
                                             <span className='text-red-500'>Nilai Maksimal 100</span>
                                         )}
 
                                     </div>
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {
-                                        siswa.penilaian?.id && siswa.penilaian?.nilai &&
-                                        <Hapus onClick={() => handleDelete(siswa.penilaian?.id)} />
-                                    }
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {
+                                            siswa.penilaian?.id &&
+                                            <Hapus onClick={() => handleDelete(siswa.penilaian?.id)} />
+                                        }
+                                    </td>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-            <div className="flex justify-end pt-5">
-                <PrimaryButton children='simpan' onClick={submit} disabled={processing} />
-            </div>
         </>
     )
 }
 
-InputNilai.layout = page => <AppLayout children={page} />
-export default InputNilai
+InputNilaiBackup.layout = page => <AppLayout children={page} />
+export default InputNilaiBackup

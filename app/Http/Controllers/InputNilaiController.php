@@ -25,29 +25,35 @@ class InputNilaiController extends Controller
 
     public function simpan()
     {
-        request()->validate(['jenisPenilaianId' => 'required'], ['jenisPenilaianId.required' => 'Pilih Jenis Penilaian']);
-
-        Penilaian::updateOrCreate(
-            ['id' => request('id')],
+        request()->validate(
             [
-                'tanggal' => date('Y-m-d'),
-                'nis' => request('nis'),
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'nilai' => request('nilai'),
-                'user_id' => auth()->user()->id
+                'jenisPenilaianId' => 'required'
+            ],
+            [
+                'jenisPenilaianId.required' => 'Pilih Jenis Penilaian'
             ]
         );
 
-        return response()->json([
-            'listSiswa' => $this->data_siswa_with_nilai(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
+        $listSiswa = request('arrayInput');
+
+        foreach ($listSiswa as $siswa) {
+            Penilaian::updateOrCreate(
+                ['id' => $siswa['penilaian']['id'] ?? null],
+                [
+                    'tanggal' => date('Y-m-d'),
+                    'nis' => $siswa['nis'],
+                    'tahun' => request('tahun'),
+                    'semester' => request('semester'),
+                    'kelas_id' => request('kelasId'),
+                    'mata_pelajaran_id' => request('mataPelajaranId'),
+                    'kategori_nilai_id' => request('kategoriNilaiId'),
+                    'jenis_penilaian_id' => request('jenisPenilaianId'),
+                    'nilai' => $siswa['penilaian']['nilai'] ?? null,
+                    'user_id' => auth()->user()->id
+                ]
+            );
+        }
+        return to_route('input-nilai');
     }
 
     public function hapus()

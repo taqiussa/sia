@@ -67,14 +67,7 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan pengeluaran')
-                    setData({
-                        tahun: data.tahun,
-                        tanggal: data.tanggal,
-                        kategoriPengeluaranId: '',
-                        keterangan: '',
-                        jumlah: 0,
-                        cari: data.cari
-                    })
+                    setData({...data})
                     getDataPengeluaran()
                 },
                 onError: (error) => {
@@ -108,14 +101,7 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus pengeluaran')
-                                setData({
-                                    tahun: data.tahun,
-                                    tanggal: data.tanggal,
-                                    kategoriPengeluaranId: '',
-                                    keterangan: '',
-                                    jumlah: '',
-                                    cari: data.cari
-                                })
+                                setData({...data})
                                 getDataPengeluaran()
                             }
                         }

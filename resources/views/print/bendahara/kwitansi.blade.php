@@ -24,7 +24,7 @@
     </div>
     <div class="py-3"></div>
     <div class="flex justify-center">
-        <table class="w-4/5 border border-black">
+        <table class="w-4/5">
             <thead>
                 <tr>
                     <th class="pl-3 text-left">Guna Bayar</th>

@@ -119,7 +119,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                 remidi_id: remidiId,
                 nilai_awal: nilaiAwal,
                 nilai_akhir: nilaiAkhir,
-                nilai_remidi: e.target.value
+                nilai_remidi: e.target.value,
             }
         })
 
@@ -350,7 +350,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
                     </thead>
                     <tbody>
                         {listSiswa && listSiswa
-                            .filter(siswa => siswa.penilaian.nilai < kkm || siswa.remidi.nilai_remidi != null)
+                            // .filter(siswa => siswa.penilaian.nilai < kkm || siswa.remidi.nilai_remidi != null)
                             .map((siswa, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600 text-center">

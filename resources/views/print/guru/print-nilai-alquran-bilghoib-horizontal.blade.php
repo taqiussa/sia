@@ -37,7 +37,7 @@
                     @foreach ($listJenis as $jenis)
                         <td class="text-center border border-collapse border-black uppercase">
                             @foreach ($siswa->penilaianAlqurans as $nilai)
-                                @if ($nilai->jenis_alquran_id === $jenis->id)
+                                @if ($nilai->jenis_alquran_id == $jenis->id)
                                     {{ $nilai->nilai }}
                                 @endif
                             @endforeach

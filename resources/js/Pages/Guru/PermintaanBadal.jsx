@@ -114,6 +114,17 @@ const PermintaanBadal = ({ listGuruAlquran, listGuruBk }) => {
         <>
             <Head title='Permintaan Badal' />
             <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">permintaan badal</div>
+            <div className='text-slate-600 font-bold py-2'>
+                {
+                    listGuruKosong && listGuruKosong
+                        .filter(kosong => kosong.jam_kosong_count > 1)
+                        .map((kosong, index) => (
+                            <ol key={index} className="list-none">
+                                <li>{kosong.name} -  {kosong.jam_kosong_count}x</li>
+                            </ol>
+                        ))
+                }
+            </div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tanggal
                     id='tanggal'

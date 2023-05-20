@@ -509,7 +509,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('input-nilai-ekstrakurikuler', 'hapus')->name('input-nilai-ekstrakurikuler.hapus');
     });
 
-    // Route Input Nilai Pengayaan
+    // Route Input Nilai Proyek
     Route::controller(InputNilaiProyekController::class)->group(function () {
         Route::get('input-nilai-proyek', 'index')->name('input-nilai-proyek');
         Route::post('input-nilai-proyek', 'simpan')->name('input-nilai-proyek.simpan');

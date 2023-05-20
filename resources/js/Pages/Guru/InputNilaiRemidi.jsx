@@ -227,6 +227,7 @@ const InputNilaiRemidi = ({ initTahun, initSemester, listMapel }) => {
 
     }, [count])
 
+    console.log(listSiswa)
     return (
         <>
             <Head title='Input Nilai Remidi' />

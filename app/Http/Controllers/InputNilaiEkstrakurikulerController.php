@@ -29,23 +29,33 @@ class InputNilaiEkstrakurikulerController extends Controller
             'ekstrakurikulerId' => 'required',
         ]);
 
-        PenilaianEkstrakurikuler::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'ekstrakurikuler_id' => request('ekstrakurikulerId'),
-                'nis' => request('nis'),
-                'kelas_id' => request('kelasId'),
-                'nilai' => request('nilai') ?? null,
-                'user_id' => auth()->user()->id
-            ]
-        );
+        $listSiswa = request('arrayInput');
 
-        return response()->json([
-            'listSiswa' => $this->data_siswa_ekstra_with_nilai(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
+        foreach ($listSiswa as $siswa) {
+            $siswa['penilaian'] ?
+                PenilaianEkstrakurikuler::updateOrCreate(
+                    ['id' => $siswa['penilaian']['id'] ?? null],
+                    [
+                        'tahun' => request('tahun'),
+                        'semester' => request('semester'),
+                        'ekstrakurikuler_id' => request('ekstrakurikulerId'),
+                        'nis' => $siswa['nis'],
+                        'kelas_id' => $siswa['kelas_id'],
+                        'nilai' => $siswa['penilaian']['nilai'] ?? null,
+                        'user_id' => auth()->user()->id
+                    ]
+                )
+                :
+                null;
+        }
+
+        return to_route('input-nilai-ekstrakurikuler');
+    }
+
+    public function hapus()
+    {
+        PenilaianEkstrakurikuler::destroy(request('id'));
+
+        return to_route('input-nilai-ekstrakurikuler');
     }
 }

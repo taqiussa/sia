@@ -1,18 +1,21 @@
+import PrimaryButton from '@/Components/PrimaryButton'
 import Ekstrakurikuler from '@/Components/Sia/Ekstrakurikuler'
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
+import Hapus from '@/Components/Sia/Hapus'
+import InputText from '@/Components/Sia/InputText'
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import Semester from '@/Components/Sia/Semester'
+import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import getSiswaEkstraWithNilai from '@/Functions/getSiswaEkstraWithNilai'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
+import { toast } from 'react-toastify'
 
 const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikuler }) => {
 
-    const { data, setData, errors, post, processing } = useForm({
+    const { data, setData, errors, post, processing, delete: destroy } = useForm({
         tahun: initTahun,
         semester: initSemester,
         ekstrakurikulerId: '',
@@ -23,7 +26,6 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
     })
 
     const [listSiswa, setListSiswa] = useState([])
-    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -54,35 +56,48 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
             }
         })
 
-        setMessage([])
-
         setListSiswa(newList)
 
         setCount(count + 1)
 
     }
 
-    const onHandleBlur = (e, id, nis, kelasId) => {
+    const submit = (e) => {
         e.preventDefault()
+        post(
+            route('input-nilai-ekstrakurikuler.simpan'),
+            {
+                onSuccess: () => {
+                    toast.success('Berhasil Simpan Penilaian')
+                    setData({ ...data })
+                    getDataSiswa()
+                },
+            }
+        )
+    }
 
-        axios.post(route('input-nilai-ekstrakurikuler.simpan', {
-            id: id,
-            tahun: data.tahun,
-            semester: data.semester,
-            ekstrakurikulerId: data.ekstrakurikulerId,
-            jenisKelamin: data.jenisKelamin,
-            nis: nis,
-            kelasId: kelasId,
-            nilai: e.target.value,
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
+    const handleDelete = (id) => {
+        Sweet
+            .fire({
+                title: 'Anda yakin menghapus?',
+                text: "Hapus Nilai!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            })
+            .then((result) => {
+                if (result.isConfirmed)
+                    destroy(
+                        route('input-nilai-ekstrakurikuler.hapus', { id: id }),
+                        {
+                            onSuccess: () => {
+                                toast.success('Berhasil Hapus Data Penilaian')
+                                setData({ ...data })
+                                getDataSiswa()
+                            }
+                        }
+                    )
             })
     }
 
@@ -110,17 +125,6 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
         })
 
     }, [count])
-
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
 
     return (
         <>
@@ -179,6 +183,9 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
                             <th scope='col' className="py-3 px-2 text-left">
                                 Nilai
                             </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Aksi
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -196,19 +203,13 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <div className='flex flex-col'>
 
-                                        <InputTextBlur
+                                        <InputText
                                             id='penilaian'
                                             name='penilaian'
                                             message={errors.penilaian}
                                             value={siswa.penilaian.nilai ?? ''}
                                             handleChange={(e) => handleDynamic(e, index, siswa.penilaian.id, siswa.nis, siswa.user.name, siswa.kelas?.nama, siswa.kelas_id, siswa.ekstrakurikuler_id)}
-                                            handleBlur={(e) => onHandleBlur(e, siswa.penilaian.id, siswa.nis, siswa.kelas_id)}
                                         />
-
-                                        {message && message.nis == siswa.nis &&
-                                            (
-                                                <span className='text-emerald-500'>{message.message}</span>
-                                            )}
 
                                         {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian.nilai > 100 && (
                                             <span className='text-red-500'>Nilai Maksimal 100</span>
@@ -216,10 +217,19 @@ const InputNilaiEkstrakurikuler = ({ initTahun, initSemester, listEkstrakurikule
 
                                     </div>
                                 </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {
+                                        siswa.penilaian?.id &&
+                                        <Hapus onClick={() => handleDelete(siswa.penilaian.id)} />
+                                    }
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-end">
+                <PrimaryButton children='simpan' onClick={submit} disabled={processing} />
             </div>
         </>
     )

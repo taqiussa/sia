@@ -21,11 +21,11 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-alquran')} active={route().current('input-nilai-alquran')} label="input nilai al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-bilghoib-per-kelas')} active={route().current('input-nilai-bilghoib-per-kelas')} label='input nilai bilghoib per kelas' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-binnadzor-per-kelas')} active={route().current('input-nilai-binnadzor-per-kelas')} label='input nilai binnadzor per kelas' />
-                {/* <SidebarLink closeSide={closeSide} href={route('input-nilai-ekstrakurikuler')} active={route().current('input-nilai-ekstrakurikuler')} label='input nilai ekstrakurikuler' /> */}
+                <SidebarLink closeSide={closeSide} href={route('input-nilai-ekstrakurikuler')} active={route().current('input-nilai-ekstrakurikuler')} label='input nilai ekstrakurikuler' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-pengayaan')} active={route().current('input-nilai-pengayaan')} label='input nilai pengayaan' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-proyek')} active={route().current('input-nilai-proyek')} label='input nilai projek' />
                 <SidebarLink closeSide={closeSide} href={route('input-nilai-remidi')} active={route().current('input-nilai-remidi')} label='input nilai remidi' />
-                {/* <SidebarLink closeSide={closeSide} href={route('input-nilai-sikap')} active={route().current('input-nilai-sikap')} label='input nilai sikap' /> */}
+                <SidebarLink closeSide={closeSide} href={route('input-nilai-sikap')} active={route().current('input-nilai-sikap')} label='input nilai sikap' />
                 <SidebarLink closeSide={closeSide} href={route('input-prestasi')} active={route().current('input-prestasi')} label='input prestasi' />
                 <SidebarLink closeSide={closeSide} href={route('input-skor')} active={route().current('input-skor')} label='input skor' />
                 {/* <SidebarLink closeSide={closeSide} href={route('input-skor-kelas')} active={route().current('input-skor-kelas')} label='input skor 1 kelas' /> */}

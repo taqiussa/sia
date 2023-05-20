@@ -506,6 +506,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiEkstrakurikulerController::class)->group(function () {
         Route::get('input-nilai-ekstrakurikuler', 'index')->name('input-nilai-ekstrakurikuler');
         Route::post('input-nilai-ekstrakurikuler', 'simpan')->name('input-nilai-ekstrakurikuler.simpan');
+        Route::delete('input-nilai-ekstrakurikuler', 'hapus')->name('input-nilai-ekstrakurikuler.hapus');
     });
 
     // Route Input Nilai Pengayaan
@@ -536,6 +537,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiSikapController::class)->group(function () {
         Route::get('input-nilai-sikap', 'index')->name('input-nilai-sikap');
         Route::post('input-nilai-sikap', 'simpan')->name('input-nilai-sikap.simpan');
+        Route::delete('input-nilai-sikap', 'hapus')->name('input-nilai-sikap.hapus');
     });
 
     // Route Input Prestasi

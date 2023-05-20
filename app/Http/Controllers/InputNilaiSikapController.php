@@ -38,25 +38,35 @@ class InputNilaiSikapController extends Controller
             'jenisSikapId' => 'required'
         ]);
 
-        PenilaianSikap::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'nis' => request('nis'),
-                'kategori_sikap_id' => request('kategoriSikapId'),
-                'jenis_sikap_id' => request('jenisSikapId'),
-                'nilai' => request('nilai'),
-                'user_id' => auth()->user()->id,
-            ]
-        );
+        $listSiswa = request('arrayInput');
 
-        return response()->json([
-            'listSiswa' => $this->data_siswa_with_nilai_sikap(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
+        foreach ($listSiswa as $siswa) {
+            $siswa['penilaian_sikap'] ?
+            PenilaianSikap::updateOrCreate(
+                ['id' => $siswa['penilaian_sikap']['id'] ?? null],
+                [
+                    'tahun' => request('tahun'),
+                    'semester' => request('semester'),
+                    'kelas_id' => request('kelasId'),
+                    'mata_pelajaran_id' => request('mataPelajaranId'),
+                    'nis' => $siswa['nis'],
+                    'kategori_sikap_id' => request('kategoriSikapId'),
+                    'jenis_sikap_id' => request('jenisSikapId'),
+                    'nilai' => $siswa['penilaian_sikap']['nilai'] ?? null,
+                    'user_id' => auth()->user()->id,
+                ]
+            )
+            :
+            null;
+        }
+
+        return to_route('input-nilai-sikap');
+    }
+
+    public function hapus()
+    {
+        PenilaianSikap::destroy(request('id'));
+
+        return to_route('input-nilai-sikap');
     }
 }

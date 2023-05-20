@@ -66,7 +66,7 @@ class InputNilaiRemidiController extends Controller
         $listSiswa = request('arrayInput');
 
         foreach ($listSiswa as $siswa) {
-            if ($siswa['remidi'] != null) {
+            $siswa['remidi'] ?
 
                 RemidiDetail::updateOrCreate(
                     ['id' => $siswa['remidi']['id'] ?? null],
@@ -84,19 +84,24 @@ class InputNilaiRemidiController extends Controller
                         'nilai_akhir' => $kkm,
                         'nilai_remidi' => $siswa['remidi']['nilai_remidi'] ?? null,
                     ]
-                );
+                )
+                :
+                null;
+
+            $siswa['remidi'] ?
 
                 Penilaian::whereTahun(request('tahun'))
-                    ->whereSemester(request('semester'))
-                    ->whereMataPelajaranId(request('mataPelajaranId'))
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
-                    ->whereKelasId(request('kelasId'))
-                    ->whereNis($siswa['nis'])
-                    ->update([
-                        'nilai' => $kkm
-                    ]);
-            }
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
+                ->whereKelasId(request('kelasId'))
+                ->whereNis($siswa['nis'])
+                ->update([
+                    'nilai' => $kkm
+                ])
+                :
+                null;
         }
 
         return to_route('input-nilai-remidi');

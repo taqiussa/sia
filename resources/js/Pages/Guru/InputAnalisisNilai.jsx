@@ -1,4 +1,5 @@
-import InputTextBlur from '@/Components/Sia/InputTextBlur'
+import PrimaryButton from '@/Components/PrimaryButton'
+import InputText from '@/Components/Sia/InputText'
 import JenisPenilaian from '@/Components/Sia/JenisPenilaian'
 import KategoriNilai from '@/Components/Sia/KategoriNilai'
 import Kelas from '@/Components/Sia/Kelas'
@@ -12,13 +13,13 @@ import getListKelasGuru from '@/Functions/getListKelasGuru'
 import getSiswaWithAnalisisNilai from '@/Functions/getSiswaWithAnalisisNilai'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
+import { toast } from 'react-toastify'
 
 const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
 
-    const { data, setData, errors, post, processing } = useForm({
+    const { data, setData, errors, post, processing, delete: destroy } = useForm({
         tahun: initTahun,
         semester: initSemester,
         mataPelajaranId: '',
@@ -32,7 +33,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
     })
 
     const [listSiswa, setListSiswa] = useState([])
-    const [message, setMessage] = useState([])
     const [count, setCount] = useState(0)
 
     async function getDataSiswa() {
@@ -64,6 +64,45 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
         })
     }
 
+    const submit = (e) => {
+        e.preventDefault()
+        post(
+            route('input-analisis-nilai.simpan'),
+            {
+                onSuccess: () => {
+                    toast.success('Berhasil Simpan Penilaian')
+                    setData({ ...data })
+                    getDataSiswa()
+                },
+            }
+        )
+    }
+
+    const handleDelete = (id) => {
+        Sweet
+            .fire({
+                title: 'Anda yakin menghapus?',
+                text: "Hapus Nilai!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            })
+            .then((result) => {
+                if (result.isConfirmed)
+                    destroy(
+                        route('input-analisis-nilai.hapus', { id: id }),
+                        {
+                            onSuccess: () => {
+                                toast.success('Berhasil Hapus Data Penilaian')
+                                setData({ ...data })
+                                getDataSiswa()
+                            }
+                        }
+                    )
+            })
+    }
+
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -90,56 +129,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
         setCount(count + 1)
     }
 
-    const onHandleBlurKeterampilan = (e, nis, id, no1, no2, no3, no4, idPenilaian) => {
-
-        e.preventDefault()
-
-        const no = parseInt(e.target.name.slice(2)) // extract the number from the name attribute (e.g. 'no1' => 1)
-
-        const arrayNilai = []
-
-        const analisis_penilaian = { id }
-
-        for (let i = 1; i <= 4; i++) {
-            const prop = `no_${i}`
-            analisis_penilaian[prop] = (i === no) ? e.target.value : (i === 1 ? no1 : i === 2 ? no2 : i === 3 ? no3 : no4)
-        }
-
-        arrayNilai.push(analisis_penilaian)
-
-
-        axios.post(route('input-analisis-nilai.simpan', {
-            id: id,
-            idPenilaian: idPenilaian,
-            nis: nis,
-            tahun: data.tahun,
-            semester: data.semester,
-            mataPelajaranId: data.mataPelajaranId,
-            kelasId: data.kelasId,
-            kategoriNilaiId: data.kategoriNilaiId,
-            jenisPenilaianId: data.jenisPenilaianId,
-            arrayNilai: arrayNilai
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.response.data.message
-                    })
-            })
-
-    }
-
     const handleDynamicPengetahuan = (e, index, nis, kelasId, id, no1, no2, no3, no4, no5, no6, no7, no8, no9, no10, idPenilaian, nilai, name) => {
         const no = parseInt(e.target.name.slice(2)) // extract the number from the name attribute (e.g. 'no1' => 1)
         const newList = [...listSiswa]
@@ -160,56 +149,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
         })
         setListSiswa(newList)
         setCount(count + 1)
-    }
-
-    const onHandleBlurPengetahuan = (e, nis, id, no1, no2, no3, no4, no5, no6, no7, no8, no9, no10, idPenilaian) => {
-
-        e.preventDefault()
-
-        const no = parseInt(e.target.name.slice(2)) // extract the number from the name attribute (e.g. 'no1' => 1)
-
-        const arrayNilai = []
-
-        const analisis_penilaian = { id }
-
-        for (let i = 1; i <= 10; i++) {
-            const prop = `no_${i}`
-            analisis_penilaian[prop] = (i === no) ? e.target.value : (i === 1 ? no1 : i === 2 ? no2 : i === 3 ? no3 : i === 4 ? no4 : i === 5 ? no5 : i === 6 ? no6 : i === 7 ? no7 : i === 8 ? no8 : i === 9 ? no9 : no10)
-        }
-
-        arrayNilai.push(analisis_penilaian)
-
-
-        axios.post(route('input-analisis-nilai.simpan', {
-            id: id,
-            idPenilaian: idPenilaian,
-            nis: nis,
-            tahun: data.tahun,
-            semester: data.semester,
-            mataPelajaranId: data.mataPelajaranId,
-            kelasId: data.kelasId,
-            kategoriNilaiId: data.kategoriNilaiId,
-            jenisPenilaianId: data.jenisPenilaianId,
-            arrayNilai: arrayNilai
-        }))
-            .then(response => {
-
-                setListSiswa(response.data.listSiswa)
-
-                setMessage({
-                    nis: response.data.nis,
-                    message: response.data.message
-                })
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error.response.data.message
-                    })
-            })
-
     }
 
     useEffect(() => {
@@ -260,17 +199,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
             arrayInput: [...listSiswa],
         })
     }, [count])
-
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
 
     return (
         <>
@@ -378,7 +306,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
                                                 <td className="py-2 px-2 font-medium text-slate-600" key={no}>
                                                     <div className="flex flex-col">
 
-                                                        <InputTextBlur
+                                                        <InputText
                                                             key={no}
                                                             id={`no${no}`}
                                                             name={`no${no}`}
@@ -414,10 +342,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
                                                                 siswa.penilaian.id
                                                             )}
                                                         />
-                                                        {message && message.nis == siswa.nis &&
-                                                            (
-                                                                <span className='text-emerald-500'>{message.message}</span>
-                                                            )}
                                                     </div>
                                                 </td>
                                             ))}
@@ -428,7 +352,7 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
                                                 <td className="py-2 px-2 font-medium text-slate-600" key={no}>
                                                     <div className="flex flex-col">
 
-                                                        <InputTextBlur
+                                                        <InputText
                                                             key={no}
                                                             id={`no${no}`}
                                                             name={`no${no}`}
@@ -452,10 +376,6 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
                                                                 siswa.penilaian.id
                                                             )}
                                                         />
-                                                        {message && message.nis == siswa.nis &&
-                                                            (
-                                                                <span className='text-emerald-500'>{message.message}</span>
-                                                            )}
                                                     </div>
                                                 </td>
                                             ))}
@@ -469,6 +389,9 @@ const InputAnalisisNilai = ({ initTahun, initSemester, listMapel }) => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-end pt-5 pr-2">
+                <PrimaryButton children='simpan' onClick={submit} disabled={processing} />
             </div>
         </>
 

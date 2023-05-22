@@ -35,64 +35,72 @@ class InputAnalisisNilaiController extends Controller
     {
         request()->validate(['jenisPenilaianId' => 'required'], ['jenisPenilaianId.required' => 'Pilih Jenis Penilaian']);
 
-        $nilai =
-            intval(request('arrayNilai')[0]['no_1'] ?? null) +
-            intval(request('arrayNilai')[0]['no_2'] ?? null) +
-            intval(request('arrayNilai')[0]['no_3'] ?? null) +
-            intval(request('arrayNilai')[0]['no_4'] ?? null) +
-            intval(request('arrayNilai')[0]['no_5'] ?? null) +
-            intval(request('arrayNilai')[0]['no_6'] ?? null) +
-            intval(request('arrayNilai')[0]['no_7'] ?? null) +
-            intval(request('arrayNilai')[0]['no_8'] ?? null) +
-            intval(request('arrayNilai')[0]['no_9'] ?? null) +
-            intval(request('arrayNilai')[0]['no_10'] ?? null);
+        $listSiswa = request('arrayInput');
 
-        AnalisisPenilaian::updateOrCreate(
-            ['id' => request('id')],
-            [
-                'tanggal' => date('Y-m-d'),
-                'nis' => request('nis'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'semester' => request('semester'),
-                'tahun' => request('tahun'),
-                'no_1' => request('arrayNilai')[0]['no_1'] ?? null,
-                'no_2' => request('arrayNilai')[0]['no_2'] ?? null,
-                'no_3' => request('arrayNilai')[0]['no_3'] ?? null,
-                'no_4' => request('arrayNilai')[0]['no_4'] ?? null,
-                'no_5' => request('arrayNilai')[0]['no_5'] ?? null,
-                'no_6' => request('arrayNilai')[0]['no_6'] ?? null,
-                'no_7' => request('arrayNilai')[0]['no_7'] ?? null,
-                'no_8' => request('arrayNilai')[0]['no_8'] ?? null,
-                'no_9' => request('arrayNilai')[0]['no_9'] ?? null,
-                'no_10' => request('arrayNilai')[0]['no_10'] ?? null,
-                'nilai' => $nilai,
-                'user_id' => auth()->user()->id
-            ]
-        );
+        foreach ($listSiswa as $siswa) {
 
-        Penilaian::updateOrCreate(
-            ['id' => request('idPenilaian')],
-            [
-                'tanggal' => date('Y-m-d'),
-                'nis' => request('nis'),
-                'kategori_nilai_id' => request('kategoriNilaiId'),
-                'jenis_penilaian_id' => request('jenisPenilaianId'),
-                'kelas_id' => request('kelasId'),
-                'mata_pelajaran_id' => request('mataPelajaranId'),
-                'semester' => request('semester'),
-                'tahun' => request('tahun'),
-                'nilai' => $nilai,
-                'user_id' => auth()->user()->id
-            ]
-        );
+            if ($siswa['analisis_penilaian']) {
 
-        return response()->json([
-            'listSiswa' => $this->data_siswa_with_analisis_nilai(),
-            'message' => 'Tersimpan',
-            'nis' => request('nis')
-        ]);
+                $nilai =
+                    $siswa['analisis_penilaian']['no_1'] +
+                    $siswa['analisis_penilaian']['no_2'] +
+                    $siswa['analisis_penilaian']['no_3'] +
+                    $siswa['analisis_penilaian']['no_4'] +
+                    $siswa['analisis_penilaian']['no_5'] +
+                    $siswa['analisis_penilaian']['no_6'] +
+                    $siswa['analisis_penilaian']['no_7'] +
+                    $siswa['analisis_penilaian']['no_8'] +
+                    $siswa['analisis_penilaian']['no_9'] +
+                    $siswa['analisis_penilaian']['no_10'];
+
+                AnalisisPenilaian::updateOrCreate(
+                    ['id' => $siswa['analisis_penilaian']['id'] ?? null],
+                    [
+                        'tanggal' => date('Y-m-d'),
+                        'nis' => $siswa['nis'],
+                        'kategori_nilai_id' => request('kategoriNilaiId'),
+                        'jenis_penilaian_id' => request('jenisPenilaianId'),
+                        'kelas_id' => request('kelasId'),
+                        'mata_pelajaran_id' => request('mataPelajaranId'),
+                        'semester' => request('semester'),
+                        'tahun' => request('tahun'),
+                        'no_1' => $siswa['analisis_penilaian']['no_1'],
+                        'no_2' => $siswa['analisis_penilaian']['no_2'],
+                        'no_3' => $siswa['analisis_penilaian']['no_3'],
+                        'no_4' => $siswa['analisis_penilaian']['no_4'],
+                        'no_5' => $siswa['analisis_penilaian']['no_5'],
+                        'no_6' => $siswa['analisis_penilaian']['no_6'],
+                        'no_7' => $siswa['analisis_penilaian']['no_7'],
+                        'no_8' => $siswa['analisis_penilaian']['no_8'],
+                        'no_9' => $siswa['analisis_penilaian']['no_9'],
+                        'no_10' => $siswa['analisis_penilaian']['no_10'],
+                        'nilai' => $nilai,
+                        'user_id' => auth()->user()->id
+                    ]
+                );
+
+
+                Penilaian::updateOrCreate(
+                    ['id' => $siswa['penilaian']['id'] ?? null],
+                    [
+                        'tanggal' => date('Y-m-d'),
+                        'nis' => $siswa['nis'],
+                        'kategori_nilai_id' => request('kategoriNilaiId'),
+                        'jenis_penilaian_id' => request('jenisPenilaianId'),
+                        'kelas_id' => request('kelasId'),
+                        'mata_pelajaran_id' => request('mataPelajaranId'),
+                        'semester' => request('semester'),
+                        'tahun' => request('tahun'),
+                        'nilai' => $nilai,
+                        'user_id' => auth()->user()->id
+                    ]
+                );
+            } else {
+                null;
+            }
+        }
+
+
+        return to_route('input-analisis-nilai');
     }
 }

@@ -45,4 +45,26 @@ class PrintLedgerRaporController extends Controller
         ];
         return view('print.guru.print-ledger-rapor', $data);
     }
+
+    public function print_ranking()
+    {
+        $kelas = Kelas::find(request('kelasId'));
+
+        $listJenis = PenilaianRapor::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereTingkat($kelas->tingkat)
+            ->pluck('jenis_penilaian_id');
+
+        $data = [
+            'namaKelas' => $kelas->nama,
+            'tahun' => request('tahun'),
+            'semester' => request('semester'),
+            'namaWaliKelas' => $this->data_nama_wali_kelas(),
+            'listSiswa' => $this->data_siswa_with_penilaian_rapors(),
+            'listMapel' => $this->data_mapel_rapor($kelas->tingkat),
+            'totalMapel' => $this->total_mapel($kelas->tingkat),
+            'listJenis' => $listJenis
+        ];
+        return view('print.guru.print-ledger-rapor-ranking', $data);
+    }
 }

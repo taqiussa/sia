@@ -63,12 +63,17 @@ const PrintLedgerRapor = ({ initTahun, initSemester, listKelas }) => {
                     listKelas={listKelas}
                     disabled={true}
                 />
-                <div className="flex items-end">
+                <div className="flex items-end space-x-3">
                     <PrintLink href={route('print-ledger-rapor.print', {
                         tahun: data.tahun,
                         semester: data.semester,
                         kelasId: data.kelasId
                     })} label='print' />
+                    <PrintLink href={route('print-ledger-rapor.print-ranking', {
+                        tahun: data.tahun,
+                        semester: data.semester,
+                        kelasId: data.kelasId
+                    })} label='ranking' />
                 </div>
             </div>
 

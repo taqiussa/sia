@@ -248,6 +248,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataSkorController::class)->group(function () {
         // Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
         Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
+        Route::post('get-skor-kelas', 'get_skor_kelas')->name('get-skor-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
 
@@ -565,6 +566,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputSkorKelasController::class)->group(function () {
         Route::get('input-skor-kelas', 'index')->name('input-skor-kelas');
         Route::post('input-skor-kelas', 'simpan')->name('input-skor-kelas.simpan');
+        Route::delete('input-skor-kelas', 'hapus')->name('input-skor-kelas.hapus');
     });
 
     // Route Jadwal Jam Kosong

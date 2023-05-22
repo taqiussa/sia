@@ -10,7 +10,7 @@ import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal } from '@/Functions/functions'
 import getSiswa from '@/Functions/getSiswa'
-import getSkorSiswa from '@/Functions/getSkorSiswa'
+import getSkorKelas from '@/Functions/getSkorKelas'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
@@ -28,18 +28,18 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
         skorId: '',
         kelasId: '',
         jumlah: 1,
-        listSiswa: [],
         listData: [],
         arrayInput: []
     })
 
+    const [listSiswa, setListSiswa] = useState([])
     async function getDataSiswa() {
         const response = await getSiswa(data.tahun, data.kelasId)
-        setData({ ...data, listSiswa: response.listSiswa })
+        setListSiswa(response.listSiswa)
     }
 
     async function getDataSkor() {
-        const response = await getSkorSiswa(data.tanggal, data.nis)
+        const response = await getSkorKelas(data.tanggal, data.kelasId)
         setData({ ...data, listData: response.listData })
     }
 
@@ -50,7 +50,7 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
 
     const checkboxRefs = useRef([])
 
-    checkboxRefs.current = data.listSiswa.map(
+    checkboxRefs.current = listSiswa.map(
         (_, index) => checkboxRefs.current[index] || React.createRef()
     )
 
@@ -69,21 +69,6 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
 
     }
 
-    // const [selectAll, setSelectAll] = useState(false);
-
-    // const handleSelectAllChange = () => {
-    //     const isChecked = !selectAll;
-    //     setSelectAll(isChecked);
-    //     if (isChecked) {
-    //         setData({ ...data, arrayInput: data.listSiswa.map((item) => item.nis) });
-    //     } else {
-    //         setData({ ...data, arrayInput: [] });
-    //     }
-    //     checkboxRefs.current.forEach((ref) => {
-    //         ref.current.checked = isChecked;
-    //     });
-    // };
-
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
@@ -98,7 +83,6 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
                     toast.success('Berhasil Simpan Skor')
                     setData({
                         ...data,
-                        listSiswa: [],
                         arrayInput: []
                     })
                     checkboxRefs.current.forEach((check) => {
@@ -134,7 +118,6 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
                                 toast.success('Berhasil Hapus Skor Siswa')
                                 setData({
                                     ...data,
-                                    listSiswa: [],
                                     arrayInput: []
                                 })
                                 trackPromise(getDataSkor())
@@ -145,19 +128,11 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
     }
 
     useEffect(() => {
-        if (data.tahun && data.kelasId)
-            trackPromise(
-                getDataSiswa()
-            )
-    }, [data.tahun, data.kelasId])
-
-    useEffect(() => {
-        if (data.tanggal && data.nis)
-            trackPromise(
-                getDataSkor()
-            )
-    }, [data.tanggal, data.nis])
-
+        trackPromise(
+            getDataSkor(),
+            getDataSiswa()
+        )
+    }, [data.tanggal, data.tahun, data.kelasId])
 
     return (
         <>
@@ -254,7 +229,7 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listSiswa && data.listSiswa.map((siswa, index) => (
+                        {listSiswa && listSiswa.map((siswa, index) => (
                             <tr
                                 key={index}
                                 onClick={() => {

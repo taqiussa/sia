@@ -29,25 +29,30 @@ class InputSkorKelasController extends Controller
 
     public function simpan()
     {
-        dd(request('arrayInput'));
-        // $skor = Skor::find(request('skorId'));
+        request()->validate([
+            'skorId' => 'required',
+            'jumlah' => 'required'
+        ]);
+        
+        $skor = Skor::find(request('skorId'));
 
-        // $siswa = Siswa::whereNis(request('nis'))
-        //     ->whereTahun(request('tahun'))
-        //     ->first();
+        $listSiswa = request('arrayInput');
 
-        // PenilaianSkor::create(
-        //     [
-        //         'tanggal' => request('tanggal'),
-        //         'tahun' => request('tahun'),
-        //         'semester' => request('semester'),
-        //         'nis' => request('nis'),
-        //         'kelas_id' => $siswa->kelas_id,
-        //         'skor_id' => request('skorId'),
-        //         'skor' => $skor->skor,
-        //         'user_id' => auth()->user()->id
-        //     ]
-        // );
+        foreach ($listSiswa as $siswa) {
+
+            PenilaianSkor::create(
+                [
+                    'tanggal' => request('tanggal'),
+                    'tahun' => request('tahun'),
+                    'semester' => request('semester'),
+                    'nis' => $siswa,
+                    'kelas_id' => request('kelasId'),
+                    'skor_id' => request('skorId'),
+                    'skor' => $skor->skor,
+                    'user_id' => auth()->user()->id
+                ]
+            );
+        }
 
         return to_route('input-skor-kelas');
     }

@@ -9,12 +9,14 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal, maskRupiah, rupiah, tanggal } from '@/Functions/functions'
 import getPengeluaran from '@/Functions/getPengeluaran'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import ReactPaginate from 'react-paginate'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 import Kategori from '@/Components/Sia/Kategori'
+import { Icon } from '@mdi/react'
+import { mdiSquareEditOutline } from '@mdi/js'
 
 const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
 
@@ -67,7 +69,7 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan pengeluaran')
-                    setData({...data})
+                    setData({ ...data })
                     getDataPengeluaran()
                 },
                 onError: (error) => {
@@ -101,7 +103,7 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
                         {
                             onSuccess: () => {
                                 toast.success('Berhasil Hapus pengeluaran')
-                                setData({...data})
+                                setData({ ...data })
                                 getDataPengeluaran()
                             }
                         }
@@ -194,7 +196,7 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
 
                 </div>
 
-                <PrimaryButton type='submit' children='simpan' disabled={processing}/>
+                <PrimaryButton type='submit' children='simpan' disabled={processing} />
             </form>
             <div className='lg:grid lg:grid-cols-3'>
                 <InputText
@@ -264,6 +266,9 @@ const InputPengeluaran = ({ initTahun, listKategoriPengeluaran }) => {
                                             {list.user?.name}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
+                                            <Link href={route('input-pengeluaran.edit', { id: list.id })} className='text-emerald-600'>
+                                                <Icon path={mdiSquareEditOutline} size={1} />
+                                            </Link>
                                             <Hapus
                                                 onClick={() => handleDelete(list.id)}
                                             />

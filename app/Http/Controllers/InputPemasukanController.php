@@ -21,6 +21,17 @@ class InputPemasukanController extends Controller
         );
     }
 
+    public function edit()
+    {
+        return inertia(
+            'Bendahara/InputPemasukanEdit',
+            [
+                'pemasukan' => Pemasukan::find(request('id')),
+                'listKategoriPemasukan' => KategoriPemasukan::orderBy('nama')->get()
+            ]
+        );
+    }
+
     public function simpan()
     {
         request()->validate([
@@ -39,6 +50,31 @@ class InputPemasukanController extends Controller
             'jumlah' => ambilAngka(request('jumlah')),
             'user_id' => auth()->user()->id
         ]);
+
+        return to_route('input-pemasukan');
+    }
+
+    public function update()
+    {
+        request()->validate([
+            'tanggal' => 'required',
+            'tahun' => 'required',
+            'kategoriPemasukanId' => 'required',
+            'keterangan' => 'required',
+            'jumlah' => 'required',
+        ]);
+
+        Pemasukan::updateOrCreate(
+            ['id' => request('id')],
+            [
+                'tanggal' => request('tanggal'),
+                'tahun' => request('tahun'),
+                'kategori_pemasukan_id' => request('kategoriPemasukanId'),
+                'keterangan' => request('keterangan'),
+                'jumlah' => ambilAngka(request('jumlah')),
+                'user_id' => auth()->user()->id
+            ]
+        );
 
         return to_route('input-pemasukan');
     }

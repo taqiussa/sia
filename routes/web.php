@@ -296,14 +296,18 @@ Route::middleware([
     // Route Input Pemasukan
     Route::controller(InputPemasukanController::class)->group(function () {
         Route::get('input-pemasukan', 'index')->name('input-pemasukan');
+        Route::get('input-pemasukan/edit', 'edit')->name('input-pemasukan.edit');
         Route::post('input-pemasukan', 'simpan')->name('input-pemasukan.simpan');
+        Route::put('input-pemasukan', 'update')->name('input-pemasukan.update');
         Route::delete('input-pemasukan', 'hapus')->name('input-pemasukan.hapus');
     });
 
     // Route Input Pengeluaran
     Route::controller(InputPengeluaranController::class)->group(function () {
         Route::get('input-pengeluaran', 'index')->name('input-pengeluaran');
+        Route::get('input-pengeluaran/edit', 'edit')->name('input-pengeluaran.edit');
         Route::post('input-pengeluaran', 'simpan')->name('input-pengeluaran.simpan');
+        Route::put('input-pengeluaran', 'update')->name('input-pengeluaran.update');
         Route::delete('input-pengeluaran', 'hapus')->name('input-pengeluaran.hapus');
     });
 

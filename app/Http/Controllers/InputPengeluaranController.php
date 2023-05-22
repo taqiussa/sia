@@ -12,8 +12,16 @@ class InputPengeluaranController extends Controller
 
     public function index()
     {
-        return inertia('Bendahara/InputPengeluaran',[
+        return inertia('Bendahara/InputPengeluaran', [
             'initTahun' => $this->data_tahun(),
+            'listKategoriPengeluaran' => KategoriPengeluaran::orderBy('nama')->get()
+        ]);
+    }
+
+    public function edit()
+    {
+        return inertia('Bendahara/InputPengeluaranEdit', [
+            'pengeluaran' => Pengeluaran::find(request('id')),
             'listKategoriPengeluaran' => KategoriPengeluaran::orderBy('nama')->get()
         ]);
     }
@@ -38,6 +46,33 @@ class InputPengeluaranController extends Controller
             'jumlah' => ambilAngka(request('jumlah')),
             'user_id' => auth()->user()->id
         ]);
+
+        return to_route('input-pengeluaran');
+    }
+
+    public function update()
+    {
+        request()->validate([
+            'tanggal' => 'required',
+            'tanggalNota' => 'required',
+            'tahun' => 'required',
+            'kategoriPengeluaranId' => 'required',
+            'keterangan' => 'required',
+            'jumlah' => 'required',
+        ]);
+
+        Pengeluaran::updateOrCreate(
+            ['id' => request('id')],
+            [
+                'tanggal' => request('tanggal'),
+                'tanggal_nota' => request('tanggalNota'),
+                'tahun' => request('tahun'),
+                'kategori_pengeluaran_id' => request('kategoriPengeluaranId'),
+                'keterangan' => request('keterangan'),
+                'jumlah' => ambilAngka(request('jumlah')),
+                'user_id' => auth()->user()->id
+            ]
+        );
 
         return to_route('input-pengeluaran');
     }

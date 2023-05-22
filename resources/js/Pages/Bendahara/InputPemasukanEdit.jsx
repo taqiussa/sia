@@ -9,23 +9,22 @@ import Tanggal from '@/Components/Sia/Tanggal'
 import { hariTanggal, maskRupiah, rupiah } from '@/Functions/functions'
 import getPemasukan from '@/Functions/getPemasukan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, Link, useForm } from '@inertiajs/react'
-import { mdiCircleEditOutline, mdiFileEdit, mdiSquareEditOutline } from '@mdi/js'
-import { Icon } from '@mdi/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import ReactPaginate from 'react-paginate'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
+const InputPemasukan = ({ pemasukan, listKategoriPemasukan }) => {
 
-    const { data, setData, post, errors, processing, delete: destroy } = useForm({
-        tahun: initTahun,
-        tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        kategoriPemasukanId: '',
-        keterangan: '',
-        jumlah: 0,
+    const { data, setData, put, errors, processing, delete: destroy } = useForm({
+        id: pemasukan.id,
+        tahun: pemasukan.tahun,
+        tanggal: pemasukan.tanggal,
+        kategoriPemasukanId: pemasukan.kategori_pemasukan_id,
+        keterangan: pemasukan.keterangan,
+        jumlah: pemasukan.jumlah,
         cari: ''
     })
 
@@ -64,7 +63,7 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
 
     const submit = (e) => {
         e.preventDefault()
-        post(route('input-pemasukan.simpan'),
+        put(route('input-pemasukan.update'),
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan Pemasukan')
@@ -248,9 +247,6 @@ const InputPemasukan = ({ initTahun, listKategoriPemasukan }) => {
                                             {list.user?.name}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600 inline-flex space-x-3">
-                                            <Link href={route('input-pemasukan.edit', { id: list.id })} className='text-emerald-600'>
-                                                <Icon path={mdiSquareEditOutline} size={1} />
-                                            </Link>
                                             <Hapus
                                                 onClick={() => handleDelete(list.id)}
                                             />

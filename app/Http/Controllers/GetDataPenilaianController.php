@@ -100,7 +100,7 @@ class GetDataPenilaianController extends Controller
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
                 ->whereIn('nis', $nis)
-                ->whereNotIn('nis', $nis)
+                ->whereNotIn('nis', $nisRemidi)
                 // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
                 //     ->whereSemester(request('semester'))
                 //     ->whereMataPelajaranId(request('mataPelajaranId'))

@@ -40,7 +40,7 @@ class InputNilaiRemidiController extends Controller
             'nilaiRemidi' => 'numeric|max:100'
         ]);
 
-        Remidi::updateOrCreate(
+        $remidi = Remidi::updateOrCreate(
             ['id' => request('id')],
             [
                 'tahun' => request('tahun'),
@@ -71,7 +71,7 @@ class InputNilaiRemidiController extends Controller
                 RemidiDetail::updateOrCreate(
                     ['id' => $siswa['remidi']['id'] ?? null],
                     [
-                        'remidi_id' => $siswa['remidi']['remidi_id'],
+                        'remidi_id' => $siswa['remidi']['remidi_id'] ?? $remidi->id,
                         'tahun' => request('tahun'),
                         'semester' => request('semester'),
                         'tanggal' => request('tanggal'),

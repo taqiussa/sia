@@ -37,7 +37,8 @@ class InputNilaiPengayaanController extends Controller
         ]);
 
         try {
-            Pengayaan::updateOrCreate(
+
+            $pengayaan = Pengayaan::updateOrCreate(
                 ['id' => request('id')],
                 [
                     'tahun' => request('tahun'),
@@ -62,7 +63,7 @@ class InputNilaiPengayaanController extends Controller
                     PengayaanDetail::updateOrCreate(
                         ['id' => $siswa['pengayaan']['id'] ?? null],
                         [
-                            'pengayaan_id' => $siswa['pengayaan']['pengayaan_id'],
+                            'pengayaan_id' => $siswa['pengayaan']['pengayaan_id'] ?? $pengayaan->id,
                             'nis' => $siswa['nis'],
                             'nilai_awal' => $siswa['penilaian']['nilai'],
                             'nilai_pengayaan' => $siswa['pengayaan']['nilai_pengayaan'] ?? null,

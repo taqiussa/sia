@@ -44,6 +44,6 @@ class UploadNilaiSikapController extends Controller
 
         Excel::import(new ImportNilaiSikap(), request('fileUpload'));
 
-        to_route('upload-nilai');
+        to_route('upload-nilai-sikap');
     }
 }

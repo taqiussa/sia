@@ -40,7 +40,7 @@
                 <th class="border border-collapse border-black">April</th>
                 <th class="border border-collapse border-black">Mei</th>
                 <th class="border border-collapse border-black">Juni</th>
-                <th class="border border-collapse border-black">Total Pembayaran</th>
+                <th class="border border-collapse border-black">Belum Dibayar</th>
             </tr>
         </thead>
         <tbody>
@@ -56,7 +56,7 @@
                         </td>
                     @endforeach
                     <td class="border border-collapse border-black px-1 whitespace-nowrap">
-                        {{ rupiah($siswa->pembayarans->sum('jumlah')) }}
+                        {{ rupiah($wajibBayar - $siswa->pembayarans->sum('jumlah')) }}
                     </td>
                 </tr>
             @endforeach

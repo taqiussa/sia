@@ -16,6 +16,7 @@ use App\Models\KategoriPemasukan;
 use App\Models\KategoriPengeluaran;
 use App\Http\Controllers\Controller;
 use App\Models\Gunabayar;
+use App\Models\Kelas;
 use App\Models\KepalaSekolah;
 use App\Models\WaliKelas;
 
@@ -405,6 +406,8 @@ class BendaharaPrintController extends Controller
 
     public function tagihan_per_kelas_print()
     {
+        $kelas = Kelas::find(request('kelasId'));
+
         $gunabayar = Gunabayar::orderBy('semester')
             ->orderBy('id')
             ->get();
@@ -430,6 +433,10 @@ class BendaharaPrintController extends Controller
             ])
             ->first();
 
+        $wajibBayar = WajibBayar::whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->first();
+
         $data = [
             'kepalaSekolah' => KepalaSekolah::whereTahun(request('tahun'))
                 ->with(['user' => fn ($q) => $q->select('id', 'name')])
@@ -442,6 +449,7 @@ class BendaharaPrintController extends Controller
             'namaWaliKelas' => $waliKelas->user->name,
             'siswa' => $siswa,
             'tahun' => request('tahun'),
+            'wajibBayar' => $wajibBayar->jumlah,
         ];
 
         return view('print.bendahara.tagihan-per-kelas-print', $data);

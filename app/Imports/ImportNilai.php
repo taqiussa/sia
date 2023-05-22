@@ -16,7 +16,7 @@ class ImportNilai implements ToCollection, WithHeadingRow, SkipsEmptyRows, Skips
 {
     use SkipsErrors;
     use SkipsFailures;
-
+    
     /**
      * @param Collection $collection
      */
@@ -25,9 +25,6 @@ class ImportNilai implements ToCollection, WithHeadingRow, SkipsEmptyRows, Skips
         foreach ($collection as $row) {
             Penilaian::updateOrCreate(
                 [
-                    'id' => $row['id'] ?? null
-                ],
-                [
                     'tahun' => $row['tahun'],
                     'semester' => $row['semester'],
                     'mata_pelajaran_id' => $row['mata_pelajaran_id'],
@@ -35,6 +32,8 @@ class ImportNilai implements ToCollection, WithHeadingRow, SkipsEmptyRows, Skips
                     'jenis_penilaian_id' => $row['jenis_penilaian_id'],
                     'kelas_id' => $row['kelas_id'],
                     'nis' => $row['nis'],
+                ],
+                [
                     'user_id' => auth()->user()->id,
                     'tanggal' => date('Y-m-d'),
                     'nilai' => $row['nilai'] ?? null,

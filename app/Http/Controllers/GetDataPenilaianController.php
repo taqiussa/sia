@@ -65,6 +65,14 @@ class GetDataPenilaianController extends Controller
             ->where('nilai', '>=', $kkm)
             ->pluck('nis');
 
+        $nisRemidi = RemidiDetail::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->pluck('nis');
+
         return response()->json([
             'pengayaan' => Pengayaan::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
@@ -92,6 +100,7 @@ class GetDataPenilaianController extends Controller
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
                 ->whereIn('nis', $nis)
+                ->whereNotIn('nis', $nis)
                 // ->withWhereHas('penilaian', fn ($q) => $q->whereTahun(request('tahun'))
                 //     ->whereSemester(request('semester'))
                 //     ->whereMataPelajaranId(request('mataPelajaranId'))

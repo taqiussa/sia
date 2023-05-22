@@ -19,6 +19,7 @@
         @foreach ($listSiswa as $siswa)
             @foreach ($listJenis as $jenis)
                 <tr>
+                    <td>{{ $siswa->penilaianSikap->id ?? null }}</td>
                     <td>{{ $tahun }}</td>
                     <td>{{ $semester }}</td>
                     <td>{{ $mataPelajaranId }}</td>

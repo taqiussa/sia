@@ -47,13 +47,15 @@
                         <td class="border border-collapse border-black text-center px-1">
                             @foreach ($siswa->penilaians as $nilai)
                                 @if ($nilai->jenis_penilaian_id == $jenis->id)
-                                    {{ $nilai->nilai }}
+                                    <div class="{{ $nilai->nilai < $kkm ? 'text-red-600 bg-yellow-400' : '' }}">
+                                        {{ $nilai->nilai }}
+                                    </div>
                                 @endif
                             @endforeach
-
                         </td>
                     @endforeach
-                    <td class="border border-collapse border-black text-center px-1">
+                    <td
+                        class="border border-collapse border-black text-center px-1 {{ floor($siswa->penilaians->avg('nilai')) < $kkm ? 'text-red-600 bg-yellow-400' : '' }}">
                         {{ floor($siswa->penilaians->avg('nilai')) }}
                     </td>
                 </tr>

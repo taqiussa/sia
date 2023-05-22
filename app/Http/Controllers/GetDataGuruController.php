@@ -11,6 +11,7 @@ use App\Traits\InitTrait;
 use App\Models\Penggajian;
 use App\Models\KategoriNilai;
 use App\Models\JenisPenilaian;
+use App\Models\JenisSikap;
 use App\Models\SubElemen;
 
 class GetDataGuruController extends Controller
@@ -88,6 +89,15 @@ class GetDataGuruController extends Controller
         return response()->json([
             'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
                 ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->orderBy('nama')
+                ->get()
+        ]);
+    }
+
+    public function get_list_jenis_sikap()
+    {
+        return response()->json([
+            'listJenis' => JenisSikap::whereKategoriSikapId(request('kategoriSikapId'))
                 ->orderBy('nama')
                 ->get()
         ]);

@@ -93,6 +93,7 @@ use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\UploadNilaiController;
+use App\Http\Controllers\UploadNilaiSikapController;
 use App\Http\Controllers\UploadPenggajianController;
 use Illuminate\Support\Facades\Route;
 
@@ -212,6 +213,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-list-dimensi', 'get_list_dimensi')->name('get-list-dimensi');
         Route::post('get-list-elemen', 'get_list_elemen')->name('get-list-elemen');
         Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
+        Route::post('get-list-jenis-sikap', 'get_list_jenis_sikap')->name('get-list-jenis-sikap');
         Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
         Route::post('get-list-kategori-per-tingkat', 'get_list_kategori_per_tingkat')->name('get-list-kategori-per-tingkat');
         Route::post('get-list-kd', 'get_list_kd')->name('get-list-kd');
@@ -745,6 +747,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('upload-nilai', 'index')->name('upload-nilai');
         Route::get('upload-nilai/download', 'download')->name('upload-nilai.download');
         Route::post('upload-nilai', 'upload')->name('upload-nilai.upload');
+    });
+    
+    // Route Upload Nilai
+    Route::controller(UploadNilaiSikapController::class)->group(function () {
+        Route::get('upload-nilai-sikap', 'index')->name('upload-nilai-sikap');
+        Route::get('upload-nilai-sikap/download', 'download')->name('upload-nilai-sikap.download');
+        Route::post('upload-nilai-sikap', 'upload')->name('upload-nilai-sikap.upload');
     });
 });
 

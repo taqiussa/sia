@@ -45,7 +45,6 @@ const SidebarGuru = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-alquran')} active={route().current('upload-analisis-alquran')} label="upload analisis al qur'an" />
                 <SidebarLink closeSide={closeSide} href={route('upload-analisis-nilai')} active={route().current('upload-analisis-nilai')} label="upload analisis nilai" />
                 <SidebarLink closeSide={closeSide} href={route('upload-nilai')} active={route().current('upload-nilai')} label="upload nilai" />
-                <SidebarLink closeSide={closeSide} href={route('upload-nilai-sikap')} active={route().current('upload-nilai-sikap')} label="upload nilai sikap" />
             </div>
             <div className="text-slate-600 font-bold mt-3">
                 Wali Kelas

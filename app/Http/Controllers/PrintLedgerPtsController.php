@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AturanKurikulum;
 use App\Models\Kelas;
 use App\Models\PenilaianRaporPts;
 use App\Traits\InitTrait;
@@ -43,6 +44,15 @@ class PrintLedgerPtsController extends Controller
             'totalMapel' => $this->total_mapel($kelas->tingkat),
             'listJenis' => $listJenis
         ];
-        return view('print.guru.print-ledger-pts', $data);
+
+        $aturanKurikulum = AturanKurikulum::whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->first();
+
+        if ($aturanKurikulum->kurikulum_id == 1) {
+            return view('print.guru.print-ledger-pts-kurtilas', $data);
+        }else{
+            return view('print.guru.print-ledger-pts-merdeka', $data);
+        }
     }
 }

@@ -1,17 +1,22 @@
 import DetailLink from '@/Components/Sia/DetailLink'
+import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal } from '@/Functions/functions'
 import getDataBimbingan from '@/Functions/getDataBimbingan'
+import getDataNilai from '@/Functions/getDataNilai'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const DataBimbingan = ({ initTahun }) => {
+const DataNilai = ({ initTahun, initSemester }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
-        listBimbingan: []
+        semester: initSemester,
+        listJenis: [],
+        listMapel: [],
+        listPenilaian: []
     })
 
     const onHandleChange = (e) => {
@@ -19,31 +24,40 @@ const DataBimbingan = ({ initTahun }) => {
     }
 
     async function getData() {
-        const response = await getDataBimbingan(data.tahun)
+        const response = await getDataNilai(data.tahun, data.semester)
         setData({
             ...data,
-            listBimbingan: response.listBimbingan,
+            listJenis: response.listJenis,
+            listMapel: response.listMapel,
+            listPenilaian: response.listPenilaian
         })
     }
 
     useEffect(() => {
 
-        if (data.tahun)
+        if (data.tahun && data.semester)
             trackPromise(getData())
 
-    }, [data.tahun])
+    }, [data.tahun, data.semester])
 
     return (
         <>
             <Head title='Data Bimbingan' />
             <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">
-                data bimbingan dan konseling
+                data nilai
             </div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
                     name='tahun'
                     value={data.tahun}
+                    handleChange={onHandleChange}
+                />
+
+                <Semester
+                    id='semester'
+                    name='semester'
+                    value={data.semester}
                     handleChange={onHandleChange}
                 />
             </div>
@@ -55,43 +69,31 @@ const DataBimbingan = ({ initTahun }) => {
                                 NO
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                TANGGAL
+                                MATA PELAJARAN
                             </th>
-                            <th scope='col' className="py-3 px-2">
-                                PERMASALAHAN
-                            </th>
-                            <th scope='col' className="py-3 px-2 text-left">
-                                PENYELESAIAN
-                            </th>
-                            <th scope='col' className="py-3 px-2 text-left">
-                                TINDAK LANJUT
-                            </th>
-                            <th scope='col' className="py-3 px-2 text-left">
-                                AKSI
-                            </th>
+                            {data.listJenis && data.listJenis.map((jenis, index) => (
+                                <th key={index} scope='col' className="py-3 px-2">
+                                    {jenis.nama}
+                                </th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listBimbingan && data.listBimbingan.map((bimbingan, index) => (
+                        {data.listMapel && data.listMapel.map((mapel, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {hariTanggal(bimbingan.tanggal)}
+                                    {mapel.mapel?.nama}
                                 </td>
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {bimbingan.permasalahan}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {bimbingan.penyelesaian}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {bimbingan.tindak_lanjut}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    <DetailLink href={route('data-bimbingan.detail', { id: bimbingan.id })} label='detail' />
-                                </td>
+                                {data.listJenis && data.listJenis.map((jenis, index) => (
+                                    <td key={index} className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {data.listPenilaian && data.listPenilaian.filter(nilai => nilai.jenis_penilaian_id == jenis.id && nilai.mata_pelajaran_id == mapel.mata_pelajaran_id)
+                                            .map(nilai => nilai.nilai)
+                                        }
+                                    </td>
+                                ))}
                             </tr>
                         ))}
                     </tbody>
@@ -101,5 +103,5 @@ const DataBimbingan = ({ initTahun }) => {
     )
 }
 
-DataBimbingan.layout = page => <AppLayout children={page} />
-export default DataBimbingan
+DataNilai.layout = page => <AppLayout children={page} />
+export default DataNilai

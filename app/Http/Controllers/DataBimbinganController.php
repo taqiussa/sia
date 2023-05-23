@@ -15,10 +15,7 @@ class DataBimbinganController extends Controller
         return inertia(
             'Siswa/DataBimbingan',
             [
-                'listBimbingan' => BkDetail::whereTahun($this->data_tahun())
-                    ->whereNis(auth()->user()->nis)
-                    ->with(['user' => fn ($q) => $q->select('id', 'name')])
-                    ->get()
+                'initTahun' => $this->data_tahun()
             ]
         );
     }

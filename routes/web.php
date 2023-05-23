@@ -20,10 +20,12 @@ use App\Http\Controllers\BiodataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DataBimbinganController;
+use App\Http\Controllers\DataNilaiController;
 use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
+use App\Http\Controllers\DataSkorController;
 use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetDataAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
@@ -32,6 +34,7 @@ use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\GetDataGuruController;
 use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\GetDataPenilaianController;
+use App\Http\Controllers\GetDataSiswaController;
 use App\Http\Controllers\GetDataSkorController;
 use App\Http\Controllers\InputAlphaController;
 use App\Http\Controllers\InputAnalisisNilaiController;
@@ -137,6 +140,13 @@ Route::middleware('auth')->group(function () {
         Route::get('data-bimbingan/detail', 'detail')->name('data-bimbingan.detail');
     });
 
+    // Route Data Nilai
+    Route::get('data-nilai', DataNilaiController::class)->name('data-nilai');
+
+    // Route Data Skor
+    Route::get('data-skor', DataSkorController::class)->name('data-skor');
+
+
     // End Sidebar Siswa
 
     // Route Bendahara Print Controller
@@ -156,7 +166,22 @@ Route::middleware('auth')->group(function () {
         Route::get('tagihan-per-kelas-print', 'tagihan_per_kelas_print')->name('tagihan-per-kelas-print');
     });
 
-    // Route Get Absensi
+    // Route Get Data
+    Route::controller(GetDataController::class)->group(function () {
+        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
+        Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
+        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
+        Route::post('get-all-siswa-with-biodata', 'get_all_siswa_with_biodata')->name('get-all-siswa-with-biodata');
+        Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
+        Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
+        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
+        Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
+        Route::post('get-siswa-with-biodata', 'get_siswa_with_biodata')->name('get-siswa-with-biodata');
+        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
+        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
+    });
+
+    // Route Get Data Absensi
     Route::controller(GetDataAbsensiController::class)->group(function () {
         Route::post('get-absensi-ekstrakurikuler', 'get_absensi_ekstrakurikuler')->name('get-absensi-ekstrakurikuler');
         Route::post('get-absensi-kelas', 'get_absensi_kelas')->name('get-absensi-kelas');
@@ -188,21 +213,6 @@ Route::middleware('auth')->group(function () {
         Route::post('get-rekap-bimbingan', 'get_rekap_bimbingan')->name('get-rekap-bimbingan');
         Route::post('get-rekap-kehadiran', 'get_rekap_kehadiran')->name('get-rekap-kehadiran');
         Route::post('get-rekap-skor', 'get_rekap_skor')->name('get-rekap-skor');
-    });
-
-    // Route Get Data
-    Route::controller(GetDataController::class)->group(function () {
-        Route::post('get-all-siswa', 'get_all_siswa')->name('get-all-siswa');
-        Route::post('get-all-siswa-belum-ekstra', 'get_all_siswa_belum_ekstra')->name('get-all-siswa-belum-ekstra');
-        Route::post('get-all-siswa-ekstra', 'get_all_siswa_ekstra')->name('get-all-siswa-ekstra');
-        Route::post('get-all-siswa-with-biodata', 'get_all_siswa_with_biodata')->name('get-all-siswa-with-biodata');
-        Route::post('get-list-ekstra', 'get_list_ekstra')->name('get-list-ekstra');
-        Route::post('get-prestasi', 'get_prestasi')->name('get-prestasi');
-        Route::post('get-siswa', 'get_siswa')->name('get-siswa');
-        Route::post('get-siswa-ekstra', 'get_siswa_ekstra')->name('get-siswa-ekstra');
-        Route::post('get-siswa-with-biodata', 'get_siswa_with_biodata')->name('get-siswa-with-biodata');
-        Route::post('get-siswa-with-catatan', 'get_siswa_with_catatan')->name('get-siswa-with-catatan');
-        Route::post('get-siswa-with-skor', 'get_siswa_with_skor')->name('get-siswa-with-skor');
     });
 
     // Route Get Data Guru
@@ -245,6 +255,14 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-nilai-alquran', 'get_siswa_with_nilai_alquran')->name('get-siswa-with-nilai-alquran');
         Route::post('get-siswa-with-nilai-proyek', 'get_siswa_with_nilai_proyek')->name('get-siswa-with-nilai-proyek');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
+    });
+
+    // Route Get Data Siswa
+    Route::controller(GetDataSiswaController::class)->group(function () {
+        Route::post('get-administrasi', 'get_administrasi')->name('get-administrasi');
+        Route::post('get-data-bimbingan', 'get_data_bimbingan')->name('get-data-bimbingan');
+        Route::post('get-data-nilai', 'get_data_nilai')->name('get-data-nilai');
+        Route::post('get-data-skor', 'get_data_skor')->name('get-data-skor');
     });
 
     // Route Get Data Skor
@@ -749,7 +767,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('upload-nilai/download', 'download')->name('upload-nilai.download');
         Route::post('upload-nilai', 'upload')->name('upload-nilai.upload');
     });
-    
+
     // Route Upload Nilai Proyek
     Route::controller(UploadNilaiProyekController::class)->group(function () {
         Route::get('upload-nilai-proyek', 'index')->name('upload-nilai-proyek');

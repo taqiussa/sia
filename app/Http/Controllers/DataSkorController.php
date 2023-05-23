@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PenilaianSkor;
 use App\Traits\InitTrait;
 
-class AdministrasiController extends Controller
+class DataSkorController extends Controller
 {
     use InitTrait;
 
@@ -14,7 +15,7 @@ class AdministrasiController extends Controller
     public function __invoke()
     {
         return inertia(
-            'Siswa/Administrasi',
+            'Siswa/DataSkor',
             [
                 'initTahun' => $this->data_tahun()
             ]

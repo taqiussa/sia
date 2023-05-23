@@ -125,7 +125,7 @@ Route::get('/dashboard', function () {
 Route::controller(AbsensiKaryawanController::class)->group(function () {
     Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
     Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
-})->middleware('ip-restriction');
+})->middleware(['blockip']);
 
 
 // Group Data

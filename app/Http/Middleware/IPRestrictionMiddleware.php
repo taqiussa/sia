@@ -9,11 +9,8 @@ use Illuminate\Support\Str;
 
 class IPRestrictionMiddleware
 {
-    private $allowedIPs = [
-        '36.71.82.141', // Example allowed IP address
-        '192.168.0.1', // Another example allowed IP address
-    ];
-
+    // Define the allowed IP range
+    private $allowedIPRange = '36.71.82.';
 
     /**
      * Handle an incoming request.
@@ -24,11 +21,10 @@ class IPRestrictionMiddleware
     {
         $requestIP = $request->ip();
 
-        // Check if the request IP is in the allowed IP addresses
-        if (!in_array($requestIP, $this->allowedIPs)) {
+        // Check if the request IP matches the allowed IP range
+        if (!Str::startsWith($requestIP, $this->allowedIPRange)) {
             abort(403, 'Access Denied'); // Return 403 Forbidden if IP is not allowed
         }
-
         return $next($request);
     }
 }

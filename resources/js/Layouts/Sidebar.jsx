@@ -30,7 +30,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                     {!auth.roles.includes('Siswa') ?
                         <>
 
-                            {/* <SidebarLink closeSide={closeSide} href={route('profile-pengguna')} active={route().current('profile-pengguna')} label='profile pengguna' /> */}
+                            <SidebarLink closeSide={closeSide} href={route('absensi-karyawan')} active={route().current('absensi-karyawan')} label='absensi karyawan' />
 
                             {/* {auth.roles.includes('Admin') &&
                                 <SidebarAdmin closeSide={closeSide} />

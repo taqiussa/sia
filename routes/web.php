@@ -122,10 +122,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Absensi Karyawan
-Route::controller(AbsensiKaryawanController::class)->group(function () {
-    Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
-    Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
-})->middleware(['blockip']);
+Route::middleware('blockip')->group(function () {
+
+    Route::controller(AbsensiKaryawanController::class)->group(function () {
+        Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
+        Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
+    });
+});
 
 
 // Group Data

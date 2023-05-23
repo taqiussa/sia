@@ -11,6 +11,7 @@ class IPRestrictionMiddleware
 {
     // Define the allowed IP range
     private $allowedIPRange = '36.71.82.';
+    // private $allowedIPRange = '127.0.0.';  
 
     /**
      * Handle an incoming request.
@@ -23,7 +24,7 @@ class IPRestrictionMiddleware
 
         // Check if the request IP matches the allowed IP range
         if (!Str::startsWith($requestIP, $this->allowedIPRange)) {
-            abort(403, 'Access Denied'); // Return 403 Forbidden if IP is not allowed
+            abort(403, 'Terhubunglah dengan Wi-fi Ruang Guru Atau TU'); // Return 403 Forbidden if IP is not allowed
         }
         return $next($request);
     }

@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const AbsensiKaryawan = () => {
+const AbsensiKaryawan = ({ ip }) => {
 
     // const { data, setData, errors, processing } = useForm({
     //     id: '',
@@ -161,6 +161,7 @@ const AbsensiKaryawan = () => {
         <>
             <Head title='Absensi' />
             <div className='pl-10 pt-10 text-slate-600 text-lg'>Selamat Datang di Sistem Akademik SMP Al Musyaffa</div>
+            <div className='pl-10 pt-10 text-slate-600 text-lg'>IP anda : {ip}</div>
 
             {/* <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">absensi</div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>

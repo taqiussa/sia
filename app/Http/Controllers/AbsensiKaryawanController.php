@@ -6,6 +6,11 @@ class AbsensiKaryawanController extends Controller
 {
     public function index()
     {
-        return inertia('Guru/AbsensiKaryawan');
+        return inertia(
+            'Guru/AbsensiKaryawan',
+            [
+                'ip' => request()->ip()
+            ]
+        );
     }
 }

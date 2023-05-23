@@ -49,7 +49,7 @@ export default forwardRef(function Proyek(
 
                     {uniqueProyeks.map((proyek, index) => (
                         <option key={index} value={proyek.proyek_id ?? proyek.id}>
-                            {proyek.proyek.nama ?? proyek.nama}
+                            {proyek.proyek?.nama ?? proyek.nama}
                         </option>
                     ))}
 

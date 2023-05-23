@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <table class="w-full pt-3 text-[7px]">
+    <table class="w-full pt-3 text-[9px]">
         <thead>
             <tr>
                 <th class="border border-collapse border-black" rowspan="3">No</th>

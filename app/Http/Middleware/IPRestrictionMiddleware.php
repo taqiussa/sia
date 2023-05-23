@@ -10,7 +10,8 @@ use Illuminate\Support\Str;
 class IPRestrictionMiddleware
 {
     // Define the allowed IP range
-    private $allowedIPRange = '36.71.82.';
+    // private $allowedIPRange = '36.71.82.';
+    private $allowedIPRange = '182.2.38.';  
     // private $allowedIPRange = '127.0.0.';  
 
     /**

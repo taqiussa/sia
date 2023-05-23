@@ -1,7 +1,7 @@
 @extends('print-no-header-rata')
-@section('title', 'Print Ledger PTS')
+@section('title', 'Print Ledger Rapor')
 @section('content')
-    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger PTS Penilaian Kelas</div>
+    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger Hasil Penilaian Kelas</div>
     <div class="flex justify-between px-1 font-semibold capitalize text-xs">
         <div class="flex flex-col justify-center">
             <div class="grid grid-cols-2 gap-2">
@@ -56,7 +56,7 @@
                             $avg = floor(
                                 $siswa->penilaians
                                     ->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)
-                                    ->whereIn('kategori_nilai_id', 6)
+                                    ->whereIn('jenis_penilaian_id', $listJenis)
                                     ->avg('nilai'),
                             );
                         @endphp
@@ -68,7 +68,7 @@
 
                     <td class="border border-collapse border-black text-center px-1">
                         {{ floor(
-                            $siswa->penilaians->whereIn('kategori_nilai_id', 6)->groupBy('mata_pelajaran_id')->map(function ($group, $key) {
+                            $siswa->penilaians->whereIn('jenis_penilaian_id', $listJenis)->groupBy('mata_pelajaran_id')->map(function ($group, $key) {
                                     $avg = $group->avg('nilai');
                                     $floorAvg = floor($avg);
                                     return [

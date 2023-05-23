@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AturanKurikulum;
 use App\Models\Kelas;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
@@ -44,6 +45,10 @@ class PrintDaftarNilaiController extends Controller
             ->whereTingkat($kelas->tingkat)
             ->first();
 
+        $aturanKurikulum = AturanKurikulum::whereTahun(request('tahun'))
+        ->whereTingkat($kelas->tingkat)
+        ->first();
+        
         $data = [
             'tahun' => request('tahun'),
             'semester' => request('semester'),
@@ -58,6 +63,11 @@ class PrintDaftarNilaiController extends Controller
                 ->get(),
         ];
 
-        return view('print.guru.print-daftar-nilai', $data);
+        if($aturanKurikulum->kurikulum_id == 1)
+        {
+            return view('print.guru.print-daftar-nilai-kurtilas', $data);
+        }else{
+            return view('print.guru.print-daftar-nilai-merdeka', $data);
+        }
     }
 }

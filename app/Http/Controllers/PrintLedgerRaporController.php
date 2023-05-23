@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AturanKurikulum;
 use App\Models\Kelas;
 use App\Models\PenilaianRapor;
 use App\Traits\InitTrait;
@@ -43,7 +44,16 @@ class PrintLedgerRaporController extends Controller
             'totalMapel' => $this->total_mapel($kelas->tingkat),
             'listJenis' => $listJenis
         ];
-        return view('print.guru.print-ledger-rapor', $data);
+
+        $aturanKurikulum =  AturanKurikulum::whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->first();
+
+        if ($aturanKurikulum->kurikulum_id == 1) {
+            return view('print.guru.print-ledger-rapor-kurtilas', $data);
+        } else {
+            return view('print.guru.print-ledger-rapor-merdeka', $data);
+        }
     }
 
     public function print_ranking()
@@ -65,6 +75,15 @@ class PrintLedgerRaporController extends Controller
             'totalMapel' => $this->total_mapel($kelas->tingkat),
             'listJenis' => $listJenis
         ];
-        return view('print.guru.print-ledger-rapor-ranking', $data);
+
+        $aturanKurikulum =  AturanKurikulum::whereTahun(request('tahun'))
+            ->whereTingkat($kelas->tingkat)
+            ->first();
+
+        if ($aturanKurikulum->kurikulum_id == 1) {
+            return view('print.guru.print-ledger-rapor-ranking-kurtilas', $data);
+        } else {
+            return view('print.guru.print-ledger-rapor-ranking-merdeka', $data);
+        }
     }
 }

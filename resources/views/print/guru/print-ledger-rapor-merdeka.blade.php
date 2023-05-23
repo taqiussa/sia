@@ -1,7 +1,7 @@
 @extends('print-no-header-rata')
-@section('title', 'Print Ledger PTS')
+@section('title', 'Print Ledger Rapor')
 @section('content')
-    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger PTS Penilaian Kelas</div>
+    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger Hasil Penilaian Kelas</div>
     <div class="flex justify-between px-1 font-semibold capitalize text-xs">
         <div class="flex flex-col justify-center">
             <div class="grid grid-cols-2 gap-2">

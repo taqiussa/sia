@@ -1,7 +1,7 @@
 @extends('print-no-header-rata')
-@section('title', 'Print Ledger PTS')
+@section('title', 'Print Ledger Rapor Ranking')
 @section('content')
-    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger PTS Penilaian Kelas</div>
+    <div class="font-bold text-center text-sm capitalize mb-2 border-b-2 border-black">Ledger Ranking Kelas</div>
     <div class="flex justify-between px-1 font-semibold capitalize text-xs">
         <div class="flex flex-col justify-center">
             <div class="grid grid-cols-2 gap-2">
@@ -27,7 +27,7 @@
     <table class="w-full pt-3 text-[9px]">
         <thead>
             <tr>
-                <th class="border border-collapse border-black" rowspan="3">No</th>
+                <th class="border border-collapse border-black" rowspan="3">Ranking</th>
                 <th class="border border-collapse border-black" rowspan="3">NIS</th>
                 <th class="border border-collapse border-black" rowspan="3">Nama</th>
                 <th class="border border-collapse border-black" colspan="{{ $totalMapel }}">Mata Pelajaran dan KKM</th>
@@ -45,9 +45,40 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($listSiswa as $siswa)
+            @php
+                $siswaRankings = $listSiswa
+                    ->map(function ($siswa) use ($listJenis) {
+                        $sumAvg = floor(
+                            $siswa->penilaians
+                                ->whereIn('jenis_penilaian_id', $listJenis)
+                                ->groupBy('mata_pelajaran_id')
+                                ->map(function ($group, $key) {
+                                    $avg = $group->avg('nilai');
+                                    $floorAvg = floor($avg);
+                                    return [
+                                        'mata_pelajaran_id' => $key,
+                                        'avg' => $avg,
+                                        'floor_avg' => $floorAvg,
+                                    ];
+                                })
+                                ->sum('avg'),
+                        );
+                        return [
+                            'siswa' => $siswa,
+                            'sum_avg' => $sumAvg,
+                        ];
+                    })
+                    ->sortByDesc('sum_avg')
+                    ->values();
+            @endphp
+
+            @foreach ($siswaRankings as $rank => $siswaRank)
+                @php
+                    $siswa = $siswaRank['siswa'];
+                    $sumAvg = $siswaRank['sum_avg'];
+                @endphp
                 <tr>
-                    <td class="border border-collapse border-black text-center px-1">{{ $loop->iteration }}</td>
+                    <td class="border border-collapse border-black text-center px-1">{{ $rank + 1 }}</td>
                     <td class="border border-collapse border-black text-center px-1">{{ $siswa->nis }}</td>
                     <td class="border border-collapse border-black px-2 whitespace-nowrap">{{ $siswa->user?->name }}</td>
 
@@ -56,7 +87,7 @@
                             $avg = floor(
                                 $siswa->penilaians
                                     ->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)
-                                    ->whereIn('kategori_nilai_id', 6)
+                                    ->whereIn('jenis_penilaian_id', $listJenis)
                                     ->avg('nilai'),
                             );
                         @endphp
@@ -67,17 +98,7 @@
                     @endforeach
 
                     <td class="border border-collapse border-black text-center px-1">
-                        {{ floor(
-                            $siswa->penilaians->whereIn('kategori_nilai_id', 6)->groupBy('mata_pelajaran_id')->map(function ($group, $key) {
-                                    $avg = $group->avg('nilai');
-                                    $floorAvg = floor($avg);
-                                    return [
-                                        'mata_pelajaran_id' => $key,
-                                        'avg' => $avg,
-                                        'floor_avg' => $floorAvg,
-                                    ];
-                                })->sum('avg'),
-                        ) }}
+                        {{ $sumAvg }}
                     </td>
                 </tr>
             @endforeach

@@ -284,6 +284,20 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_siswa_with_nilai_proyek()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaianProyek' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereProyekId(request('proyekId')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
     public function data_siswa_with_nilai_remidi()
     {
         $kelas = Kelas::find(request('kelasId'));
@@ -371,6 +385,20 @@ trait SiswaTrait
                 'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                     ->whereSemester(request('semester'))
                     ->whereMataPelajaranId(request('mataPelajaranId')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
+    public function data_siswa_with_penilaian_proyeks()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaianProyeks' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereProyekId(request('proyekId')),
                 'user' => fn ($q) => $q->select('nis', 'name')
             ])
             ->get()

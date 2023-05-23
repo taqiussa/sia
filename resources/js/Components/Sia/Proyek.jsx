@@ -5,7 +5,14 @@ export default forwardRef(function Proyek(
     ref
 ) {
 
-    const input = ref ? ref : useRef();
+    const input = ref ? ref : useRef()
+
+    const uniqueProyeks = listProyek.filter((proyek, index, self) => {
+        if (proyek.proyek_id) {
+            return self.findIndex((p) => p.proyek_id == proyek.proyek_id) == index
+        }
+        return self.findIndex((p) => p.id == proyek.id) == index;
+    })
 
     useEffect(() => {
 
@@ -40,8 +47,10 @@ export default forwardRef(function Proyek(
 
                     <option value="">Pilih Proyek</option>
 
-                    {listProyek.map((proyek, index) => (
-                        <option key={index} value={proyek.id}>{proyek.nama}</option>
+                    {uniqueProyeks.map((proyek, index) => (
+                        <option key={index} value={proyek.proyek_id ?? proyek.id}>
+                            {proyek.proyek.nama ?? proyek.nama}
+                        </option>
                     ))}
 
                 </select>

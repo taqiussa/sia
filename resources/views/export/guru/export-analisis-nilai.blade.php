@@ -43,21 +43,21 @@
                 <td>{{ $siswa->nis }}</td>
                 <td>{{ $siswa->user->name }}</td>
                 @if ($kategoriNilaiId == 3 || $kategoriNilaiId == 6)
-                    <td>{{ $siswa->analisisPenilaian->no_1 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_2 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_3 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_4 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_5 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_6 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_7 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_8 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_9 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_10 }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_1 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_2 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_3 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_4 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_5 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_6 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_7 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_8 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_9 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_10 ?? null }}</td>
                 @else
-                    <td>{{ $siswa->analisisPenilaian->no_1 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_2 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_3 }}</td>
-                    <td>{{ $siswa->analisisPenilaian->no_4 }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_1 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_2 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_3 ?? null }}</td>
+                    <td>{{ $siswa->analisisPenilaian->no_4 ?? null }}</td>
                 @endif
                 <td></td>
             </tr>

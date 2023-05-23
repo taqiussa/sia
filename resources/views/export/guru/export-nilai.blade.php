@@ -25,7 +25,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $siswa->nis }}</td>
                 <td>{{ $siswa->user->name }}</td>
-                <td>{{ $siswa->penilaian->nilai }}</td>
+                <td>{{ $siswa->penilaian->nilai ?? null }}</td>
             </tr>
         @endforeach
     </tbody>

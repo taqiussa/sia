@@ -93,6 +93,7 @@ use App\Http\Controllers\TagihanPerKelasController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\UploadNilaiController;
+use App\Http\Controllers\UploadNilaiProyekController;
 use App\Http\Controllers\UploadNilaiSikapController;
 use App\Http\Controllers\UploadPenggajianController;
 use Illuminate\Support\Facades\Route;
@@ -749,7 +750,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::post('upload-nilai', 'upload')->name('upload-nilai.upload');
     });
     
-    // Route Upload Nilai
+    // Route Upload Nilai Proyek
+    Route::controller(UploadNilaiProyekController::class)->group(function () {
+        Route::get('upload-nilai-proyek', 'index')->name('upload-nilai-proyek');
+        Route::get('upload-nilai-proyek/download', 'download')->name('upload-nilai-proyek.download');
+        Route::post('upload-nilai-proyek', 'upload')->name('upload-nilai-proyek.upload');
+    });
+
+    // Route Upload Nilai Sikap
     Route::controller(UploadNilaiSikapController::class)->group(function () {
         Route::get('upload-nilai-sikap', 'index')->name('upload-nilai-sikap');
         Route::get('upload-nilai-sikap/download', 'download')->name('upload-nilai-sikap.download');

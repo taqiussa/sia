@@ -1,55 +1,48 @@
 import PrimaryButton from '@/Components/PrimaryButton'
+import Dimensi from '@/Components/Sia/Dimensi'
 import DownloadLink from '@/Components/Sia/DownloadLink'
 import FileUpload from '@/Components/Sia/FileUpload'
-import JenisSikap from '@/Components/Sia/JenisSikap'
-import KategoriSikap from '@/Components/Sia/KategoriSikap'
 import Kelas from '@/Components/Sia/Kelas'
-import MataPelajaran from '@/Components/Sia/MataPelajaran'
-import Semester from '@/Components/Sia/Semester'
+import Proyek from '@/Components/Sia/Proyek'
 import Tahun from '@/Components/Sia/Tahun'
-import getListJenisSikap from '@/Functions/getListJenisSikap'
-import getListKelasGuru from '@/Functions/getListKelasGuru'
-import getSiswaWithNilaiSikap from '@/Functions/getSiswaWithNilaiSikap'
+import getListAturanProyek from '@/Functions/getListAturanProyek'
+import getListDimensi from '@/Functions/getListDimensi'
+import getSiswaWithNilaiProyek from '@/Functions/getSiswaWithNilaiProyek'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) => {
+const UploadNilaiProyek = ({ initTahun, listKelas }) => {
 
     const { data, setData, post, errors, processing } = useForm({
         tahun: initTahun,
-        semester: initSemester,
-        mataPelajaranId: '',
         kelasId: '',
-        kategoriSikapId: '',
-        jenisSikapId: '',
+        proyekId: '',
+        dimensiId: '',
         fileUpload: '',
-        listKelas: [],
-        listJenis: []
+        listProyek: [],
+        listDimensi: []
     })
 
     const [listSiswa, setListSiswa] = useState([])
 
     async function getDataSiswa() {
-        const response = await getSiswaWithNilaiSikap(data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriSikapId, data.jenisSikapId)
+        const response = await getSiswaWithNilaiProyek(data.tahun, data.kelasId, data.proyekId, data.dimensiId)
         setListSiswa(response.listSiswa)
     }
 
-    async function getDataKelas() {
-        const response = await getListKelasGuru(data.tahun, data.mataPelajaranId)
-        setData({
-            ...data,
-            listKelas: response.listKelas
-        })
+    async function getDataProyek() {
+        const response = await getListAturanProyek(data.tahun)
+        setData({ ...data, listProyek: response.listAturanProyek })
     }
 
-    async function getDataJenis() {
-        const response = await getListJenisSikap(data.tahun, data.semester, data.kategoriSikapId, data.kelasId)
+    async function getDataDimensi() {
+        const response = await getListDimensi(data.tahun, data.proyekId)
         setData({
             ...data,
-            listJenis: response.listJenis
+            listDimensi: response.listDimensi
         })
     }
 
@@ -60,9 +53,9 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
     const submit = (e) => {
         e.preventDefault()
 
-        post(route('upload-nilai-sikap.upload'), {
+        post(route('upload-nilai-proyek.upload'), {
             onSuccess: () => {
-                toast.success('Berhasil Upload Nilai Sikap')
+                toast.success('Berhasil Upload Nilai Proyek')
                 setData({ ...data })
                 trackPromise(
                     getDataSiswa()
@@ -71,41 +64,40 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
         })
     }
 
-    useEffect(() => {
-
-        if (data.tahun && data.mataPelajaranId)
-            trackPromise(getDataKelas())
-    }, [data.tahun, data.mataPelajaranId])
 
     useEffect(() => {
 
-        if (data.kategoriSikapId) {
-            setData('jenisSikapId', '')
-            trackPromise(getDataJenis())
+        if (data.tahun) {
+            trackPromise(getDataProyek())
         }
-    }, [data.semester, data.kategoriSikapId])
+    }, [data.tahun])
+
+    useEffect(() => {
+
+        if (data.tahun && data.proyekId) {
+            trackPromise(getDataDimensi())
+        }
+    }, [data.tahun, data.proyekId])
 
 
     useEffect(() => {
 
         if (
             data.tahun
-            && data.semester
-            && data.mataPelajaranId
             && data.kelasId
-            && data.kategoriSikapId
-            && data.jenisSikapId
+            && data.proyekId
+            && data.dimensiId
         )
             trackPromise(
                 getDataSiswa()
             )
 
-    }, [data.tahun, data.semester, data.mataPelajaranId, data.kelasId, data.kategoriSikapId, data.jenisSikapId])
+    }, [data.tahun, data.kelasId, data.proyekId, data.dimensiId])
 
     return (
         <>
-            <Head title='Upload Nilai Sikap' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">upload nilai sikap</div>
+            <Head title='Upload Nilai Proyek' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">upload nilai proyek</div>
             <div className='lg:grid lg:grid-cols-6 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
@@ -115,22 +107,6 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
                     handleChange={onHandleChange}
                 />
 
-                <Semester
-                    id='semester'
-                    name='semester'
-                    value={data.semester}
-                    message={errors.semester}
-                    handleChange={onHandleChange}
-                />
-
-                <MataPelajaran
-                    id='mataPelajaranId'
-                    name='mataPelajaranId'
-                    value={data.mataPelajaranId}
-                    message={errors.mataPelajaranId}
-                    handleChange={onHandleChange}
-                    listMapel={listMapel}
-                />
 
                 <Kelas
                     id='kelasId'
@@ -138,37 +114,35 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
                     value={data.kelasId}
                     message={errors.kelasId}
                     handleChange={onHandleChange}
-                    listKelas={data.listKelas}
+                    listKelas={listKelas}
                 />
 
-                <KategoriSikap
-                    id='kategoriSikapId'
-                    name='kategoriSikapId'
-                    value={data.kategoriSikapId}
-                    message={errors.kategoriSikapId}
+                <Proyek
+                    id='proyekId'
+                    name='proyekId'
+                    value={data.proyekId}
+                    message={errors.proyekId}
                     handleChange={onHandleChange}
-                    listKategori={listKategori}
+                    listProyek={data.listProyek}
                 />
 
-                <JenisSikap
-                    id='jenisSikapId'
-                    name='jenisSikapId'
-                    value={data.jenisSikapId}
-                    message={errors.jenisSikapId}
+                <Dimensi
+                    id='dimensiId'
+                    name='dimensiId'
+                    value={data.dimensiId}
+                    message={errors.dimensiId}
                     handleChange={onHandleChange}
-                    listJenis={data.listJenis}
+                    listDimensi={data.listDimensi}
                 />
             </div>
 
-            {data.tahun && data.semester  && data.mataPelajaranId && data.kategoriSikapId && data.kelasId &&
+            {data.tahun  && data.proyekId  &&
                 <div className="flex flex-col space-y-5">
                     <DownloadLink
-                        href={route('upload-nilai-sikap.download', {
+                        href={route('upload-nilai-proyek.download', {
                             tahun: data.tahun,
-                            semester: data.semester,
-                            kategoriSikapId: data.kategoriSikapId,
+                            proyekId: data.proyekId,
                             kelasId: data.kelasId,
-                            mataPelajaranId: data.mataPelajaranId
                         })}
                         label='download draft' />
 
@@ -212,7 +186,7 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
                                     {siswa.user?.name}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {siswa.penilaian_sikap?.nilai}
+                                    {siswa.penilaian_proyek?.nilai}
                                 </td>
                             </tr>
                         ))}
@@ -223,5 +197,5 @@ const UploadNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori }) 
     )
 }
 
-UploadNilaiSikap.layout = page => <AppLayout children={page} />
-export default UploadNilaiSikap
+UploadNilaiProyek.layout = page => <AppLayout children={page} />
+export default UploadNilaiProyek

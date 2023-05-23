@@ -42,16 +42,16 @@ class InputAnalisisNilaiController extends Controller
             if ($siswa['analisis_penilaian']) {
 
                 $nilai =
-                    $siswa['analisis_penilaian']['no_1'] +
-                    $siswa['analisis_penilaian']['no_2'] +
-                    $siswa['analisis_penilaian']['no_3'] +
-                    $siswa['analisis_penilaian']['no_4'] +
-                    $siswa['analisis_penilaian']['no_5'] +
-                    $siswa['analisis_penilaian']['no_6'] +
-                    $siswa['analisis_penilaian']['no_7'] +
-                    $siswa['analisis_penilaian']['no_8'] +
-                    $siswa['analisis_penilaian']['no_9'] +
-                    $siswa['analisis_penilaian']['no_10'];
+                    $siswa['analisis_penilaian']['no_1'] ?? null +
+                    $siswa['analisis_penilaian']['no_2'] ?? null +
+                    $siswa['analisis_penilaian']['no_3'] ?? null +
+                    $siswa['analisis_penilaian']['no_4'] ?? null +
+                    $siswa['analisis_penilaian']['no_5'] ?? null +
+                    $siswa['analisis_penilaian']['no_6'] ?? null +
+                    $siswa['analisis_penilaian']['no_7'] ?? null +
+                    $siswa['analisis_penilaian']['no_8'] ?? null +
+                    $siswa['analisis_penilaian']['no_9'] ?? null +
+                    $siswa['analisis_penilaian']['no_10'] ?? null;
 
                 AnalisisPenilaian::updateOrCreate(
                     ['id' => $siswa['analisis_penilaian']['id'] ?? null],
@@ -64,16 +64,16 @@ class InputAnalisisNilaiController extends Controller
                         'mata_pelajaran_id' => request('mataPelajaranId'),
                         'semester' => request('semester'),
                         'tahun' => request('tahun'),
-                        'no_1' => $siswa['analisis_penilaian']['no_1'],
-                        'no_2' => $siswa['analisis_penilaian']['no_2'],
-                        'no_3' => $siswa['analisis_penilaian']['no_3'],
-                        'no_4' => $siswa['analisis_penilaian']['no_4'],
-                        'no_5' => $siswa['analisis_penilaian']['no_5'],
-                        'no_6' => $siswa['analisis_penilaian']['no_6'],
-                        'no_7' => $siswa['analisis_penilaian']['no_7'],
-                        'no_8' => $siswa['analisis_penilaian']['no_8'],
-                        'no_9' => $siswa['analisis_penilaian']['no_9'],
-                        'no_10' => $siswa['analisis_penilaian']['no_10'],
+                        'no_1' => $siswa['analisis_penilaian']['no_1'] ?? null,
+                        'no_2' => $siswa['analisis_penilaian']['no_2'] ?? null,
+                        'no_3' => $siswa['analisis_penilaian']['no_3'] ?? null,
+                        'no_4' => $siswa['analisis_penilaian']['no_4'] ?? null,
+                        'no_5' => $siswa['analisis_penilaian']['no_5'] ?? null,
+                        'no_6' => $siswa['analisis_penilaian']['no_6'] ?? null,
+                        'no_7' => $siswa['analisis_penilaian']['no_7'] ?? null,
+                        'no_8' => $siswa['analisis_penilaian']['no_8'] ?? null,
+                        'no_9' => $siswa['analisis_penilaian']['no_9'] ?? null,
+                        'no_10' => $siswa['analisis_penilaian']['no_10'] ?? null,
                         'nilai' => $nilai,
                         'user_id' => auth()->user()->id
                     ]

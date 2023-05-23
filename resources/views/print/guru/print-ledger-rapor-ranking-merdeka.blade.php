@@ -50,7 +50,7 @@
                     ->map(function ($siswa) use ($listJenis) {
                         $sumAvg = floor(
                             $siswa->penilaians
-                                ->whereIn('kategori_nilai_id', 6)
+                                ->where('kategori_nilai_id', 6)
                                 ->groupBy('mata_pelajaran_id')
                                 ->map(function ($group, $key) {
                                     $avg = $group->avg('nilai');
@@ -87,7 +87,7 @@
                             $avg = floor(
                                 $siswa->penilaians
                                     ->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)
-                                    ->whereIn('kategori_nilai_id', 6)
+                                    ->where('kategori_nilai_id', 6)
                                     ->avg('nilai'),
                             );
                         @endphp

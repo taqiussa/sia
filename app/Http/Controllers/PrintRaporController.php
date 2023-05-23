@@ -49,7 +49,7 @@ class PrintRaporController extends Controller
             ->get();
 
 
-        if ($cekKurikulum->kurikulum->nama == 'K13') {
+        if ($cekKurikulum->kurikulum_id == 1) {
             $siswa = Siswa::whereNis($nis)
                 ->with([
                     'absensis' => fn ($q) => $q->whereTahun($tahun)
@@ -176,5 +176,4 @@ class PrintRaporController extends Controller
             );
         }
     }
-
 }

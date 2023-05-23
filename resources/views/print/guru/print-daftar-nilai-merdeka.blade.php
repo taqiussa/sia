@@ -55,8 +55,8 @@
                         </td>
                     @endforeach
                     <td
-                        class="border border-collapse border-black text-center px-1 {{ floor($siswa->penilaians->whereIn('kategori_nilai_id', 6)->avg('nilai')) < $kkm ? 'text-red-600 bg-yellow-400' : '' }}">
-                        {{ floor($siswa->penilaians->whereIn('kategori_nilai_id', 6)->avg('nilai')) }}
+                        class="border border-collapse border-black text-center px-1 {{ floor($siswa->penilaians->where('kategori_nilai_id', 6)->avg('nilai')) < $kkm ? 'text-red-600 bg-yellow-400' : '' }}">
+                        {{ floor($siswa->penilaians->where('kategori_nilai_id', 6)->avg('nilai')) }}
                     </td>
                 </tr>
             @endforeach

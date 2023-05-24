@@ -1,8 +1,9 @@
 import Sweet from '@/Components/Sia/Sweet'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { QrScanner } from '@yudiel/react-qr-scanner'
+import ReactPaginate from 'react-paginate'
 
 const AbsensiKaryawan = ({ listAbsensi }) => {
 
@@ -10,6 +11,14 @@ const AbsensiKaryawan = ({ listAbsensi }) => {
         id: '',
         pilihan: 'Masuk'
     })
+
+    const [page, setPage] = useState(0);
+    const postsPerPage = 10;
+    const numberOfPostsVisited = page * postsPerPage;
+    const totalPages = Math.ceil(data.listPenggajian?.length / postsPerPage);
+    const changePage = ({ selected }) => {
+        setPage(selected);
+    };
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -85,25 +94,43 @@ const AbsensiKaryawan = ({ listAbsensi }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listAbsensi && listAbsensi.map((absensi, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {absensi.user?.name}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {new Date(absensi.masuk).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {new Date(absensi.pulang).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                                </td>
-                            </tr>
-                        ))}
+                        {listAbsensi && listAbsensi
+                            .slice(numberOfPostsVisited, numberOfPostsVisited + postsPerPage)
+                            .map((absensi, index) => (
+                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className="py-2 px-2 font-medium text-slate-600 text-center">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {absensi.user?.name}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {absensi.masuk ? new Date(absensi.masuk).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : null}
+                                    </td>
+                                    <td className="py-2 px-2 font-medium text-slate-600">
+                                        {absensi.pulang ? new Date(absensi.pulang).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : null}
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
+            <ReactPaginate
+                pageRangeDisplayed={3} //The range of buttons pages displayed.
+                previousLabel={"Previous"} //lable for previous page button
+                nextLabel={"Next"} // lable for Next page button
+                pageCount={totalPages} // place here the variable for total number of pages
+                onPageChange={changePage} // place here the trigger event function
+                /// navigation CSS styling ///
+                containerClassName={"flex items-center my-4 space-x-1 text-slate-600"}
+                pageLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-md py-1 px-2 border"}
+                previousLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-l-md py-1 px-2 border"}
+                nextLinkClassName={"focus:shadow-outline transition-colors duration-150 border-emerald-500 hover:bg-emerald-300 rounded-r-md py-1 px-2 border"}
+                disabledLinkClassName={"text-gray-300 cursor-not-allowed hover:bg-white"}
+                activeLinkClassName={"focus:shadow-outline transition-colors duration-150 bg-emerald-500 text-emerald-100 cursor-pointer"}
+                /// end navigation styling ///
+                renderOnZeroPageCount={null}
+            />
         </>
     )
 }

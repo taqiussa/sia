@@ -94,6 +94,16 @@ class GetDataGuruController extends Controller
         ]);
     }
 
+    public function get_list_jenis_per_tingkat()
+    {
+        return response()->json([
+            'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian_per_tingkat())
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->orderBy('nama')
+                ->get()
+        ]);
+    }
+
     public function get_list_jenis_sikap()
     {
         return response()->json([

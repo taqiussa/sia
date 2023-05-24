@@ -235,6 +235,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-list-dimensi', 'get_list_dimensi')->name('get-list-dimensi');
         Route::post('get-list-elemen', 'get_list_elemen')->name('get-list-elemen');
         Route::post('get-list-jenis', 'get_list_jenis')->name('get-list-jenis');
+        Route::post('get-list-jenis-per-tingkat', 'get_list_jenis_per_tingkat')->name('get-list-jenis-per-tingkat');
         Route::post('get-list-jenis-sikap', 'get_list_jenis_sikap')->name('get-list-jenis-sikap');
         Route::post('get-list-kategori', 'get_list_kategori')->name('get-list-kategori');
         Route::post('get-list-kategori-per-tingkat', 'get_list_kategori_per_tingkat')->name('get-list-kategori-per-tingkat');

@@ -16,6 +16,7 @@ import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { trackPromise } from 'react-promise-tracker'
+import getListJenisPerTingkat from '@/Functions/getListJenisPerTingkat'
 
 const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, listKd }) => {
 
@@ -38,7 +39,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
     }
 
     async function getDataJenis() {
-        const response = await getListJenis(data.tahun, data.semester, data.kategoriNilaiId)
+        const response = await getListJenisPerTingkat(data.tahun, data.semester, data.kategoriNilaiId, data.tingkat)
         setData({ ...data, listJenis: response.listJenis })
     }
 

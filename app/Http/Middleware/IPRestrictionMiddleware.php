@@ -25,9 +25,10 @@ class IPRestrictionMiddleware
         $requestIP = $request->ip();
 
         // Check if the request IP matches the allowed IP range
-        if (!Str::startsWith($requestIP, $this->allowedIPRange) || !Str::startsWith($requestIP, $this->allowedIPRangeTu)) {
-            abort(403, 'Terhubunglah dengan Wi-fi Ruang Guru Atau TU'); // Return 403 Forbidden if IP is not allowed
+        if (Str::startsWith($requestIP, $this->allowedIPRange) || Str::startsWith($requestIP, $this->allowedIPRangeTu)) {
+            return $next($request);
         }
-        return $next($request);
+        
+        abort(403, 'Terhubunglah dengan Wi-fi Ruang Guru Atau TU'); // Return 403 Forbidden if IP is not allowed
     }
 }

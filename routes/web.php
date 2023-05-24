@@ -27,6 +27,7 @@ use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\DataSkorController;
+use App\Http\Controllers\DownloadQrCodeController;
 use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetDataAbsensiController;
 use App\Http\Controllers\GetDataBendaharaController;
@@ -469,6 +470,11 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
 
     // Route Data Siswa Ekstrakurikuler
     Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');
+
+    // Route Download Qr Code
+    Route::controller(DownloadQrCodeController::class)->group(function () {
+        Route::get('download-qr-code', 'index')->name('download-qr-code');
+    });
 
     // Route Form Tugas
     Route::controller(FormTugasController::class)->group(function () {

@@ -182,7 +182,7 @@
         <table style="border-collapse: collapse" width="100%">
             <tbody>
                 <tr>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:justify">{{ $proyek->deskripsi }}</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:justify">{{ $proyek->deskripsi }}.</td>
                 </tr>
             </tbody>
         </table>
@@ -270,7 +270,7 @@
                         Dalam mengerjakan projek ini, {{ ucwords(strtolower($namaSiswa)) }}
                         @if ($maxValue <= 73)
                             belum aktif
-                        @elseif ($maxValue <= 91)
+                        @elseif ($maxValue <= 83)
                             mulai aktif
                         @else
                             aktif
@@ -278,10 +278,10 @@
 
                         {{ $listProyek->where('proyek_id', $proyek->proyek_id)->where('dimensi_id', $maxDimensi)->first()->catatan }}.
 
-                        Dalam mengerjakan projek ini, {{ ucwords(strtolower($namaSiswa)) }}
+                        {{ ucwords(strtolower($namaSiswa)) }}
                         @if ($minValue <= 73)
                             belum aktif
-                        @elseif ($minValue <= 91)
+                        @elseif ($minValue <= 83)
                             mulai aktif
                         @else
                             aktif
@@ -292,12 +292,11 @@
             </tbody>
         </table>
     @endforeach
-
-    <div style="page-break-before: always"></div>
+    <div style="padding:10px;"></div>
     <div style="text-align: center">
         <b>KETERANGAN TINGKAT PENCAPAIAN SISWA</b>
     </div>
-    <div style="padding:25px;"></div>
+    <div style="padding:10px;"></div>
     <table style="border-collapse: collapse" width="100%">
         <thead>
             <tr>
@@ -326,7 +325,7 @@
             </tr>
         </tbody>
     </table>
-    <div style="padding:15px;"></div>
+    <div style="padding:10px;"></div>
     <table style="text-align:center;table-layout:fixed;" width="100%">
         <tr>
             <td style="text-align:center">Mengetahui</td>
@@ -348,12 +347,6 @@
             <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
             <td style="text-align:center"><u><b>..........................</b></u></td>
             <td style="text-align:center"><u><b>{{ $namaWaliKelas }}</b></u></td>
         </tr>
@@ -365,12 +358,6 @@
         </tr>
         <tr>
             <td style="text-align:center" colspan="2">Kepala Sekolah</td>
-        </tr>
-        <tr>
-            <td style="text-align:center" colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
-            <td style="text-align:center" colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td style="text-align:center" colspan="2">&nbsp;</td>

@@ -79,6 +79,7 @@ use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintNilaiSikapController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\PrintRaporController;
+use App\Http\Controllers\PrintRaporProyekController;
 use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapBimbinganController;
@@ -726,6 +727,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintRaporController::class)->group(function () {
         Route::get('print-rapor', 'index')->name('print-rapor');
         Route::get('print-rapor/download', 'download')->name('print-rapor.download');
+    });
+
+    // Route Print Rapor Proyek
+    Route::controller(PrintRaporProyekController::class)->group(function () {
+        Route::get('print-rapor-proyek', 'index')->name('print-rapor-proyek');
+        Route::get('print-rapor-proyek/download', 'download')->name('print-rapor-proyek.download');
     });
 
     // Route Print Rapor PTS

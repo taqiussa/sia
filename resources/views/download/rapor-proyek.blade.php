@@ -128,11 +128,12 @@
         {{ $namaSiswa }} | {{ $nis }} | Kelas : {{ $namaKelas }} | {{ $tahun }}
     </footer>
     <div style="text-align: center">
-        <h4>
-            RAPOR PROYEK PENGUATAN <br>
-            PROFIL PELAJARA PANCASILA
+        <h4 style=" letter-spacing:0.2em;">RAPOR PROJEK PENGUATAN
+            <br>
+            PROFIL PELAJAR PANCASILA
         </h4>
     </div>
+    <div style="padding:10px"></div>
     <table style="text-align:justify; border-collapse:collapse;" width="100%">
         <tbody>
             <tr>
@@ -149,7 +150,6 @@
                 <td>:</td>
                 <td style="white-space: nowrap">Jl. Kampir Sudipayung, Kec. Ngampel, Kab. Kendal</td>
                 <td>&nbsp;</td>
-
                 <td>Fase</td>
                 <td>:</td>
                 <td>D</td>
@@ -172,8 +172,7 @@
             </tr>
         </tbody>
     </table>
-
-    <br>
+    <hr>
 
     @foreach ($listProyek->unique('proyek_id') as $proyek)
         <br>
@@ -189,248 +188,144 @@
         </table>
     @endforeach
 
-    <div style="page-break-before: always"></div>
 
-    <table style="border-collapse: collapse" width="100%">
-        <tbody>
-            @foreach ($listProyek->unique('proyek_id') as $proyek)
+    @foreach ($listProyek->unique('proyek_id') as $proyek)
+        <div style="page-break-before: always"></div>
+        <table style="border-collapse: collapse" width="100%">
+            <thead>
                 <tr>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold">
-                        {{ $proyek->proyek->nama }} {{ $proyek->judul }}</td>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BB</td>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">MB</td>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BSH</td>
-                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">SB</td>
+                    <th style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold">
+                        {{ $proyek->proyek->nama }} {{ $proyek->judul }}</th>
+                    <th style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BB</th>
+                    <th style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">MB</th>
+                    <th style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BSH</th>
+                    <th style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">SB</th>
                 </tr>
-                @foreach ($listProyek->unique('dimensi_id') as $dimensi)
+            </thead>
+            <tbody>
+                @foreach ($listProyek->where('proyek_id', $proyek->proyek_id) as $dimensi)
                     <tr>
-                        <td style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold">
+                        <td style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold"
+                            colspan="5">
                             {{ $dimensi->dimensi->nama }}
                         </td>
-                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BB</td>
-                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">MB</td>
-                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BSH</td>
-                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">SB</td>
+                    </tr>
+                    <tr>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:justify; vertical-align:middle;">
+                            <b>
+                                {{ $dimensi->subElemen->nama }} -
+                            </b>
+                            {{ $dimensi->capaian }}.
+                        </td>
+                        @php
+                            $nilai = $penilaian
+                                ->where('proyek_id', $dimensi->proyek_id)
+                                ->where('dimensi_id', $dimensi->dimensi_id)
+                                ->value('nilai');
+                        @endphp
+                        <td
+                            style="width:45px; border: solid 1px #000; padding: 3px;text-align:center; vertical-align:middle; font-weight:bold">
+                            @if ($nilai <= 73)
+                                <img src="{{ asset('images/check.png') }}" />
+                            @endif
+                        </td>
+                        <td
+                            style="width:45px; border: solid 1px #000; padding: 3px;text-align:center; vertical-align:middle; font-weight:bold">
+                            @if ($nilai >= 74 && $nilai <= 82)
+                                <img src="{{ asset('images/check.png') }}" />
+                            @endif
+                        </td>
+                        <td
+                            style="width:45px; border: solid 1px #000; padding: 3px;text-align:center; vertical-align:middle; font-weight:bold">
+                            @if ($nilai >= 83 && $nilai <= 91)
+                                <img src="{{ asset('images/check.png') }}" />
+                            @endif
+                        </td>
+                        <td
+                            style="width:45px; border: solid 1px #000; padding: 3px;text-align:center; vertical-align:middle; font-weight:bold">
+                            @if ($nilai >= 92)
+                                <img src="{{ asset('images/check.png') }}" />
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
-            @endforeach
-        </tbody>
-    </table>
-
-    <div style="page-break-before: always"></div>
-
-    {{-- <b>B. PENGETAHUAN DAN KETERAMPILAN</b>
-    <table class="table">
-        <thead>
-            <tr>
-                <th width="5%">No</th>
-                <th width="25%">Mata Pelajaran</th>
-                <th width="8%">Nilai</th>
-                <th width="46%">Deskripsi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="4" style="text-align: left">Kelompok A</td>
-            </tr>
-            @foreach ($kelompok_a as $mapel)
-                <tr style="page-break-inside: avoid;height: 140px;">
-                    <td style="text-align: center ; vertical-align:middle;">{{ $loop->iteration }}</td>
-                    <td style="text-align: left ; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
-                    </td>
-                    <td style="text-align: center ; vertical-align:middle;">
-                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
-                    </td>
-                    <td style="text-align: justify ;padding:10px;vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
-                            @php
-                                if ($nilai->nilai < 60) {
-                                    $predikat_a = 'Perlu penguatan';
-                                } elseif ($nilai->nilai < 70) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang cukup';
-                                } elseif ($nilai->nilai < 80) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang baik';
-                                } else {
-                                    $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
-                                }
-                            @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
-                                @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
-                                    {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
-                                @endif
-                            @endforeach
-                        @endforeach
-                    </td>
-                </tr>
-            @endforeach
-            <tr style="page-break-before: always">
-                <td colspan="4" style="text-align: left">Kelompok B</td>
-            </tr>
-            @foreach ($kelompok_b as $mapel)
-                <tr style="page-break-inside: avoid;height: 140px;">
-                    <td style="text-align: center; vertical-align:middle;">{{ $loop->iteration + 7 }}</td>
-                    <td style="text-align: left; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
-                    </td>
-                    <td style="text-align: center; vertical-align:middle;">
-                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
-                    </td>
-                    <td style="text-align: justify; padding:10px; vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
-                            @php
-                                if ($nilai->nilai < 60) {
-                                    $predikat_a = 'Perlu penguatan';
-                                } elseif ($nilai->nilai < 70) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang cukup';
-                                } elseif ($nilai->nilai < 80) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang baik';
-                                } else {
-                                    $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
-                                }
-                            @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
-                                @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
-                                    {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
-                                @endif
-                            @endforeach
-                        @endforeach
-                    </td>
-                </tr>
-            @endforeach
-            <tr>
-                <td colspan="4" style="text-align: left">Kelompok C</td>
-            </tr>
-            @foreach ($kelompok_c as $mapel)
-                <tr style="page-break-inside: avoid;height: 140px;">
-                    <td style="text-align: center ; vertical-align:middle;">{{ $loop->iteration + 10 }}</td>
-                    <td style="text-align: left ; vertical-align:middle;padding-left:10px;">{{ $mapel->mapel->nama }}
-                    </td>
-                    <td style="text-align: center ; vertical-align:middle;">
-                        {{ floor($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id)->avg('nilai')) }}
-                    </td>
-                    <td style="text-align: justify; padding:10px; vertical-align:middle;">
-                        @foreach ($penilaians->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $nilai)
-                            @php
-                                if ($nilai->nilai < 60) {
-                                    $predikat_a = 'Perlu penguatan';
-                                } elseif ($nilai->nilai < 70) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang cukup';
-                                } elseif ($nilai->nilai < 80) {
-                                    $predikat_a = 'Menunjukkan penguasaan yang baik';
-                                } else {
-                                    $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
-                                }
-                            @endphp
-                            @foreach ($listKd->where('mata_pelajaran_id', $mapel->mata_pelajaran_id) as $kd)
-                                @if ($kd->jenis_penilaian_id === $nilai->jenis_penilaian_id)
-                                    {{ $predikat_a . ' dalam ' . $kd->deskripsi . '.' }}
-                                @endif
-                            @endforeach
-                        @endforeach
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div style="page-break-before: always"></div>
-    <b>C. EKSTRAKURIKULER</b>
-    <table class="table">
-        <thead>
-            <tr>
-                <th width="5%">No</th>
-                <th width="30%">Nama Kegiatan</th>
-                <th width="10%">Nilai</th>
-                <th width="55%">Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if ($penilaianEkstrakurikuler->nilai != null)
+            </tbody>
+        </table>
+        <br>
+        <b>Catatan Proses</b>
+        <br>
+        <div style="padding:5px;"></div>
+        <table style="border-collapse: collapse" width="100%">
+            <tbody>
                 <tr>
-                    <td class="ctr" style=" vertical-align:middle;">1.</td>
-                    <td style=" vertical-align:middle;padding-left:10px;">{{ $penilaianEkstrakurikuler->nilai }}</td>
-                    <td class="ctr" style="vertical-align: middle;">{{ $penilaianEkstrakurikuler->nilai }}</td>
-                    <td style="padding: 10px;">
-                        @if ($penilaianEkstrakurikuler->nilai > 90)
-                            Menunjukkan penguasaan yang sangat baik dalam
-                            {{ $penilaianEkstrakurikuler->ekstrakurikuler->deskripsi->deskripsi }}
-                        @elseif ($penilaianEkstrakurikuler->nilai > 80)
-                            Menunjukkan penguasaan yang baik dalam
-                            {{ $penilaianEkstrakurikuler->ekstrakurikuler->deskripsi->deskripsi }}
-                        @elseif ($penilaianEkstrakurikuler->nilai > 70)
-                            Menunjukkan penguasaan yang cukup dalam
-                            {{ $penilaianEkstrakurikuler->ekstrakurikuler->deskripsi->deskripsi }}
+                    <td style="border: solid 1px #000; padding: 10px;text-align:justify">
+                        @php
+                            $penilaianProyek = $penilaian->where('proyek_id', $proyek->proyek_id);
+                            $maxValue = $penilaianProyek->pluck('nilai')->max();
+                            $minValue = $penilaianProyek->pluck('nilai')->min();
+                            
+                            $maxDimensi = $penilaianProyek->where('nilai', $maxValue)->value('dimensi_id');
+                            $minDimensi = $penilaianProyek->where('nilai', $minValue)->value('dimensi_id');
+                        @endphp
+                        Dalam mengerjakan projek ini, {{ ucwords(strtolower($namaSiswa)) }}
+                        @if ($maxValue <= 73)
+                            belum aktif
+                        @elseif ($maxValue <= 91)
+                            mulai aktif
                         @else
-                            Perlu bimbingan dalam
-                            {{ $penilaianEkstrakurikuler->ekstrakurikuler->deskripsi->deskripsi }}
+                            aktif
                         @endif
+
+                        {{ $listProyek->where('proyek_id', $proyek->proyek_id)->where('dimensi_id', $maxDimensi)->first()->catatan }}.
+
+                        Dalam mengerjakan projek ini, {{ ucwords(strtolower($namaSiswa)) }}
+                        @if ($minValue <= 73)
+                            belum aktif
+                        @elseif ($minValue <= 91)
+                            mulai aktif
+                        @else
+                            aktif
+                        @endif
+                        {{ $listProyek->where('proyek_id', $proyek->proyek_id)->where('dimensi_id', $minDimensi)->first()->catatan }}.
                     </td>
                 </tr>
-            @else
-                <tr>
-                    <td class="ctr" style=" vertical-align:middle;">-</td>
-                    <td style=" vertical-align:middle;padding-left:10px;">-</td>
-                    <td class="ctr" style="vertical-align: middle;">-</td>
-                    <td style="padding: 10px;">
-                        -
-                    </td>
-                </tr>
-            @endif
-        </tbody>
-    </table>
-    <div style="padding:5px;"></div>
-    <b>D. KETIDAKHADIRAN</b>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td width="60%" style="padding-left:10px;">Sakit</td>
-                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? 0 }}
-                    hari</td>
-            </tr>
-            <tr>
-                <td style="padding-left:10px;">Izin</td>
-                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? 0 }} hari</td>
-            </tr>
-            <tr>
-                <td style="padding-left:10px;">Tanpa Keterangan</td>
-                <td class="ctr"> {{ $alpha }} hari</td>
-            </tr>
-            </tr>
-        </tbody>
-    </table>
-    <div style="padding:5px;"></div>
-    <b>E. PRESTASI</b>
-    <table class="table">
+            </tbody>
+        </table>
+    @endforeach
+
+    <div style="page-break-before: always"></div>
+    <div style="text-align: center">
+        <b>KETERANGAN TINGKAT PENCAPAIAN SISWA</b>
+    </div>
+    <div style="padding:25px;"></div>
+    <table style="border-collapse: collapse" width="100%">
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="30%">Jenis Prestasi</th>
-                <th width="55%">Keterangan</th>
+                <th style="border: solid 1px #000; padding: 10px;text-align:center;font-weight:bold">BB</th>
+                <th style="border: solid 1px #000; padding: 10px;text-align:center;font-weight:bold">MB</th>
+                <th style="border: solid 1px #000; padding: 10px;text-align:center;font-weight:bold">BSH</th>
+                <th style="border: solid 1px #000; padding: 10px;text-align:center;font-weight:bold">SB</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($listPrestasi as $prestasi)
-                <tr>
-                    <td width="5%" style="text-align: center; vertical-align:middle;">{{ $loop->iteration }}</td>
-                    <td width="40%" style="vertical-align: middle;padding:10px;">{{ $prestasi->prestasi }}</th>
-                    <td width="55%" style="vertical-align: middle;padding:10px;">{{ $prestasi->keterangan }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td width="5%" style="text-align: center">-</td>
-                    <td width="40%">-</th>
-                    <td width="55%">-</td>
-                </tr>
-            @endforelse
+            <tr>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Belum Berkembang</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Mulai Berkembang</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Berkembang Sesuai Harapan</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Sangat Berkembang</td>
+            </tr>
+            <tr>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Siswa masih membutuhkan bimbingan
+                    dalam mengembangkan kemampuan</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Siswa mulai mengembangkan kemampuan
+                    namun masih belum ajek</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Siswa telah mengembangkan kemampuan
+                    hingga berada dalam tahap ajek</td>
+                <td style="border: solid 1px #000; padding: 10px;text-align:center">Siswa mengembangkan kemampuannya
+                    melampaui harapan</td>
+            </tr>
         </tbody>
     </table>
-    <div style="padding:5px;"></div>
-    <b>F. CATATAN WALIKELAS</b>
-    <table class="table">
-        <tr>
-            <td style="border:#000 1px solid;padding:5px;">
-                {{ $catatan }}
-            </td>
-        </tr>
-    </table> --}}
     <div style="padding:15px;"></div>
     <table style="text-align:center;table-layout:fixed;" width="100%">
         <tr>

@@ -9,3 +9,8 @@ print daftar nilai projek
 judul proyek 1 judulnya
 
 sub elemen tebal, capaian tidak
+
+BB 30 - 73
+MB  74 - 82
+BSH 83 - 91
+SB 92 - 100

@@ -37,7 +37,6 @@ class PrintRaporProyekController extends Controller
             ->with([
                 'biodata',
                 'kelas',
-                'penilaianProyek' => fn ($q) => $q->whereTahun($tahun),
                 'penilaianProyeks' => fn ($q) => $q->whereTahun($tahun),
                 'user'
             ])
@@ -55,6 +54,7 @@ class PrintRaporProyekController extends Controller
         $data =
             [
                 'listProyek' => $listProyek,
+                'penilaian' => $siswa->penilaianProyeks,
                 'namaSiswa' => $siswa->user?->name,
                 'namaKelas' => $siswa->kelas?->nama,
                 'nis' => $nis,

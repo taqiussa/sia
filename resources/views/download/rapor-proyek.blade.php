@@ -172,7 +172,9 @@
             </tr>
         </tbody>
     </table>
+
     <br>
+
     @foreach ($listProyek->unique('proyek_id') as $proyek)
         <br>
         <br>
@@ -186,7 +188,37 @@
             </tbody>
         </table>
     @endforeach
+
     <div style="page-break-before: always"></div>
+
+    <table style="border-collapse: collapse" width="100%">
+        <tbody>
+            @foreach ($listProyek->unique('proyek_id') as $proyek)
+                <tr>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold">
+                        {{ $proyek->proyek->nama }} {{ $proyek->judul }}</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BB</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">MB</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BSH</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">SB</td>
+                </tr>
+                @foreach ($listProyek->unique('dimensi_id') as $dimensi)
+                    <tr>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:left; font-weight:bold">
+                            {{ $dimensi->dimensi->nama }}
+                        </td>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BB</td>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">MB</td>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">BSH</td>
+                        <td style="border: solid 1px #000; padding: 10px;text-align:center; font-weight:bold">SB</td>
+                    </tr>
+                @endforeach
+            @endforeach
+        </tbody>
+    </table>
+
+    <div style="page-break-before: always"></div>
+
     {{-- <b>B. PENGETAHUAN DAN KETERAMPILAN</b>
     <table class="table">
         <thead>

@@ -124,6 +124,9 @@
 </head>
 
 <body>
+    <footer>
+        {{ $namaSiswa }} | {{ $nis }} | Kelas : {{ $namaKelas }} | {{ $tahun }}
+    </footer>
     <div style="text-align: center">
         <h4>
             RAPOR PROYEK PENGUATAN <br>
@@ -147,9 +150,9 @@
                 <td style="white-space: nowrap">Jl. Kampir Sudipayung, Kec. Ngampel, Kab. Kendal</td>
                 <td>&nbsp;</td>
 
-                <td>Semester</td>
+                <td>Fase</td>
                 <td>:</td>
-                <td></td>
+                <td>D</td>
             </tr>
             <tr>
                 <td>Nama Siswa</td>
@@ -170,83 +173,18 @@
         </tbody>
     </table>
     <br>
-    @foreach ($listProyek as $proyek)
+    @foreach ($listProyek->unique('proyek_id') as $proyek)
+        <br>
+        <br>
         <b>{{ $proyek->proyek->nama }} {{ $proyek->judul }}</b>
         <div style="padding:5px;"></div>
-        {{-- <table style="border-collapse: collapse" width="100%">
+        <table style="border-collapse: collapse" width="100%">
             <tbody>
                 <tr>
-                    <td width="35.7%" style="border: solid 1px #000; padding: 10px">Dimensi</td>
-                    <td width="64.3%" style="border: solid 1px #000; padding: 10px">Deskripsi</td>
+                    <td style="border: solid 1px #000; padding: 10px;text-align:justify">{{ $proyek->deskripsi }}</td>
                 </tr>
-                @foreach ($listSikap as $sikap)
-                    <tr style="height: 100px;">
-                        @php
-                            
-                            $hasil = $penilaianSikaps->where('jenis_sikap_id', $sikap->id)->avg('nilai');
-                            
-                            if ($hasil > 90) {
-                                $predikat = 'menunjukkan penguasaan yang sangat baik';
-                            } elseif ($hasil > 80) {
-                                $predikat = 'menunjukkan penguasaan yang baik';
-                            } elseif ($hasil > 70) {
-                                $predikat = 'menunjukkan penguasaan yang cukup';
-                            } else {
-                                $predikat = 'perlu penguatan';
-                            }
-                        @endphp
-                        <td style="border: solid 1px #000; padding: 10px ; vertical-align:middle;">
-                            {{ $sikap->nama }}
-                        </td>
-                        <td style="border: solid 1px #000; padding: 10px; text-align:justify;vertical-align:middle;">
-                            @switch($sikap->id)
-                                @case(11)
-                                    Dalam penguatan dimensi beriman, bertakwa, dan berakhlak mulia, {{ $namaSiswa }}
-                                    {{ $predikat }} dalam elemen akhlak bernegara, akhlak kepada alam, akhlak beragama,
-                                    akhlak
-                                    kepada sesama manusia dan akhlak pribadi
-                                @break
-
-                                @case(12)
-                                    Dalam penguatan dimensi berkebinekaan global, {{ $namaSiswa }}
-                                    {{ $predikat }} dalam elemen mengenal dan menghargai budaya, refleksi dan tanggung
-                                    jawab
-                                    terhadap pengalaman kebinekaan, komunikasi dan interaksi antar budaya dan berkeadilan sosial
-                                @break
-
-                                @case(13)
-                                    Dalam penguatan dimensi bergotong royong, {{ $namaSiswa }} {{ $predikat }} dalam
-                                    elemen
-                                    kepedulian, kolaborasi dan berbagi
-                                @break
-
-                                @case(14)
-                                    Dalam penguatan dimensi mandiri, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                    regulasi diri, pemahaman diri dan situasi
-                                @break
-
-                                @case(15)
-                                    Dalam penguatan dimensi bernalar kritis, {{ $namaSiswa }} {{ $predikat }} dalam
-                                    elemen
-                                    menganalisis dan mengevaluasi penalaran, memperoleh dan memproses informasi gagasan,
-                                    merefleksi
-                                    dan mengevaluasi pemikirannya sendiri
-                                @break
-
-                                @case(16)
-                                    Dalam penguatan dimensi kreatif, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                    memiliki keluwesan berpikir dalam mencari alternatif solusi permasalahan, menghasilkan
-                                    gagasan
-                                    yang orisinal, menghasilkan karya dan tindakan yang orisinial
-                                @break
-
-                                @default
-                            @endswitch
-                        </td>
-                    </tr>
-                @endforeach
             </tbody>
-        </table> --}}
+        </table>
     @endforeach
     <div style="page-break-before: always"></div>
     {{-- <b>B. PENGETAHUAN DAN KETERAMPILAN</b>

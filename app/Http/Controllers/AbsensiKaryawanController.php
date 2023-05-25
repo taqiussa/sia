@@ -12,8 +12,7 @@ class AbsensiKaryawanController extends Controller
             'Guru/AbsensiKaryawan',
             [
                 'listAbsensi' => AbsensiKaryawan::whereTanggal(date('Y-m-d'))
-                    ->with(['user' => fn ($q) => $q->select('id', 'name')])
-                    ->latest()
+                    ->whereUserId(auth()->user()->id)
                     ->get()
             ]
         );
@@ -27,6 +26,9 @@ class AbsensiKaryawanController extends Controller
             ->whereUserId(request('id'))
             ->first();
 
+        if (request('id') != auth()->user()->id) {
+            return back()->withErrors(['message' => 'SILAHKAN PAKAI AKUN ANDA SENDIRI UNTUK ABSEN!']);
+        }
         if (request('pilihan') == 'Masuk') {
             if ($cek && $cek->masuk) {
                 return back()->withErrors(['message' => 'Sudah Absen Masuk!']);
@@ -37,6 +39,11 @@ class AbsensiKaryawanController extends Controller
                 'tanggal' => date('Y-m-d')
             ]);
         } else {
+
+            if (!$cek) {
+                return back()->withErrors(['message' => 'Anda Belum Absen Masuk!, Silahkan Absen Masuk Terlebih Dahulu']);
+            }
+
             if ($cek && $cek->pulang) {
                 return back()->withErrors(['message' => 'Sudah Absen Pulang!']);
             }
@@ -46,6 +53,6 @@ class AbsensiKaryawanController extends Controller
             ]);
         }
 
-        return to_route('absensi-karyawan');
+        return to_route('absensi-karyawan')->with(['message' => 'Berhasil Absen ' . request('pilihan')]);
     }
 }

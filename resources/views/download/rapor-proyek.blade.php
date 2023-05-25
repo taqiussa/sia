@@ -124,9 +124,12 @@
 </head>
 
 <body>
-    <footer>
-        {{ $namaSiswa }} | {{ $nis }} | Kelas : {{ $namaKelas }} | {{ $tahun }}
-    </footer>
+    <div style="text-align: center">
+        <h4>
+            RAPOR PROYEK PENGUATAN <br>
+            PROFIL PELAJARA PANCASILA
+        </h4>
+    </div>
     <table style="text-align:justify; border-collapse:collapse;" width="100%">
         <tbody>
             <tr>
@@ -146,7 +149,7 @@
 
                 <td>Semester</td>
                 <td>:</td>
-                <td>{{ $semester }}</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Nama Siswa</td>
@@ -166,83 +169,87 @@
             </tr>
         </tbody>
     </table>
-    <hr>
-    <div style="text-align: center">
-        <h4>LAPORAN HASIL BELAJAR</h4>
-    </div>
     <br>
-    <b>A. SIKAP</b>
-    <div style="padding:5px;"></div>
-    <table style="border-collapse: collapse" width="100%">
-        <tbody>
-            <tr>
-                <td width="35.7%" style="border: solid 1px #000; padding: 10px">Dimensi</td>
-                <td width="64.3%" style="border: solid 1px #000; padding: 10px">Deskripsi</td>
-            </tr>
-            @foreach ($listSikap as $sikap)
-                <tr style="height: 100px;">
-                    @php
-                        
-                        $hasil = $penilaianSikaps->where('jenis_sikap_id', $sikap->id)->avg('nilai');
-                        
-                        if ($hasil > 90) {
-                            $predikat = 'menunjukkan penguasaan yang sangat baik';
-                        } elseif ($hasil > 80) {
-                            $predikat = 'menunjukkan penguasaan yang baik';
-                        } elseif ($hasil > 70) {
-                            $predikat = 'menunjukkan penguasaan yang cukup';
-                        } else {
-                            $predikat = 'perlu penguatan';
-                        }
-                    @endphp
-                    <td style="border: solid 1px #000; padding: 10px ; vertical-align:middle;">
-                        {{ $sikap->nama }}
-                    </td>
-                    <td style="border: solid 1px #000; padding: 10px; text-align:justify;vertical-align:middle;">
-                        @switch($sikap->id)
-                            @case(11)
-                                Dalam penguatan dimensi beriman, bertakwa, dan berakhlak mulia, {{ $namaSiswa }}
-                                {{ $predikat }} dalam elemen akhlak bernegara, akhlak kepada alam, akhlak beragama, akhlak
-                                kepada sesama manusia dan akhlak pribadi
-                            @break
-
-                            @case(12)
-                                Dalam penguatan dimensi berkebinekaan global, {{ $namaSiswa }}
-                                {{ $predikat }} dalam elemen mengenal dan menghargai budaya, refleksi dan tanggung jawab
-                                terhadap pengalaman kebinekaan, komunikasi dan interaksi antar budaya dan berkeadilan sosial
-                            @break
-
-                            @case(13)
-                                Dalam penguatan dimensi bergotong royong, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                kepedulian, kolaborasi dan berbagi
-                            @break
-
-                            @case(14)
-                                Dalam penguatan dimensi mandiri, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                regulasi diri, pemahaman diri dan situasi
-                            @break
-
-                            @case(15)
-                                Dalam penguatan dimensi bernalar kritis, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                menganalisis dan mengevaluasi penalaran, memperoleh dan memproses informasi gagasan, merefleksi
-                                dan mengevaluasi pemikirannya sendiri
-                            @break
-
-                            @case(16)
-                                Dalam penguatan dimensi kreatif, {{ $namaSiswa }} {{ $predikat }} dalam elemen
-                                memiliki keluwesan berpikir dalam mencari alternatif solusi permasalahan, menghasilkan gagasan
-                                yang orisinal, menghasilkan karya dan tindakan yang orisinial
-                            @break
-
-                            @default
-                        @endswitch
-                    </td>
+    @foreach ($listProyek as $proyek)
+        <b>{{ $proyek->proyek->nama }} {{ $proyek->judul }}</b>
+        <div style="padding:5px;"></div>
+        {{-- <table style="border-collapse: collapse" width="100%">
+            <tbody>
+                <tr>
+                    <td width="35.7%" style="border: solid 1px #000; padding: 10px">Dimensi</td>
+                    <td width="64.3%" style="border: solid 1px #000; padding: 10px">Deskripsi</td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                @foreach ($listSikap as $sikap)
+                    <tr style="height: 100px;">
+                        @php
+                            
+                            $hasil = $penilaianSikaps->where('jenis_sikap_id', $sikap->id)->avg('nilai');
+                            
+                            if ($hasil > 90) {
+                                $predikat = 'menunjukkan penguasaan yang sangat baik';
+                            } elseif ($hasil > 80) {
+                                $predikat = 'menunjukkan penguasaan yang baik';
+                            } elseif ($hasil > 70) {
+                                $predikat = 'menunjukkan penguasaan yang cukup';
+                            } else {
+                                $predikat = 'perlu penguatan';
+                            }
+                        @endphp
+                        <td style="border: solid 1px #000; padding: 10px ; vertical-align:middle;">
+                            {{ $sikap->nama }}
+                        </td>
+                        <td style="border: solid 1px #000; padding: 10px; text-align:justify;vertical-align:middle;">
+                            @switch($sikap->id)
+                                @case(11)
+                                    Dalam penguatan dimensi beriman, bertakwa, dan berakhlak mulia, {{ $namaSiswa }}
+                                    {{ $predikat }} dalam elemen akhlak bernegara, akhlak kepada alam, akhlak beragama,
+                                    akhlak
+                                    kepada sesama manusia dan akhlak pribadi
+                                @break
+
+                                @case(12)
+                                    Dalam penguatan dimensi berkebinekaan global, {{ $namaSiswa }}
+                                    {{ $predikat }} dalam elemen mengenal dan menghargai budaya, refleksi dan tanggung
+                                    jawab
+                                    terhadap pengalaman kebinekaan, komunikasi dan interaksi antar budaya dan berkeadilan sosial
+                                @break
+
+                                @case(13)
+                                    Dalam penguatan dimensi bergotong royong, {{ $namaSiswa }} {{ $predikat }} dalam
+                                    elemen
+                                    kepedulian, kolaborasi dan berbagi
+                                @break
+
+                                @case(14)
+                                    Dalam penguatan dimensi mandiri, {{ $namaSiswa }} {{ $predikat }} dalam elemen
+                                    regulasi diri, pemahaman diri dan situasi
+                                @break
+
+                                @case(15)
+                                    Dalam penguatan dimensi bernalar kritis, {{ $namaSiswa }} {{ $predikat }} dalam
+                                    elemen
+                                    menganalisis dan mengevaluasi penalaran, memperoleh dan memproses informasi gagasan,
+                                    merefleksi
+                                    dan mengevaluasi pemikirannya sendiri
+                                @break
+
+                                @case(16)
+                                    Dalam penguatan dimensi kreatif, {{ $namaSiswa }} {{ $predikat }} dalam elemen
+                                    memiliki keluwesan berpikir dalam mencari alternatif solusi permasalahan, menghasilkan
+                                    gagasan
+                                    yang orisinal, menghasilkan karya dan tindakan yang orisinial
+                                @break
+
+                                @default
+                            @endswitch
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table> --}}
+    @endforeach
     <div style="page-break-before: always"></div>
-    <b>B. PENGETAHUAN DAN KETERAMPILAN</b>
+    {{-- <b>B. PENGETAHUAN DAN KETERAMPILAN</b>
     <table class="table">
         <thead>
             <tr>
@@ -453,77 +460,7 @@
                 {{ $catatan }}
             </td>
         </tr>
-    </table>
-    <div style="padding:5px;"></div>
-    {{-- <b>G. TANGGAPAN ORANGTUA/WALI</b>
-    <table style="border-collapse:  collapse; border:#000 1px solid" width="100%">
-        <tbody>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-            </tr>
-        </tbody>
     </table> --}}
-    @if ($tingkat == 9 && $semester == 2)
-        <p>
-            <b>Keputusan</b> berdasarkan pencapaian kompetensi pada semester ke-1 sampai dengan ke-5, peserta didik
-            ditetapkan *)
-        </p>
-        <p>
-            @switch($naik)
-                @case(1)
-                    Lulus<br>
-                    <s>
-                        Tidak Lulus
-                    </s>
-                @break
-
-                @case(2)
-                    <s>
-                        Lulus
-                    </s>
-                    <br>
-                    Tidak Lulus
-                @break
-
-                @default
-            @endswitch
-            <br>
-            *) Coret yang tidak perlu
-        </p>
-    @elseif ($semester == 2)
-        <p>
-            <b>Keputusan</b> berdasarkan pencapaian kompetensi pada semester ke-1 dan ke-2, peserta didik ditetapkan *)
-        </p>
-        <p>
-            @switch($naik)
-                @case(1)
-                    Naik Kelas<br>
-                    <s>
-                        Tinggal Kelas
-                    </s>
-                @break
-
-                @case(2)
-                    <s>
-                        Naik Kelas
-                    </s>
-                    <br>
-                    Tinggal Kelas
-                @break
-
-                @default
-            @endswitch
-            <br>
-            *) Coret yang tidak perlu
-        </p>
-    @else
-    @endif
     <div style="padding:15px;"></div>
     <table style="text-align:center;table-layout:fixed;" width="100%">
         <tr>

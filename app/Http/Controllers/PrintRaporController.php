@@ -69,6 +69,7 @@ class PrintRaporController extends Controller
                         ->whereSemester($semester),
                     'prestasi' => fn ($q) => $q->whereTahun($tahun)
                         ->whereSemester($semester),
+                    'user'
                 ])
                 // ->withCount([
                 //     'absensis as hitung_izin' => fn ($q) => $q->whereTahun($tahun)
@@ -131,6 +132,7 @@ class PrintRaporController extends Controller
                     'penilaianEkstrakurikuler.ekstrakurikuler.deskripsi',
                     'penilaians' => fn ($q) => $q->whereTahun($tahun)
                         ->whereSemester($semester),
+                    'user'
                 ])
                 // ->withCount([
                 //     'absensis as hitung_izin' => fn ($q) => $q->whereTahun($tahun)

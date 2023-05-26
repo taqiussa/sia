@@ -114,6 +114,6 @@ export function tanggal(tanggal) {
 }
 
 export function waktu(tanggal) {
-    return new Date(tanggal).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    return new Date(tanggal).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')
 }
 

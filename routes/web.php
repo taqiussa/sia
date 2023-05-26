@@ -126,7 +126,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Absensi Karyawan
-Route::middleware('blockip')->group(function () {
+Route::middleware(['auth', 'blockip'])->group(function () {
 
     Route::controller(AbsensiKaryawanController::class)->group(function () {
         Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');

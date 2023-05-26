@@ -14,3 +14,8 @@ BB 30 - 73
 MB  74 - 82
 BSH 83 - 91
 SB 92 - 100
+
+Print Slip Gaji
+
+Kreator
+pembayaran pembuatan kartu pelajar

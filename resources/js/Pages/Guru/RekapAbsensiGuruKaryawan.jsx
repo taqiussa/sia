@@ -66,31 +66,52 @@ const RekapAbsensiGuruKaryawan = () => {
                             <th scope='col' className="py-3 px-2 text-left">
                                 Hari, Tanggal
                             </th>
-                            <th scope='col' className="py-3 px-2 text-left">
+                            <th scope='col' className="py-3 px-2 ">
                                 Masuk
                             </th>
-                            <th scope='col' className="py-3 px-2 text-left">
+                            <th scope='col' className="py-3 px-2 ">
                                 Pulang
+                            </th>
+                            <th scope='col' className="py-3 px-2 ">
+                                Kehadiran
+                            </th>
+                            <th scope='col' className="py-3 px-2 ">
+                                Transport
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listAbsensi && data.listAbsensi.map((absensi, index) => (
-                            <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
-                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {index + 1}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {absensi.tanggal ? hariTanggal(absensi.tanggal) : null}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {absensi.masuk ? waktu(absensi.masuk) : null}
-                                </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">
-                                    {absensi.pulang ? waktu(absensi.pulang) : null}
-                                </td>
-                            </tr>
-                        ))}
+                        {data.listAbsensi &&
+                            data.listAbsensi.map((absensi, index) => {
+                                const isTerlambat = moment(absensi.masuk, 'YYYY-MM-DD HH:mm:ss').isAfter(moment(absensi.masuk).set({ hour: 7, minute: 0, second: 0 }), 'second')
+                                const isJumat = moment(absensi.tanggal).day() == 5
+                                const isAwal = isJumat
+                                    ? moment(absensi.pulang, 'YYYY-MM-DD HH:mm:ss').isBefore(moment(absensi.pulang).set({ hour: 10, minute: 30, second: 0 }), 'second')
+                                    : moment(absensi.pulang, 'YYYY-MM-DD HH:mm:ss').isBefore(moment(absensi.pulang).set({ hour: 13, minute: 0, second: 0 }), 'second')
+                                return (
+                                    <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                        <td className={`py-2 px-2 font-medium text-slate-600 `}>
+                                            {index + 1}
+                                        </td>
+                                        <td className={`py-2 px-2 font-medium text-slate-600 `}>
+                                            {absensi.tanggal ? hariTanggal(absensi.tanggal) : null}
+                                        </td>
+                                        <td className={`py-2 px-2 font-medium text-slate-600 text-center ${isTerlambat ? 'bg-red-600 text-white' : ''}`}>
+                                            {absensi.masuk ? waktu(absensi.masuk) : null}
+                                        </td>
+                                        <td className={`py-2 px-2 font-medium text-slate-600 text-center ${isAwal ? 'bg-red-600 text-white' : ''}`}>
+                                            {absensi.pulang ? waktu(absensi.pulang) : null}
+                                        </td>
+                                        <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
+                                            {absensi.masuk && absensi.pulang ? '1' : '0'}
+                                        </td>
+                                        <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
+                                            {isTerlambat || isAwal ? '0' : '1'}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+
                     </tbody>
                 </table>
             </div>

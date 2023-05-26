@@ -82,6 +82,8 @@ const InputPembayaranSiswa = ({ initTahun }) => {
             arrayInput: updatedArrayInput,
             listTransaksi: updatedArrayInput
         });
+        const checkboxRef = checkboxRefs.current[index]
+        checkboxRef.current.click()
 
     }
 

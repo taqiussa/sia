@@ -67,6 +67,9 @@ const InputSkorKelas = ({ initTahun, initSemester, listSkor, listKelas }) => {
             arrayInput: updatedArrayInput,
         });
 
+        const checkboxRef = checkboxRefs.current[index]
+        checkboxRef.current.click()
+
     }
 
     const onHandleChange = (e) => {

@@ -10,6 +10,7 @@ import SidebarKurikulum from './Partials/SidebarKurikulum';
 import SidebarSiswa from './Partials/SidebarSiswa';
 import SidebarTataUsaha from './Partials/SidebarTataUsaha';
 import SidebarGuruKaryawan from './Partials/SidebarGuruKaryawan';
+import SidebarKaryawan from './Partials/SidebarKaryawan';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
@@ -46,6 +47,10 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarGuru closeSide={closeSide} />
                             }
 
+                            {auth.roles.includes('Karyawan') &&
+                                <SidebarKaryawan closeSide={closeSide} />
+                            }
+
                             {auth.roles.includes('Ketenagaan') &&
                                 <SidebarKetenagaan closeSide={closeSide} />
                             }
@@ -57,27 +62,6 @@ export default function Sidebar({ open, closeSide, auth }) {
                             {auth.roles.includes('Kurikulum') &&
                                 <SidebarKurikulum closeSide={closeSide} />
                             }
-
-                            {/* {auth.roles.includes('Karyawan') &&
-                                <SidebarKaryawan closeSide={closeSide} />
-                            }
-
-                            {auth.roles.includes('Kepala Sekolah') &&
-                                <SidebarKepalaSekolah closeSide={closeSide} />
-                            }
-
-                            {auth.roles.includes('Kesiswaan') &&
-                                <SidebarKesiswaan closeSide={closeSide} />
-                            }
-                            
-                            {auth.roles.includes('Konseling') &&
-                                <SidebarKonseling closeSide={closeSide} />
-                            }
-
-
-                            {auth.roles.includes('Tata Usaha') &&
-                                <SidebarTataUsaha closeSide={closeSide} />
-                            } */}
 
                             {auth.roles.includes('Tata Usaha') &&
                                 <SidebarTataUsaha closeSide={closeSide} />

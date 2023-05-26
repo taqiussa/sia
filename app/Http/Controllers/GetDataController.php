@@ -21,7 +21,7 @@ class GetDataController extends Controller
                     'user' => fn ($q) => $q->select('nis', 'name')
                 ])
                 ->get()
-                ->sortBy('user.name')
+                ->sortBy(['kelas.nama', 'user.name'])
                 ->values()
         ]);
     }

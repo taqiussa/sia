@@ -9,6 +9,7 @@ import SidebarKonseling from './Partials/SidebarKonseling';
 import SidebarKurikulum from './Partials/SidebarKurikulum';
 import SidebarSiswa from './Partials/SidebarSiswa';
 import SidebarTataUsaha from './Partials/SidebarTataUsaha';
+import SidebarGuruKaryawan from './Partials/SidebarGuruKaryawan';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
@@ -31,7 +32,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                     {!auth.roles.includes('Siswa') ?
                         <>
 
-                            <SidebarLink closeSide={closeSide} href={route('absensi-karyawan')} active={route().current('absensi-karyawan')} label='absensi karyawan' />
+                            <SidebarGuruKaryawan closeSide={closeSide} />
 
                             {/* {auth.roles.includes('Admin') &&
                                 <SidebarAdmin closeSide={closeSide} />
@@ -82,7 +83,6 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarTataUsaha closeSide={closeSide} />
                             }
 
-                            <SidebarLink closeSide={closeSide} href={route('slip-gaji')} active={route().current('slip-gaji')} label='slip gaji' />
                         </>
 
                         :

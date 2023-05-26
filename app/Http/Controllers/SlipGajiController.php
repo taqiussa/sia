@@ -12,7 +12,7 @@ class SlipGajiController extends Controller
      */
     public function __invoke()
     {
-        return inertia('SlipGaji', [
+        return inertia('Guru/SlipGaji', [
             'initTahun' => $this->data_tahun(),
         ]);
     }

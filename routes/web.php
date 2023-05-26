@@ -30,6 +30,7 @@ use App\Http\Controllers\DataSkorController;
 use App\Http\Controllers\DownloadQrCodeController;
 use App\Http\Controllers\FormTugasController;
 use App\Http\Controllers\GetDataAbsensiController;
+use App\Http\Controllers\GetDataAbsensiKaryawanController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataBkController;
 use App\Http\Controllers\GetDataController;
@@ -82,6 +83,7 @@ use App\Http\Controllers\PrintRaporController;
 use App\Http\Controllers\PrintRaporProyekController;
 use App\Http\Controllers\PrintRaporPtsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
 use App\Http\Controllers\RekapBimbinganController;
 use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapHarianPengeluaranController;
@@ -162,6 +164,18 @@ Route::middleware('auth')->group(function () {
 
     // End Sidebar Siswa
 
+    // Menu Guru & Karyawan 
+
+    //Route Rekap Absensi Guru & Karyawan
+    Route::get('rekap-absensi-karyawan', RekapAbsensiGuruKaryawanController::class)->name('rekap-absensi-karyawan');
+
+    // Route Slip Gaji
+    Route::get('slip-gaji', SlipGajiController::class)->name('slip-gaji');
+
+    //End Menu Guru & Karyawan
+
+    // Get Data
+
     // Route Bendahara Print Controller
     Route::controller(BendaharaPrintController::class)->group(function () {
         Route::get('kwitansi', 'kwitansi')->name('kwitansi');
@@ -202,6 +216,11 @@ Route::middleware('auth')->group(function () {
         Route::post('get-absensi-ujian', 'get_absensi_ujian')->name('get-absensi-ujian');
         Route::post('get-info-absensi', 'get_info_absensi')->name('get-info-absensi');
         Route::post('get-siswa-with-alpha', 'get_siswa_with_alpha')->name('get-siswa-with-alpha');
+    });
+
+    // Route Get Data Absensi Guru dan Karyawan
+    Route::controller(GetDataAbsensiKaryawanController::class)->group(function () {
+        Route::post('get-rekap-absensi-karyawan', 'get_rekap_absensi_karyawan')->name('get-rekap-absensi-karyawan');
     });
 
     // Route Get Data Bendahara
@@ -286,11 +305,6 @@ Route::middleware('auth')->group(function () {
         Route::post('get-skor-kelas', 'get_skor_kelas')->name('get-skor-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
     });
-
-
-
-    // Route Slip Gaji
-    Route::get('slip-gaji', SlipGajiController::class)->name('slip-gaji');
 });
 
 // Group Bendahara dan Kepala Sekolah

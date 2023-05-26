@@ -50,6 +50,8 @@ export function gunabayar(id) {
     }
 }
 
+
+
 export function hariTanggal(tanggal) {
     return new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 }
@@ -109,5 +111,9 @@ export function rupiah(angka) {
 
 export function tanggal(tanggal) {
     return new Date(tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+export function waktu(tanggal) {
+    return new Date(tanggal).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 }
 

@@ -14,7 +14,7 @@ import SidebarKaryawan from './Partials/SidebarKaryawan';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
-            <div className={`w-[310px] h-full py-5 px-0 fixed overflow-x-hidden overflow-y-scroll myscroll top-0 left-0 z-50 shadow-md transition duration-300 lg:translate-x-0 backdrop-blur bg-white/50  ${open ? 'translate-x-0 ease-in' : '-translate-x-[310px] ease-out'}`}>
+            <div className={`lg:w-[310px] w-[250px] h-full py-5 px-0 fixed overflow-x-hidden overflow-y-scroll myscroll top-0 left-0 z-50 shadow-md transition duration-300 lg:translate-x-0 backdrop-blur bg-white/80  ${open ? 'translate-x-0 ease-in' : 'lg:-translate-x-[310px] -translate-x-[250px] ease-out'}`}>
                 <div className="px-4">
                     <button onClick={() => closeSide()} className="absolute p-1 text-white transition duration-300 transform border-2 rounded-full shadow-md bg-emerald-600 right-5 top-5 border-emerald-700 hover:bg-emerald-500 focus:bg-emerald-500 lg:invisible">
                         <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24">

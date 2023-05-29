@@ -103,7 +103,7 @@ const RekapAbsensiGuruKaryawan = () => {
                                             {absensi.pulang ? waktu(absensi.pulang) : null}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
-                                            {absensi.masuk && absensi.pulang ? '1' : '0'}
+                                            {absensi.masuk || absensi.pulang ? '1' : '0'}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
                                             {isTerlambat || isAwal ? '0' : '1'}

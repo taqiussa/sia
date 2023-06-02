@@ -10,7 +10,7 @@
         body {
             font-family: 'Times New Roman', Times, serif !important;
             font-size: 12pt;
-            margin-top: 1cm;
+            margin-top: 1.2cm;
             margin-left: 1cm;
             margin-right: 1cm;
             margin-bottom: 2cm;
@@ -22,7 +22,7 @@
 
         footer {
             position: fixed;
-            bottom: 1cm;
+            bottom: 0.8cm;
             left: 1cm;
             right: 0cm;
             font-size: 11pt !important;

@@ -14,6 +14,7 @@ use App\Http\Controllers\AturNamaElemenController;
 use App\Http\Controllers\AturNamaProyekController;
 use App\Http\Controllers\AturNamaSubElemenController;
 use App\Http\Controllers\AturPenilaianProyekController;
+use App\Http\Controllers\AturPulangAwalController;
 use App\Http\Controllers\AturWajibBayarController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
@@ -443,6 +444,13 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('atur-penilaian-proyek', 'index')->name('atur-penilaian-proyek');
         Route::post('atur-penilaian-proyek', 'simpan')->name('atur-penilaian-proyek.simpan');
         Route::delete('atur-penilaian-proyek', 'hapus')->name('atur-penilaian-proyek.hapus');
+    });
+
+    // Route Atur Pulang Awal
+    Route::controller(AturPulangAwalController::class)->group(function () {
+        Route::get('atur-pulang-awal', 'index')->name('atur-pulang-awal');
+        Route::post('atur-pulang-awal', 'simpan')->name('atur-pulang-awal.simpan');
+        Route::delete('atur-pulang-awal', 'hapus')->name('atur-pulang-awal.hapus');
     });
 
     // Route Absensi

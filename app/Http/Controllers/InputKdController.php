@@ -32,7 +32,7 @@ class InputKdController extends Controller
             'tingkat' => 'required',
             'kategoriNilaiId' => 'required',
             'jenisPenilaianId' => 'required',
-            'deskripsi' => 'required|string|min:65|max:120',
+            'deskripsi' => 'required|string|min:100|max:120',
         ]);
 
         Kd::updateOrCreate(

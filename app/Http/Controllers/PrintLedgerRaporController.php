@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AturanKurikulum;
+use App\Exports\ExportLedgerRapor;
 use App\Models\Kelas;
-use App\Models\PenilaianRapor;
 use App\Traits\InitTrait;
 use App\Traits\SiswaTrait;
+use App\Models\PenilaianRapor;
+use App\Models\AturanKurikulum;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PrintLedgerRaporController extends Controller
 {
@@ -85,5 +87,12 @@ class PrintLedgerRaporController extends Controller
         } else {
             return view('print.guru.print-ledger-rapor-ranking-merdeka', $data);
         }
+    }
+
+    public function download()
+    {
+        $namaKelas = Kelas::find(request('kelasId'))->nama;
+
+        return Excel::download(new ExportLedgerRapor(), 'Ledger ' . $namaKelas . '.xlsx');
     }
 }

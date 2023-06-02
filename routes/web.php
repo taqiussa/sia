@@ -692,6 +692,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(PrintLedgerRaporController::class)->group(function () {
         Route::get('print-ledger-rapor', 'index')->name('print-ledger-rapor');
         Route::get('print-ledger-rapor/print', 'print')->name('print-ledger-rapor.print');
+        Route::get('print-ledger-rapor/download', 'download')->name('print-ledger-rapor.download');
         Route::get('print-ledger-rapor/print-ranking', 'print_ranking')->name('print-ledger-rapor.print-ranking');
     });
 

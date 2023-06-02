@@ -1,3 +1,4 @@
+import DownloadLink from '@/Components/Sia/DownloadLink'
 import Kelas from '@/Components/Sia/Kelas'
 import PrintLink from '@/Components/Sia/PrintLink'
 import Semester from '@/Components/Sia/Semester'
@@ -74,6 +75,13 @@ const PrintLedgerRapor = ({ initTahun, initSemester, listKelas }) => {
                         semester: data.semester,
                         kelasId: data.kelasId
                     })} label='ranking' />
+                </div>
+                <div>
+                    <DownloadLink href={route('print-ledger-rapor.download', {
+                        tahun: data.tahun,  
+                        semester: data.semester,
+                        kelasId: data.kelasId
+                    })} label='download'/>
                 </div>
             </div>
 

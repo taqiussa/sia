@@ -340,7 +340,7 @@
     <div style="padding:5px;"></div>
     @if ($tingkat == 9 && $semester == 2)
         <p>
-            <b>Keputusan</b> berdasarkan pencapaian kompetensi pada semester ke-1 sampai dengan ke-5, peserta didik
+            <b>Keputusan</b> berdasarkan pencapaian kompetensi pada semester ke-1 sampai dengan ke-6, peserta didik
             ditetapkan *)
         </p>
         <p>

@@ -405,16 +405,16 @@
         <tbody>
             <tr>
                 <td width="60%" style="padding-left:10px;">Sakit</td>
-                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? 0 }}
+                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? '-' }}
                     hari</td>
             </tr>
             <tr>
                 <td style="padding-left:10px;">Izin</td>
-                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? 0 }} hari</td>
+                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? '-' }} hari</td>
             </tr>
             <tr>
                 <td style="padding-left:10px;">Tanpa Keterangan</td>
-                <td class="ctr"> {{ $alpha }} hari</td>
+                <td class="ctr"> {{ $alpha == 0 ? '-' : $alpha }} hari</td>
             </tr>
             </tr>
         </tbody>

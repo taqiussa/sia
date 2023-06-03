@@ -63,6 +63,16 @@ class Siswa extends Model
     }
 
     /**
+     * Get all of the comments for the Siswa
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function analisisPenilaians(): HasMany
+    {
+        return $this->hasMany(AnalisisPenilaian::class, 'nis', 'nis');
+    }
+
+    /**
      * Get the biodata that owns the Siswa
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -26,9 +26,12 @@ const CariDataSiswa = ({ initTahun }) => {
 
     const filteredData = data.listSiswa?.filter((list) => {
         const searchTerm = data.search.toLowerCase();
-        const siswa = list.user?.name.toLowerCase();
+        const siswa = list.user?.name?.toLowerCase();
+        const nis = list.nis?.toString().toLowerCase(); // Assuming nis is a number
+
         return (
-            siswa.includes(searchTerm)
+            (siswa && siswa.includes(searchTerm)) || // Filter by name
+            (nis && nis.includes(searchTerm)) // Filter by nis
         );
     });
 

@@ -60,7 +60,7 @@ const AbsensiKetenagaan = ({ listAbsensi }) => {
                 </div>
             </div>
             <div className='lg:grid lg:grid-cols-2 lg:gap-2 lg:space-y-0 py-2'>
-                <div className='flex justify-center items-center text-center py-2 max-w-md'>
+                <div className='flex items-start justify-start text-center py-2 max-w-md'>
                     <QrScanner
                         onDecode={(e) => submit(e)}
                         onError={(error) => console.log(error?.message)}

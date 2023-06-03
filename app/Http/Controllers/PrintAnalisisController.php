@@ -50,7 +50,7 @@ class PrintAnalisisController extends Controller
             ->whereSemester(request('semester'))
             ->whereMataPelajaranId(request('mataPelajaranId'))
             ->whereKategoriNilaiId(request('kategoriNilaiId'))
-            ->whereJenisPenilaianId(request('jeniPenilaianId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
             ->whereKelasId(request('kelasId'))
             ->first() ?? null;
 
@@ -66,7 +66,7 @@ class PrintAnalisisController extends Controller
                 ->whereSemester(request('semester'))
                 ->whereMataPelajaranId(request('mataPelajaranId'))
                 ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                ->whereJenisPenilaianId(request('jeniPenilaianId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
                 ->whereKelasId(request('kelasId'))
                 ->whereNotIn('nis', $remidiDetail->pluck('nis'))
                 ->count();

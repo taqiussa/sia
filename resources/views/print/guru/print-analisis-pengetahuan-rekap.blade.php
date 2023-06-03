@@ -168,17 +168,14 @@
             <td class="py-1 px-2">&nbsp;</td>
             <td class="py-1 px-2">&nbsp;</td>
             <td class="py-1 px-2">:</td>
-            <td class="py-1 px-2">
-                {{ round($listSiswa->analisisPenilaians->where('nilai', '>=', $kkm)->count() / ($listSiswa->analisisPenilaians->where('nilai', '>=', $kkm)->count() + $listSiswa->analisisPenilaians->where('nilai', '<=', $kkm)), 2) }}
-                x 100%</td>
+            <td class="py-1 px-2">{{ round($jumlahTuntas / ($jumlahTuntas + $jumlahTidakTuntas), 2) }} x 100%</td>
         </tr>
         <tr>
             <td class="py-1 px-2">2</td>
             <td class="py-1 px-2">Daya serap soal</td>
             <td class="py-1 px-2">:</td>
             <td class="py-1 px-2">
-                {{ round($listSiswa->analisisPenilaians->where('nilai', '>=', $kkm)->count() / ($listSiswa->analisisPenilaians->where('nilai', '>=', $kkm)->count() + $listSiswa->analisisPenilaians->where('nilai', '<=', $kkm)), 2) * 100 }}
-                %
+                {{ round($jumlahTuntas / ($jumlahTuntas + $jumlahTidakTuntas), 2) * 100 }} %
             </td>
         </tr>
         <tr>

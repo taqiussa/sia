@@ -42,16 +42,37 @@ class PrintAnalisisController extends Controller
             ->with(['kurikulum' => fn ($q) => $q->select('id', 'nama')])
             ->first();
 
-        $listSiswa = Siswa::whereTahun(request('tahun'))
+        $jumlahSiswa = Siswa::whereTahun(request('tahun'))
             ->whereKelasId(request('kelasId'))
-            ->with([
-                'analisisPenilaian' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereSemester(request('semester'))
-                    ->whereMataPelajaranId(request('mataPelajaranId'))
-                    ->whereJenisPenilaianId(request('jenisPenilaianId'))
-            ])
-            ->get();
+            ->count();
 
+        $remidi = Remidi::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->whereJenisPenilaianId(request('jeniPenilaianId'))
+            ->whereKelasId(request('kelasId'))
+            ->first() ?? null;
+
+        $remidiDetail = null;
+
+        $jumlahTuntas = $jumlahSiswa;
+
+        $jumlahTidakTuntas = 0;
+
+        if ($remidi) {
+            $remidiDetail = RemidiDetail::whereRemidiId($remidi->id)->get();
+            $jumlahTuntas = Penilaian::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereMataPelajaranId(request('mataPelajaranId'))
+                ->whereKategoriNilaiId(request('kategoriNilaiId'))
+                ->whereJenisPenilaianId(request('jeniPenilaianId'))
+                ->whereKelasId(request('kelasId'))
+                ->whereNotIn('nis', $remidiDetail->pluck('nis'))
+                ->count();
+
+            $jumlahTidakTuntas = $remidiDetail->count();
+        }
 
         $data = [
             'tahun' => request('tahun'),
@@ -60,7 +81,8 @@ class PrintAnalisisController extends Controller
                 ->nama,
             'kkm' => $kkm,
             'namaKurikulum' => $kurikulum->kurikulum->nama,
-            'listSiswa' => $listSiswa,
+            'jumlahTuntas' => $jumlahTuntas,
+            'jumlahTidakTuntas' => $jumlahTidakTuntas,
             'namaWaliKelas' => $this->data_nama_wali_kelas(),
             'namaKepalaSekolah' => $this->data_nama_kepala_sekolah(),
             'jenisPenilaian' => JenisPenilaian::find(request('jenisPenilaianId'))

@@ -52,6 +52,6 @@ class AbsensiKetenagaanController extends Controller
         }
 
 
-        return to_route('absensi-karyawan')->with(['message' => 'Berhasil Absen ' . request('pilihan')]);
+        return to_route('absensi-ketenagaan')->with(['message' => 'Berhasil Absen ' . request('pilihan')]);
     }
 }

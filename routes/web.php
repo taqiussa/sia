@@ -21,7 +21,9 @@ use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\BimbinganIndividuController;
 use App\Http\Controllers\BiodataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
+use App\Http\Controllers\CekKdController;
 use App\Http\Controllers\CekListAbsensiController;
+use App\Http\Controllers\CekPenilaianController;
 use App\Http\Controllers\DataBimbinganController;
 use App\Http\Controllers\DataNilaiController;
 use App\Http\Controllers\DataPemasukanController;
@@ -37,6 +39,7 @@ use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataBkController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\GetDataGuruController;
+use App\Http\Controllers\GetDataKdController;
 use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataSiswaController;
@@ -274,6 +277,11 @@ Route::middleware('auth')->group(function () {
         Route::post('get-slip-gaji', 'get_slip_gaji')->name('get-slip-gaji');
     });
 
+    // Route Get Data KD 
+    Route::controller(GetDataKdController::class)->group(function () {
+        Route::post('get-kd-per-tingkat', 'get_kd_per_tingkat')->name('get-kd-per-tingkat');
+    });
+
     // Route Get Data Ketenagaan
     Route::controller(GetDataKetenagaanController::class)->group(function () {
         Route::post('get-guru-izin', 'get_guru_izin')->name('get-guru-izin');
@@ -494,8 +502,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     // Route Cari Data Siswa
     Route::get('cari-data-siswa', CariDataSiswaController::class)->name('cari-data-siswa');
 
+    // Route Cek Kd
+    Route::get('cek-kd', CekKdController::class)->name('cek-kd');
+
     // Route Cek List Absensi
     Route::get('cek-list-absensi', CekListAbsensiController::class)->name('cek-list-absensi');
+
+    // Route Cek Penilaian
+    Route::get('cek-penilaian', CekPenilaianController::class)->name('cek-penilaian');
 
     // Route Data Siswa Ekstrakurikuler
     Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');

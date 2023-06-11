@@ -3,13 +3,15 @@ import TahunNon from '@/Components/Sia/TahunNon'
 import { hariTanggal, namaBulan, waktu } from '@/Functions/functions'
 import getRekapAbsensiGuruKaryawan from '@/Functions/getRekapAbsensiGuruKaryawan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
 const RekapAbsensiGuruKaryawan = () => {
+
+    const { auth, roles } = usePage().props
 
     const { data, setData, errors, processing } = useForm({
         tahun: moment(new Date()).format('YYYY'),
@@ -83,7 +85,7 @@ const RekapAbsensiGuruKaryawan = () => {
                     <tbody>
                         {data.listAbsensi &&
                             data.listAbsensi.map((absensi, index) => {
-                                const isTerlambat = moment(absensi.masuk, 'YYYY-MM-DD HH:mm:ss').isAfter(moment(absensi.masuk).set({ hour: 7, minute: 0, second: 0 }), 'second')
+                                const isTerlambat = moment(absensi.masuk, 'YYYY-MM-DD HH:mm:ss').isAfter(moment(absensi.masuk).set({ hour: 7, minute: 0, second: 59 }), 'second')
                                 const isJumat = moment(absensi.tanggal).day() == 5
                                 const isAwal = isJumat
                                     ? moment(absensi.pulang, 'YYYY-MM-DD HH:mm:ss').isBefore(moment(absensi.pulang).set({ hour: 10, minute: 30, second: 0 }), 'second')

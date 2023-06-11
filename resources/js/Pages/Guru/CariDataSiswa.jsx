@@ -1,5 +1,4 @@
 import InputText from '@/Components/Sia/InputText'
-import Paginator from '@/Components/Sia/Paginator'
 import Tahun from '@/Components/Sia/Tahun'
 import getAllSiswaWithBiodata from '@/Functions/getAllSiswaWithBiodata'
 import AppLayout from '@/Layouts/AppLayout'

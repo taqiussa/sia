@@ -45,6 +45,7 @@ use App\Http\Controllers\GetDataMapelController;
 use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataSiswaController;
 use App\Http\Controllers\GetDataSkorController;
+use App\Http\Controllers\HapusSkorController;
 use App\Http\Controllers\InputAlphaController;
 use App\Http\Controllers\InputAnalisisNilaiController;
 use App\Http\Controllers\InputCatatanRaporController;
@@ -321,6 +322,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-skor-wali-kelas', 'get_siswa_with_skor_wali_kelas')->name('get-siswa-with-skor-wali-kelas');
         Route::post('get-skor-kelas', 'get_skor_kelas')->name('get-skor-kelas');
         Route::post('get-skor-siswa', 'get_skor_siswa')->name('get-skor-siswa');
+        Route::post('get-skor-siswa-per-guru', 'get_skor_siswa_per_guru')->name('get-skor-siswa-per-guru');
     });
 });
 
@@ -526,6 +528,12 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('form-tugas', 'index')->name('form-tugas');
         Route::post('form-tugas', 'simpan')->name('form-tugas.simpan');
         Route::delete('form-tugas', 'hapus')->name('form-tugas.hapus');
+    });
+
+    // Route Hapus Skor
+    Route::controller(HapusSkorController::class)->group(function () {
+        Route::get('hapus-skor', 'index')->name('hapus-skor');
+        Route::delete('hapus-skor', 'hapus')->name('hapus-skor.hapus');
     });
 
     // Route Input Alpha

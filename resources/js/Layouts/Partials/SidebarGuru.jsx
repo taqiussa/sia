@@ -52,6 +52,7 @@ const SidebarGuru = ({ closeSide }) => {
                 Wali Kelas
             </div>
             <div>
+                <SidebarLink closeSide={closeSide} href={route('hapus-skor')} active={route().current('hapus-skor')} label='hapus skor' />
                 <SidebarLink closeSide={closeSide} href={route('input-alpha')} active={route().current('input-alpha')} label="input alpha" />
                 <SidebarLink closeSide={closeSide} href={route('input-catatan-rapor')} active={route().current('input-catatan-rapor')} label="input catatan rapor" />
                 <SidebarLink closeSide={closeSide} href={route('input-skor-birrul-walidain')} active={route().current('input-skor-birrul-walidain')} label="input skor birrul walidain" />

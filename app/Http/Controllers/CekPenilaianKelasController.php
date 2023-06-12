@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use App\Traits\InitTrait;
 
-class CekPenilaianController extends Controller
+class CekPenilaianKelasController extends Controller
 {
     use InitTrait;
 
@@ -14,7 +14,7 @@ class CekPenilaianController extends Controller
      */
     public function __invoke()
     {
-        return inertia('Guru/CekPenilaian', [
+        return inertia('Guru/CekPenilaianKelas', [
             'initTahun' => $this->data_tahun(),
             'initSemester' => $this->data_semester(),
             'listKelas' => Kelas::orderBy('nama')->get()

@@ -7,7 +7,7 @@ import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const CekPenilaian = ({ initTahun, initSemester, listKelas }) => {
+const CekPenilaianKelas = ({ initTahun, initSemester, listKelas }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
@@ -108,5 +108,5 @@ const CekPenilaian = ({ initTahun, initSemester, listKelas }) => {
     )
 }
 
-CekPenilaian.layout = page => <AppLayout children={page} />
-export default CekPenilaian
+CekPenilaianKelas.layout = page => <AppLayout children={page} />
+export default CekPenilaianKelas

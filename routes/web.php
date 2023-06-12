@@ -23,7 +23,7 @@ use App\Http\Controllers\BiodataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
 use App\Http\Controllers\CekKdController;
 use App\Http\Controllers\CekListAbsensiController;
-use App\Http\Controllers\CekPenilaianController;
+use App\Http\Controllers\CekPenilaianKelasController;
 use App\Http\Controllers\DataBimbinganController;
 use App\Http\Controllers\DataNilaiController;
 use App\Http\Controllers\DataPemasukanController;
@@ -511,7 +511,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::get('cek-list-absensi', CekListAbsensiController::class)->name('cek-list-absensi');
 
     // Route Cek Penilaian
-    Route::get('cek-penilaian', CekPenilaianController::class)->name('cek-penilaian');
+    Route::get('cek-penilaian-kelas', CekPenilaianKelasController::class)->name('cek-penilaian-kelas');
 
     // Route Data Siswa Ekstrakurikuler
     Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');

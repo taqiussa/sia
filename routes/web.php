@@ -41,6 +41,7 @@ use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\GetDataGuruController;
 use App\Http\Controllers\GetDataKdController;
 use App\Http\Controllers\GetDataKetenagaanController;
+use App\Http\Controllers\GetDataMapelController;
 use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataSiswaController;
 use App\Http\Controllers\GetDataSkorController;

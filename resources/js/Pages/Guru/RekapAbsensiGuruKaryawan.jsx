@@ -13,7 +13,7 @@ const RekapAbsensiGuruKaryawan = () => {
 
     const { auth, roles } = usePage().props
 
-    const { data, setData, errors, processing } = useForm({
+    const { data, setData, errors } = useForm({
         tahun: moment(new Date()).format('YYYY'),
         bulan: moment(new Date()).format('MM'),
         listAbsensi: []

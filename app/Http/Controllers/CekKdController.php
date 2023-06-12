@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Traits\InitTrait;
 
 class CekKdController extends Controller
 {
+    use InitTrait;
+
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        //
+        return inertia('Guru/CekKd', [
+            'initTahun' => $this->data_tahun(),
+        ]);
     }
 }

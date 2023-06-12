@@ -1,3 +1,4 @@
+import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
 import Tingkat from '@/Components/Sia/Tingkat'
 import getKdPerTingkat from '@/Functions/getKdPerTingkat'
@@ -6,10 +7,11 @@ import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const CekKd = ({ initTahun }) => {
+const CekKd = ({ initTahun, initSemester }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
+        semester: initSemester,
         tingkat: '',
         listKd: [],
         listMapel: []
@@ -20,7 +22,7 @@ const CekKd = ({ initTahun }) => {
     }
 
     async function getDataKd() {
-        const res = await getKdPerTingkat(data.tahun, data.tingkat)
+        const res = await getKdPerTingkat(data.tahun, data.semester, data.tingkat)
         setData({
             ...data,
             listKd: res.listKd,
@@ -29,10 +31,10 @@ const CekKd = ({ initTahun }) => {
     }
 
     useEffect(() => {
-        if (data.tahun && data.tingkat)
+        if (data.tahun && data.semester && data.tingkat)
             trackPromise(
                 getDataKd())
-    }, [data.tahun, data.tingkat])
+    }, [data.tahun, data.semester, data.tingkat])
 
     return (
         <>
@@ -42,6 +44,12 @@ const CekKd = ({ initTahun }) => {
                 <Tahun
                     name='tahun'
                     value={data.tahun}
+                    handleChange={onHandleChange}
+                />
+
+                <Semester
+                    name='semester'
+                    value={data.semester}
                     handleChange={onHandleChange}
                 />
 

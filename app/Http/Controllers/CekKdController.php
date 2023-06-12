@@ -15,6 +15,7 @@ class CekKdController extends Controller
     {
         return inertia('Guru/CekKd', [
             'initTahun' => $this->data_tahun(),
+            'initSemester' => $this->data_semester()
         ]);
     }
 }

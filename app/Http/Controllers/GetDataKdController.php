@@ -12,6 +12,7 @@ class GetDataKdController extends Controller
         return response()->json([
             'listKd' => Kd::whereTahun(request('tahun'))
                 ->whereTingkat(request('tingkat'))
+                ->whereSemester(request('semester'))
                 ->with(['jenis'])
                 ->get(),
             'listMapel' => KurikulumMapel::whereTahun(request('tahun'))

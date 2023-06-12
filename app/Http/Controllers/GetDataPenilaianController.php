@@ -8,13 +8,16 @@ use App\Models\Siswa;
 use App\Models\Remidi;
 use App\Models\Pengayaan;
 use App\Models\Penilaian;
+use App\Traits\InitTrait;
 use App\Models\SiswaEkstra;
 use App\Models\JenisAlquran;
 use App\Models\RemidiDetail;
-
+use App\Models\JenisPenilaian;
+use App\Models\KurikulumMapel;
 
 class GetDataPenilaianController extends Controller
 {
+    use InitTrait;
 
     public function get_list_jenis_alquran_with_nilai_siswa()
     {
@@ -24,6 +27,25 @@ class GetDataPenilaianController extends Controller
                     'penilaian' => fn ($q) => $q->whereNis(request('nis')),
                     'penilaian.user'
                 ])
+                ->get(),
+        ]);
+    }
+
+    public function get_penilaian_per_kelas()
+    {
+        $tingkat = Kelas::find(request('kelasId'))?->tingkat;
+        return response()->json([
+            'listJenis' => JenisPenilaian::whereIn('id', $this->data_jenis_penilaian())
+                ->get(),
+            'listMapel' => KurikulumMapel::whereTahun(request('tahun'))
+                ->whereTingkat($tingkat)
+                ->with([
+                    'mapel' => fn ($q) => $q->select('id', 'nama'),
+                ])
+                ->get(),
+            'listPenilaian' => Penilaian::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereKelasId(request('kelasId'))
                 ->get(),
         ]);
     }

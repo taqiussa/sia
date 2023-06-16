@@ -12,7 +12,7 @@ class AbsensiKetenagaanController extends Controller
             'Guru/AbsensiKetenagaan',
             [
                 'listAbsensi' => AbsensiKaryawan::whereTanggal(date('Y-m-d'))
-                    ->latest()
+                    ->orderByDesc('updated_at')
                     ->with(['user' => fn ($q) => $q->select('id', 'name')])
                     ->get()
             ]

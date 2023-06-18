@@ -130,32 +130,6 @@ Route::get('/', function () {
     return inertia('Auth/Login');
 });
 
-Route::get('/delete', function () {
-
-    $duplicateRecords = DB::table('penilaian_skors as ps1')
-        ->select('ps1.nis', 'ps1.tanggal', 'ps1.user_id', 'ps1.skor_id', 'ps1.id')
-        ->join(
-            DB::raw('(SELECT nis, tanggal, user_id, skor_id, MIN(id) AS min_id
-                FROM penilaian_skors
-                GROUP BY nis, tanggal, user_id, skor_id
-                HAVING COUNT(*) > 1) AS ps2'),
-            function ($join) {
-                $join->on('ps1.nis', '=', 'ps2.nis')
-                    ->on('ps1.tanggal', '=', 'ps2.tanggal')
-                    ->on('ps1.user_id', '=', 'ps2.user_id')
-                    ->on('ps1.skor_id', '=', 'ps2.skor_id')
-                    ->on('ps1.id', '=', 'ps2.min_id');
-            }
-        )
-        ->get();
-
-
-    dd($duplicateRecords->pluck('nis'));
-    // foreach ($duplicateRecords as $record) {
-    //     echo "nis: " . $record->nis . ", tanggal: " . $record->tanggal . ", user_id: " . $record->user_id . ", skor_id: " . $record->skor_id . ", min_id: " . $record->id . "<br>";
-    // }
-});
-
 Route::get('/dashboard', function () {
     return inertia('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -167,6 +141,10 @@ Route::middleware(['auth', 'blockip'])->group(function () {
         Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
         Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
     });
+});
+
+// Route Absensi Karyawan
+Route::middleware(['blockip'])->group(function () {
 
     Route::controller(AbsensiKetenagaanController::class)->group(function () {
         Route::get('absensi-ketenagaan', 'index')->name('absensi-ketenagaan');

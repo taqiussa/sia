@@ -1,9 +1,8 @@
-import Sweet from '@/Components/Sia/Sweet'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React from 'react'
 import { QrScanner } from '@yudiel/react-qr-scanner'
-import { hariTanggal } from '@/Functions/functions'
+import { toast } from 'react-toastify'
 
 const AbsensiKetenagaan = ({ listAbsensi }) => {
 
@@ -22,18 +21,11 @@ const AbsensiKetenagaan = ({ listAbsensi }) => {
         post(route('absensi-ketenagaan.simpan'),
             {
                 onSuccess: (response) => {
-                    Sweet.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.props?.flash?.message,
-                    })
+                    toast.success('Berhasil Absen')
+                    setData({ ...data, id: '' })
                 },
                 onError: (response) => {
-                    Sweet.fire({
-                        icon: 'error',
-                        title: 'Maaf...',
-                        text: response.message,
-                    })
+                    toast.error('Gagal, Ulangi')
                 }
             })
     }
@@ -92,7 +84,6 @@ const AbsensiKetenagaan = ({ listAbsensi }) => {
                                             {index + 1}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">
-                                            {/* {absensi.tanggal ? hariTanggal(absensi.tanggal) : null} */}
                                             {absensi.user?.name}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600">

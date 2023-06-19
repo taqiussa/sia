@@ -1,8 +1,8 @@
-import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React from 'react'
 import { QrScanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'react-toastify'
+import AppLayoutNon from '@/Layouts/AppLayoutNon'
 
 const AbsensiKetenagaan = ({ listAbsensi }) => {
 
@@ -103,5 +103,5 @@ const AbsensiKetenagaan = ({ listAbsensi }) => {
     )
 }
 
-AbsensiKetenagaan.layout = page => <AppLayout children={page} />
+AbsensiKetenagaan.layout = page => <AppLayoutNon children={page} />
 export default AbsensiKetenagaan

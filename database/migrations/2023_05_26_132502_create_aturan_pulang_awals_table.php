@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->string('tahun', 30);
-            $table->dateTime('masuk')->nullable();
-            $table->dateTime('pulang')->nullable();
+            $table->time('masuk')->nullable();
+            $table->time('pulang')->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();
         });

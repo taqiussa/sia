@@ -2,20 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GetDataController;
-use App\Http\Controllers\DataSkorController;
 use App\Http\Controllers\SlipGajiController;
-use App\Http\Controllers\DataNilaiController;
 use App\Http\Controllers\GetDataBkController;
 use App\Http\Controllers\GetDataKdController;
 use App\Http\Controllers\GetDataGuruController;
 use App\Http\Controllers\GetDataSkorController;
-use App\Http\Controllers\AdministrasiController;
 use App\Http\Controllers\GetDataSiswaController;
-use App\Http\Controllers\DataBimbinganController;
 use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\GetDataAbsensiController;
-use App\Http\Controllers\AlquranBilghoibController;
-use App\Http\Controllers\AlquranBinnadzorController;
 use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataKetenagaanController;
@@ -24,33 +18,6 @@ use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
 
 // Group Data
 Route::middleware('auth')->group(function () {
-
-    // Sidebar Siswa
-
-    // Route Administrasi
-    Route::get('administrasi', AdministrasiController::class)->name('administrasi');
-
-    // Route Al Qur'an Bilghoib
-    Route::get('alquran-bilghoib', AlquranBilghoibController::class)->name('alquran-bilghoib');
-
-    // Route Al Qur'an Binnadzor
-    Route::get('alquran-binnadzor', AlquranBinnadzorController::class)->name('alquran-binnadzor');
-
-    // Route Data Bimbingan
-    Route::controller(DataBimbinganController::class)->group(function () {
-        Route::get('data-bimbingan', 'index')->name('data-bimbingan');
-        Route::get('data-bimbingan/detail', 'detail')->name('data-bimbingan.detail');
-    });
-
-    // Route Data Nilai
-    Route::get('data-nilai', DataNilaiController::class)->name('data-nilai');
-
-    // Route Data Skor
-    Route::get('data-skor', DataSkorController::class)->name('data-skor');
-
-
-    // End Sidebar Siswa
-
     // Menu Guru & Karyawan 
 
     //Route Rekap Absensi Guru & Karyawan
@@ -107,6 +74,7 @@ Route::middleware('auth')->group(function () {
 
     // Route Get Data Absensi Guru dan Karyawan
     Route::controller(GetDataAbsensiKaryawanController::class)->group(function () {
+        Route::post('get-list-aturan-pulang-awal', 'get_list_aturan_pulang_awal')->name('get-list-aturan-pulang-awal');
         Route::post('get-rekap-absensi-karyawan', 'get_rekap_absensi_karyawan')->name('get-rekap-absensi-karyawan');
     });
 

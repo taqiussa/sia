@@ -1,83 +1,40 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CekKdController;
 use App\Http\Controllers\AbsensiController;
-use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InputKdController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DataSkorController;
-use App\Http\Controllers\SlipGajiController;
-use App\Http\Controllers\DataNilaiController;
 use App\Http\Controllers\FormTugasController;
-use App\Http\Controllers\GetDataBkController;
-use App\Http\Controllers\GetDataKdController;
 use App\Http\Controllers\HapusSkorController;
 use App\Http\Controllers\InputSkorController;
-use App\Http\Controllers\ListBadalController;
 use App\Http\Controllers\RekapSkorController;
 use App\Http\Controllers\SaldoSkorController;
 use App\Http\Controllers\InputAlphaController;
 use App\Http\Controllers\InputNilaiController;
-use App\Http\Controllers\KasBulananController;
-use App\Http\Controllers\KasTahunanController;
 use App\Http\Controllers\PrintRaporController;
-use App\Http\Controllers\GetDataGuruController;
-use App\Http\Controllers\GetDataSkorController;
 use App\Http\Controllers\UploadNilaiController;
 use App\Http\Controllers\AbsensiUjianController;
-use App\Http\Controllers\AdministrasiController;
 use App\Http\Controllers\BiodataSiswaController;
-use App\Http\Controllers\GetDataMapelController;
-use App\Http\Controllers\GetDataSiswaController;
 use App\Http\Controllers\CariDataSiswaController;
-use App\Http\Controllers\DataBimbinganController;
-use App\Http\Controllers\DataPemasukanController;
 use App\Http\Controllers\InputPrestasiController;
 use App\Http\Controllers\PrintAnalisisController;
 use App\Http\Controllers\PrintRaporPtsController;
-use App\Http\Controllers\RekapPerSiswaController;
-use App\Http\Controllers\AturNamaElemenController;
-use App\Http\Controllers\AturNamaProyekController;
-use App\Http\Controllers\AturPulangAwalController;
-use App\Http\Controllers\AturWajibBayarController;
-use App\Http\Controllers\BendaharaPrintController;
 use App\Http\Controllers\CekListAbsensiController;
 use App\Http\Controllers\DownloadQrCodeController;
-use App\Http\Controllers\GetDataAbsensiController;
-use App\Http\Controllers\InputPemasukanController;
 use App\Http\Controllers\InputSkorKelasController;
 use App\Http\Controllers\PrintLedgerPtsController;
 use App\Http\Controllers\RekapBimbinganController;
-use App\Http\Controllers\RekapJamKosongController;
 use App\Http\Controllers\RekapKehadiranController;
-use App\Http\Controllers\AbsensiKaryawanController;
-use App\Http\Controllers\AlquranBilghoibController;
-use App\Http\Controllers\AturNamaDimensiController;
-use App\Http\Controllers\DataPengeluaranController;
 use App\Http\Controllers\InputNilaiSikapController;
-use App\Http\Controllers\JadwalJamKosongController;
-use App\Http\Controllers\PermintaanBadalController;
 use App\Http\Controllers\PrintNilaiSikapController;
-use App\Http\Controllers\RekapPenggajianController;
-use App\Http\Controllers\TagihanPerKelasController;
-use App\Http\Controllers\AlquranBinnadzorController;
-use App\Http\Controllers\GetDataBendaharaController;
-use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\InputNilaiProyekController;
 use App\Http\Controllers\InputNilaiRemidiController;
-use App\Http\Controllers\InputPengeluaranController;
 use App\Http\Controllers\PrintDaftarNilaiController;
 use App\Http\Controllers\PrintLedgerRaporController;
 use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintRaporProyekController;
 use App\Http\Controllers\UploadNilaiSikapController;
-use App\Http\Controllers\UploadPenggajianController;
-use App\Http\Controllers\AbsensiKetenagaanController;
-use App\Http\Controllers\AturNamaSubElemenController;
 use App\Http\Controllers\BimbinganIndividuController;
-use App\Http\Controllers\CekPenilaianKelasController;
-use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\InputCatatanRaporController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\PrintAbsensiKelasController;
@@ -85,25 +42,14 @@ use App\Http\Controllers\PrintAbsensiUjianController;
 use App\Http\Controllers\PrintNilaiAlquranController;
 use App\Http\Controllers\UploadNilaiProyekController;
 use App\Http\Controllers\InputAnalisisNilaiController;
-use App\Http\Controllers\AturPenilaianProyekController;
-use App\Http\Controllers\DataPembayaranSiswaController;
 use App\Http\Controllers\InputNilaiPengayaanController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
-use App\Http\Controllers\InputPembayaranSiswaController;
-use App\Http\Controllers\RekapHarianPemasukanController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
-use App\Http\Controllers\AturKategoriPemasukanController;
-use App\Http\Controllers\RekapTahunanPemasukanController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
 use App\Http\Controllers\AbsensiEkstrakurikulerController;
-use App\Http\Controllers\GetDataAbsensiKaryawanController;
-use App\Http\Controllers\RekapHarianPengeluaranController;
-use App\Http\Controllers\AturKategoriPengeluaranController;
 use App\Http\Controllers\InputSkorBirrulWalidainController;
-use App\Http\Controllers\RekapTahunanPengeluaranController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
-use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
@@ -134,13 +80,6 @@ Route::get('/dashboard', function () {
 
 // Group Guru dan Karyawan
 Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {
-
-    // Route Atur Pulang Awal
-    Route::controller(AturPulangAwalController::class)->group(function () {
-        Route::get('atur-pulang-awal', 'index')->name('atur-pulang-awal');
-        Route::post('atur-pulang-awal', 'simpan')->name('atur-pulang-awal.simpan');
-        Route::delete('atur-pulang-awal', 'hapus')->name('atur-pulang-awal.hapus');
-    });
 
     // Route Absensi
     Route::controller(AbsensiController::class)->group(function () {
@@ -177,14 +116,8 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     // Route Cari Data Siswa
     Route::get('cari-data-siswa', CariDataSiswaController::class)->name('cari-data-siswa');
 
-    // Route Cek Kd
-    Route::get('cek-kd', CekKdController::class)->name('cek-kd');
-
     // Route Cek List Absensi
     Route::get('cek-list-absensi', CekListAbsensiController::class)->name('cek-list-absensi');
-
-    // Route Cek Penilaian
-    Route::get('cek-penilaian-kelas', CekPenilaianKelasController::class)->name('cek-penilaian-kelas');
 
     // Route Data Siswa Ekstrakurikuler
     Route::get('data-siswa-ekstrakurikuler', DataSiswaEkstrakurikulerController::class)->name('data-siswa-ekstrakurikuler');
@@ -336,28 +269,11 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('input-skor-kelas', 'hapus')->name('input-skor-kelas.hapus');
     });
 
-    // Route Jadwal Jam Kosong
-    Route::controller(JadwalJamKosongController::class)->group(function () {
-        Route::get('jadwal-jam-kosong', 'index')->name('jadwal-jam-kosong');
-        Route::post('jadwal-jam-kosong', 'simpan')->name('jadwal-jam-kosong.simpan');
-        Route::delete('jadwal-jam-kosong', 'hapus')->name('jadwal-jam-kosong.hapus');
-    });
-
-    // Route List Badal
-    Route::controller(ListBadalController::class)->group(function () {
-        Route::get('list-badal', 'index')->name('list-badal');
-    });
-
     // Route Pendaftaran Siswa Ekstrakurikuler
     Route::controller(PendaftaranSiswaEkstrakurikulerController::class)->group(function () {
         Route::get('pendaftaran-siswa-ekstrakurikuler', 'index')->name('pendaftaran-siswa-ekstrakurikuler');
         Route::post('pendaftaran-siswa-ekstrakurikuler', 'simpan')->name('pendaftaran-siswa-ekstrakurikuler.simpan');
         Route::delete('pendaftaran-siswa-ekstrakurikuler', 'hapus')->name('pendaftaran-siswa-ekstrakurikuler.hapus');
-    });
-
-    Route::controller(PermintaanBadalController::class)->group(function () {
-        Route::get('permintaan-badal', 'index')->name('permintaan-badal');
-        Route::post('permintaan-badal', 'simpan')->name('permintaan-badal.simpan');
     });
 
     // Route Print Absensi Ekstrakurikuler
@@ -472,9 +388,6 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::delete('rekap-bimbingan', 'hapus')->name('rekap-bimbingan.hapus');
     });
 
-    // Route Rekap Jam Kosong
-    Route::get('rekap-jam-kosong', RekapJamKosongController::class)->name('rekap-jam-kosong');
-
     Route::controller(RekapKehadiranController::class)->group(function () {
         Route::get('rekap-kehadiran', 'index')->name('rekap-kehadiran');
         Route::get('rekap-kehadiran/detail', 'detail')->name('rekap-kehadiran.detail');
@@ -542,4 +455,6 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/bendahara.php';
 require __DIR__ . '/blockip.php';
 require __DIR__ . '/data.php';
+require __DIR__ . '/ketenagaan.php';
 require __DIR__ . '/kurikulum.php';
+require __DIR__ . '/siswa.php';

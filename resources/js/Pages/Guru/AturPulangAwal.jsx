@@ -1,26 +1,33 @@
 import PrimaryButton from '@/Components/PrimaryButton'
-import Guru from '@/Components/Sia/Guru'
 import Hapus from '@/Components/Sia/Hapus'
-import Hari from '@/Components/Sia/Hari'
-import Jam from '@/Components/Sia/Jam'
-import Semester from '@/Components/Sia/Semester'
+import JamTime from '@/Components/Sia/JamTime'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
-import { namaHari } from '@/Functions/functions'
-import getListJadwalJamKosong from '@/Functions/getListJadwalJamKosong'
+import Tanggal from '@/Components/Sia/Tanggal'
+import { hariTanggal, jamTime } from '@/Functions/functions'
+import getListAturanPulangAwal from '@/Functions/getListAturanPulangAwal'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
+import moment from 'moment'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const AturPulangAwal = ({ listAturan }) => {
+const AturPulangAwal = ({ initTahun }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
-        tanggal: '',
+        tahun: initTahun,
+        tanggal: moment(new Date()).format('YYYY-MM-DD'),
         hari: '',
+        pilihan: 'Pulang',
         jam: '',
+        listAturan: []
     })
+
+    async function getData() {
+        const res = await getListAturanPulangAwal(data.tahun)
+        setData({ ...data, listAturan: res.listAturan })
+    }
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -30,13 +37,13 @@ const AturPulangAwal = ({ listAturan }) => {
 
         e.preventDefault()
 
-        post(route('aturan-pulang-awal.simpan'),
+        post(route('atur-pulang-awal.simpan'),
 
             {
                 onSuccess: () => {
-                    toast.success('Berhasil Simpan Jam Kosong')
+                    toast.success('Berhasil Simpan Aturan')
                     setData({ ...data })
-                    getDataKosong()
+                    getData()
                 }
             }
         )
@@ -46,7 +53,7 @@ const AturPulangAwal = ({ listAturan }) => {
 
         Sweet
             .fire({
-                title: 'Menghapus Jadwal Jam Kosong',
+                title: 'Menghapus Aturan',
                 text: 'Anda yakin menghapus ?',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -55,16 +62,15 @@ const AturPulangAwal = ({ listAturan }) => {
             .then(result => {
                 if (result.isConfirmed)
                     destroy(
-                        route('aturan-pulang-awal.hapus', {
+                        route('atur-pulang-awal.hapus', {
                             id: id,
-                            userId: data.userId
                         }
                         ),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus Jadwal Jam Kosong')
+                                toast.success('Berhasil Hapus Aturan')
                                 setData({ ...data })
-                                getDataKosong()
+                                getData()
                             }
                         }
                     )
@@ -74,16 +80,16 @@ const AturPulangAwal = ({ listAturan }) => {
 
     useEffect(() => {
 
-        if (data.userId)
-            trackPromise(getDataKosong())
+        if (data.tahun)
+            trackPromise(getData())
 
-    }, [data.userId])
+    }, [data.tahun])
 
     return (
         <>
-            <Head title='Jadwal Jam Kosong' />
+            <Head title='Atur Pulang Awal' />
             <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 mb-2 uppercase">
-                jadwal jam kosong
+                Atur Pulang Awal
             </div>
             <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
@@ -94,32 +100,36 @@ const AturPulangAwal = ({ listAturan }) => {
                     handleChange={onHandleChange}
                 />
 
-                <Semester
-                    id='semester'
-                    name='semester'
-                    value={data.semester}
-                    message={errors.semester}
+                <Tanggal
+                    name='tanggal'
+                    label='tanggal'
+                    value={data.tanggal}
+                    message={errors.tanggal}
                     handleChange={onHandleChange}
                 />
 
-                <Guru
-                    id='userId'
-                    name='userId'
-                    value={data.userId}
-                    message={errors.userId}
-                    handleChange={onHandleChange}
-                    listUser={listUser}
-                />
+                <div className="flex flex-col text-slate-600 capitalize">
+                    <div>
+                        pilih
+                    </div>
+                    <div>
+                        <select
+                            name='pilihan'
+                            id='piihan'
+                            value={data.pilihan}
+                            className='border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full text-slate-600'
+                            onChange={onHandleChange}
+                        >
 
-                <Hari
-                    id='hari'
-                    name='hari'
-                    value={data.hari}
-                    message={errors.hari}
-                    handleChange={onHandleChange}
-                />
+                            <option value="">Pilih</option>
+                            <option value="Pulang">Pulang</option>
+                            <option value="Masuk">Masuk</option>
 
-                <Jam
+                        </select>
+                    </div>
+                </div>
+
+                <JamTime
                     id='jam'
                     name='jam'
                     value={data.jam}
@@ -139,13 +149,16 @@ const AturPulangAwal = ({ listAturan }) => {
                                 No
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Semester
+                                Tahun
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Hari
+                                Tanggal
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Jam
+                                Pulang Awal
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
+                                Masuk Siang
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
@@ -153,22 +166,25 @@ const AturPulangAwal = ({ listAturan }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listJadwal && data.listJadwal.map((jadwal, index) => (
+                        {data.listAturan && data.listAturan.map((aturan, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {jadwal.semester}
+                                    {aturan.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {namaHari(jadwal.hari)}
+                                    {hariTanggal(aturan.tanggal)}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {jadwal.jam}
+                                    {aturan.pulang ? jamTime(aturan.pulang) : null}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus onClick={() => handleDelete(jadwal.id)} />
+                                    {aturan.masuk ? jamTime(aturan.pulang) : null}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">``
+                                    <Hapus onClick={() => handleDelete(aturan.id)} />
                                 </td>
                             </tr>
                         ))}

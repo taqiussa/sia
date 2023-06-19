@@ -50,10 +50,22 @@ export function gunabayar(id) {
     }
 }
 
-
-
 export function hariTanggal(tanggal) {
     return new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+export function jamDate(jam) {
+    return new Date(jam).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
+
+export function jamTime(jam) {
+    // Splitting the time string into hours and minutes
+    const [hours, minutes] = jam.split(':');
+
+    // Formatting the time in 24-hour format
+    const formattedTime = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+
+    return formattedTime;
 }
 
 export function maskRupiah(angka) {

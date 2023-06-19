@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('aturan_pulang_awals', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
+            $table->string('tahun', 30);
             $table->dateTime('masuk')->nullable();
             $table->dateTime('pulang')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

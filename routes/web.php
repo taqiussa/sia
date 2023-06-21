@@ -74,6 +74,10 @@ Route::get('/', function () {
     return inertia('Auth/Login');
 });
 
+Route::get('/privasi', function () {
+    return inertia('Privasi');
+});
+
 Route::get('/dashboard', function () {
     return inertia('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

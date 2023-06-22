@@ -3,6 +3,7 @@ import React from 'react'
 import { QrScanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'react-toastify'
 import AppLayoutNon from '@/Layouts/AppLayoutNon'
+import SpinnerNonPromise from '@/Components/Sia/SpinnerNonPromise'
 
 const AbsensiKetenagaan = ({ listAbsensi }) => {
 
@@ -32,6 +33,8 @@ const AbsensiKetenagaan = ({ listAbsensi }) => {
 
     return (
         <>
+            {processing &&
+                <SpinnerNonPromise />}
             <Head title='Absensi Guru dan Karyawan' />
             <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 bg-emerald-200">absensi guru dan karyawan</div>
             <div className='lg:grid lg:grid-cols-3 lg:gap-2 lg:space-y-0 py-2'>

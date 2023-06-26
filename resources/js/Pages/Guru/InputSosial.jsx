@@ -1,14 +1,13 @@
 import PrimaryButton from '@/Components/PrimaryButton'
-import Jam from '@/Components/Sia/Jam'
+import InputArea from '@/Components/Sia/InputArea'
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
+import Kategori from '@/Components/Sia/Kategori'
 import Kehadiran from '@/Components/Sia/Kehadiran'
-import Kelas from '@/Components/Sia/Kelas'
+import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
 import { arrayKehadiranKaryawan } from '@/Functions/functions'
-import getAbsensiSiswa from '@/Functions/getAbsensiSiswa'
 import getAbsensiSosial from '@/Functions/getAbsensiSosial'
-import getInfoAbsensi from '@/Functions/getInfoAbsensi'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import axios from 'axios'
@@ -17,13 +16,15 @@ import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const Absensi = ({ initTahun, initSemester }) => {
+const InputSosial = ({ initTahun, initSemester }) => {
 
     const { data, setData, errors, processing } = useForm({
         tahun: initTahun,
         semester: initSemester,
         tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        keterangan: ''
+        keterangan: '',
+        jenisKelamin: '',
+        role: ''
     })
 
     const [count, setCount] = useState(0)
@@ -31,8 +32,19 @@ const Absensi = ({ initTahun, initSemester }) => {
     const [message, setMessage] = useState([])
     const [show, setShow] = useState(false)
 
-    async function getDataAbsensiSiswa() {
-        const response = await getAbsensiSosial(data.tanggal)
+    const listKategori = [
+        {
+            id: 'Guru',
+            nama: 'Guru'
+        },
+        {
+            id: 'Karyawan',
+            nama: 'Karyawan'
+        }
+    ]
+
+    async function getDataAbsensiSosial() {
+        const response = await getAbsensiSosial(data.tanggal, data.role, data.jenisKelamin)
         setListUser(response.listUser)
     }
 
@@ -40,13 +52,12 @@ const Absensi = ({ initTahun, initSemester }) => {
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, name, sosialDetailId, sosialId, JenisKelamin) => {
+    const handleDynamic = (e, index, id, name, sosialDetailId, sosialId) => {
 
         const newList = [...listUser]
         newList.splice(index, 1, {
             id: id,
             name: name,
-            jenis_kelamin: JenisKelamin,
             sosial_detail: {
                 id: sosialDetailId,
                 sosial_id: sosialId,
@@ -59,27 +70,32 @@ const Absensi = ({ initTahun, initSemester }) => {
 
         axios.post(route('input-sosial.simpan',
             {
-                id: id,
+                id: sosialDetailId,
                 sosialId: sosialId,
                 tahun: data.tahun,
                 semester: data.semester,
                 tanggal: data.tanggal,
                 userId: id,
-                JenisKelamin: JenisKelamin,
+                jenisKelamin: data.jenisKelamin,
+                keterangan: data.keterangan,
                 kehadiranId: e.target.value
             }))
             .then(response => {
 
-                setListUser(response.data.listUser)
+                setData({ ...data })
+                trackPromise(getDataAbsensiSosial())
 
                 setMessage({
                     id: response.data.id,
                     message: response.data.message
                 })
-                getDataInfoAbsensi()
             })
             .catch(error => {
-                console.log(error)
+                Sweet
+                    .fire({
+                        text: 'Keterangan Belum di Isi',
+                        icon: 'error'
+                    })
             })
     }
 
@@ -88,17 +104,20 @@ const Absensi = ({ initTahun, initSemester }) => {
 
         trackPromise(
             axios.post(
-                route('absensi.nihil',
+                route('input-sosial.nihil',
                     {
-                        tanggal: data.tanggal,
                         tahun: data.tahun,
-                        jam: data.jam,
-                        kelasId: data.kelasId,
+                        semester: data.semester,
+                        tanggal: data.tanggal,
+                        keterangan: data.keterangan,
+                        jenisKelamin: data.jenisKelamin,
+                        role: data.role
                     })
             )
                 .then(e => {
-                    setListUser(e.data.listUser)
                     toast.success('Berhasil Set Kehadiran')
+                    setData({ ...data })
+                    trackPromise(getDataAbsensiSosial())
                 })
                 .catch(error => {
                     console.log(error)
@@ -108,26 +127,20 @@ const Absensi = ({ initTahun, initSemester }) => {
 
     useEffect(() => {
 
-        if (data.tanggal && data.kelasId) {
-            trackPromise(
-                getDataInfoAbsensi()
-            )
-        }
-
         setShow(false)
-
+        setListUser([])
         if (data.tanggal
             && data.tahun
-            && data.jam
-            && data.kelasId
+            && data.role
+            && data.jenisKelamin
         ) {
             trackPromise(
-                getDataAbsensiSiswa()
+                getDataAbsensiSosial()
             )
 
             setShow(true)
         }
-    }, [data.tanggal, data.tahun, data.jam, data.kelasId])
+    }, [data.tanggal, data.tahun, data.role, data.jenisKelamin])
 
     useEffect(() => {
 
@@ -139,20 +152,10 @@ const Absensi = ({ initTahun, initSemester }) => {
 
     }, [count])
 
-    useEffect(() => {
-
-        const timeoutId = setTimeout(() => {
-            setMessage([]);
-        }, 1000);
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [message])
     return (
         <>
-            <Head title='Absensi' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">absensi</div>
+            <Head title='Input Sosial' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">input sosial</div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
@@ -171,6 +174,29 @@ const Absensi = ({ initTahun, initSemester }) => {
                     handleChange={onHandleChange}
                 />
 
+                <JenisKelamin
+                    name='jenisKelamin'
+                    value={data.jenisKelamin}
+                    message={errors.jenisKelamin}
+                    handleChange={onHandleChange}
+                />
+
+                <Kategori
+                    name='role'
+                    value={data.role}
+                    message={errors.role}
+                    handleChange={onHandleChange}
+                    listKategori={listKategori}
+                />
+
+                <div className="col-span-4">
+                    <InputArea
+                        name='keterangan'
+                        label='keterangan'
+                        value={data.keterangan}
+                        handleChange={onHandleChange}
+                    />
+                </div>
 
             </div>
 
@@ -212,11 +238,11 @@ const Absensi = ({ initTahun, initSemester }) => {
                                             name='kehadiranId'
                                             message={errors.kehadiranId}
                                             value={user.sosial_detail?.kehadiran_id ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, user.id, user.name, user.sosial_detail?.id, user.sosial_detail.sosial_id, user.jenis_kelamin)}
+                                            handleChange={(e) => handleDynamic(e, index, user.id, user.name, user.sosial_detail?.id, user.sosial_detail.sosial_id)}
                                             listKehadiran={arrayKehadiranKaryawan()}
                                         />
 
-                                        {message && message.nis == siswa.nis &&
+                                        {message && message.id == user.id &&
                                             (
                                                 <span className='text-emerald-500'>{message.message}</span>
                                             )}
@@ -232,5 +258,5 @@ const Absensi = ({ initTahun, initSemester }) => {
     )
 }
 
-Absensi.layout = page => <AppLayout children={page} />
-export default Absensi
+InputSosial.layout = page => <AppLayout children={page} />
+export default InputSosial

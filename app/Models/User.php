@@ -82,12 +82,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the sosialDetail associated with the User
+     * Get the sosial_detail associated with the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function sosial_detail(): HasOne
     {
-        return $this->hasOne(SosialDetail::class)->withDefault();
+        return $this->hasOne(SosialDetail::class);
+    }
+    /**
+     * Get all of the sosial_detail for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sosial_details(): HasMany
+    {
+        return $this->hasMany(SosialDetail::class);
     }
 }

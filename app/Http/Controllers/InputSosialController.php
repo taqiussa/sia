@@ -28,37 +28,41 @@ class InputSosialController extends Controller
             'tahun' => 'required',
             'semester' => 'required',
             'tanggal' => 'required',
-            'keterangan' => 'required'
+            'keterangan' => 'required',
+            'jenisKelamin' => 'required'
         ]);
 
         try {
 
             $sosial = Sosial::updateOrCreate(
-                [],
+                [
+                    'tanggal' => request('tanggal')
+                ],
                 [
                     'tahun' => request('tahun'),
                     'semester' => request('semester'),
-                    'tanggal' => request('tanggal'),
                     'keterangan' => request('keterangan'),
                 ]
             );
 
             $userBelumAbseni = User::role(request('role'))
-                ->whereDoesntHave('sosialDetail', fn ($q) => $q->whereTanggal(request('tanggal')))
+                ->whereJenisKelamin(request('jenisKelamin'))
+                ->whereDoesntHave('sosial_detail', fn ($q) => $q->whereTanggal(request('tanggal')))
                 ->get();
 
-            foreach ($userBelumAbseni as $user)
+            foreach ($userBelumAbseni as $user) {
                 $sosial->detail()->updateOrCreate(
                     [
-                        'tahun' => request('tahun'),
-                        'semester' => request('semester'),
                         'tanggal' => request('tanggal'),
                         'user_id' => $user->id
                     ],
                     [
+                        'tahun' => request('tahun'),
+                        'semester' => request('semester'),
                         'kehadiran_id' => EnumKehadiranIbadah::Hadir
                     ]
                 );
+            }
 
             return to_route('input-sosial');
         } catch (\Throwable $th) {
@@ -73,7 +77,8 @@ class InputSosialController extends Controller
             'tahun' => 'required',
             'semester' => 'required',
             'tanggal' => 'required',
-            'keterangan' => 'required'
+            'keterangan' => 'required',
+            'jenisKelamin' => 'required'
         ]);
 
         SosialDetail::updateOrCreate(

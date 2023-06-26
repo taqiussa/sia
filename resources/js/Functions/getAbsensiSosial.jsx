@@ -1,11 +1,13 @@
 import axios from "axios"
 
-const getAbsensiSosial = async (tanggal) => {
+const getAbsensiSosial = async (tanggal, role, jenisKelamin) => {
     try {
         const response = await axios.post(
             route('get-absensi-sosial',
                 {
-                    tanggal: tanggal,
+                    tanggal,
+                    role,
+                    jenisKelamin
                 })
         )
         return response.data;

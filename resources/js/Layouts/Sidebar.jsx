@@ -11,6 +11,7 @@ import SidebarSiswa from './Partials/SidebarSiswa';
 import SidebarTataUsaha from './Partials/SidebarTataUsaha';
 import SidebarGuruKaryawan from './Partials/SidebarGuruKaryawan';
 import SidebarKaryawan from './Partials/SidebarKaryawan';
+import SidebarKesiswaan from './Partials/SidebarKesiswaan';
 export default function Sidebar({ open, closeSide, auth }) {
     return (
         <div>
@@ -54,6 +55,10 @@ export default function Sidebar({ open, closeSide, auth }) {
 
                             {auth.roles.includes('Karyawan') &&
                                 <SidebarKaryawan closeSide={closeSide} />
+                            }
+
+                            {auth.roles.includes('Kesiswaan') &&
+                                <SidebarKesiswaan closeSide={closeSide} />
                             }
 
                             {auth.roles.includes('Ketenagaan') &&

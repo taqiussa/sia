@@ -12,5 +12,6 @@ Route::middleware([
     Route::controller(InputSosialController::class)->group(function () {
         Route::get('input-sosial', 'index')->name('input-sosial');
         Route::post('input-sosial', 'simpan')->name('input-sosial.simpan');
+        Route::post('input-sosial/nihil', 'nihil')->name('input-sosial.nihil');
     });
 });

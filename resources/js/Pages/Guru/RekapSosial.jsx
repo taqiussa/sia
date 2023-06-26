@@ -103,7 +103,7 @@ const RekapSosial = ({ initTahun }) => {
                                     listSosial && listSosial.map((sosial, index) => (
                                         <td key={index} className="py-2 px-2 font-medium text-slate-600">
                                             {user.sosial_details
-                                                .filter(detail => detail.sosial_id == sosial.id)
+                                                .filter(detail => detail.tanggal == sosial.tanggal)
                                                 .map(detail => detail.kehadiran_id)}
                                         </td>
                                     ))

@@ -5,27 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PenilaianGuru extends Model
+class PenilaianRaporGuru extends Model
 {
     use HasFactory;
-    protected $guarded = [];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id')->withDefault();
-    }
-
     public function kategori()
     {
         return $this->belongsTo(KategoriPenilaianGuru::class, 'kategori_nilai_id')->withDefault();
     }
+
     public function jenis()
     {
         return $this->belongsTo(JenisPenilaianGuru::class, 'jenis_penilaian_id')->withDefault();
     }
 
-    public function tim()
+    public function nilai()
     {
-        return $this->belongsTo(User::class, 'tim_id')->withDefault();
+        return $this->hasMany(PenilaianGuru::class, 'jenis_penilaian_id', 'jenis_penilaian_id');
+    }
+
+    public function kkm()
+    {
+        return $this->belongsTo(KkmGuru::class, 'jenis_penilaian_id', 'jenis_penilaian_id')->withDefault();
     }
 }

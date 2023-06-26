@@ -3,11 +3,12 @@
 use App\Http\Controllers\InputSosialController;
 use App\Http\Controllers\RekapSosialController;
 use App\Http\Controllers\TotalSosialController;
+use App\Http\Controllers\UploadNilaiKaryawanController;
 use Illuminate\Support\Facades\Route;
 
 // Group Bendahara dan Kepala Sekolah
 Route::middleware([
-    'auth', 'role:Guru|Kepala Sekolah'
+    'auth', 'role:Guru|Kepala Sekolah|Tim Penilai'
 ])->group(function () {
 
     // Route Input Sosial
@@ -22,4 +23,11 @@ Route::middleware([
 
     // Route Total Sosial
     Route::get('total-sosial', TotalSosialController::class)->name('total-sosial');
+
+    // Route Upload Nilai Karyawan
+    Route::controller(UploadNilaiKaryawanController::class)->group(function(){
+        Route::get('upload-nilai-karyawan', 'index')->name('upload-nilai-karyawan');
+        Route::get('upload-nilai-karyawan/download', 'download')->name('upload-nilai-karyawan.download');
+        Route::post('upload-nilai-karyawan', 'upload')->name('upload-nilai-karyawan.upload');
+    });
 });

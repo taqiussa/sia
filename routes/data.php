@@ -156,6 +156,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataPenilaianKaryawanController::class)->group(function () {
         Route::post('get-absensi-sosial', 'get_absensi_sosial')->name('get-absensi-sosial');
         Route::post('get-absensi-sosials', 'get_absensi_sosials')->name('get-absensi-sosials');
+        Route::post('get-karyawan-with-nilai', 'get_karyawan_with_nilai')->name('get-karyawan-with-nilai');
+        Route::post('get-list-jenis-penilaian-karyawan', 'get_list_jenis_penilaian_karyawan')->name('get-list-jenis-penilaian-karyawan');
+        Route::post('get-list-kategori-penilaian-karyawan', 'get_list_kategori_penilaian_karyawan')->name('get-list-kategori-penilaian-karyawan');
         Route::post('get-list-sosial', 'get_list_sosial')->name('get-list-sosial');
     });
 

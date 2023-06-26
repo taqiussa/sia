@@ -155,6 +155,8 @@ Route::middleware('auth')->group(function () {
     // Route Get Data Penilaian Karyawan
     Route::controller(GetDataPenilaianKaryawanController::class)->group(function () {
         Route::post('get-absensi-sosial', 'get_absensi_sosial')->name('get-absensi-sosial');
+        Route::post('get-absensi-sosials', 'get_absensi_sosials')->name('get-absensi-sosials');
+        Route::post('get-list-sosial', 'get_list_sosial')->name('get-list-sosial');
     });
 
     // Route Get Data Siswa

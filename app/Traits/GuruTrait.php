@@ -16,4 +16,15 @@ trait GuruTrait
             ->orderBy('name')
             ->get();
     }
+
+    public function data_absensi_sosials()
+    {
+        return User::role(request('role'))
+            ->whereJenisKelamin(request('jenisKelamin'))
+            ->with([
+                'sosial_details' => fn ($q) => $q->whereTahun(request('tahun'))
+            ])
+            ->orderBy('name')
+            ->get();
+    }
 }

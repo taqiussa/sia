@@ -28,6 +28,20 @@ export function arrayKehadiranKaryawan() {
     return kehadiran
 }
 
+export function arrayKategoriRole() {
+    const listKategori = [
+        {
+            id: 'Guru',
+            nama: 'Guru'
+        },
+        {
+            id: 'Karyawan',
+            nama: 'Karyawan'
+        }
+    ]
+    return listKategori
+}
+
 export function gunabayar(id) {
     switch (id) {
         case '1':
@@ -107,6 +121,19 @@ export function namaHari(hari) {
             return 'Sabtu';
         default:
             return '';
+    }
+}
+
+export function namaKehadiran(id) {
+    switch (id) {
+        case 1:
+            return 'Hadir'
+        case 2:
+            return 'Izin'
+        case 3:
+            return 'Alpha'
+        default:
+            return ''
     }
 }
 

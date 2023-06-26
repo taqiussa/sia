@@ -6,7 +6,7 @@ import Kehadiran from '@/Components/Sia/Kehadiran'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
-import { arrayKehadiranKaryawan } from '@/Functions/functions'
+import { arrayKategoriRole, arrayKehadiranKaryawan } from '@/Functions/functions'
 import getAbsensiSosial from '@/Functions/getAbsensiSosial'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
@@ -31,17 +31,6 @@ const InputSosial = ({ initTahun, initSemester }) => {
     const [listUser, setListUser] = useState([])
     const [message, setMessage] = useState([])
     const [show, setShow] = useState(false)
-
-    const listKategori = [
-        {
-            id: 'Guru',
-            nama: 'Guru'
-        },
-        {
-            id: 'Karyawan',
-            nama: 'Karyawan'
-        }
-    ]
 
     async function getDataAbsensiSosial() {
         const response = await getAbsensiSosial(data.tanggal, data.role, data.jenisKelamin)
@@ -174,6 +163,14 @@ const InputSosial = ({ initTahun, initSemester }) => {
                     handleChange={onHandleChange}
                 />
 
+                <Kategori
+                    name='role'
+                    value={data.role}
+                    message={errors.role}
+                    handleChange={onHandleChange}
+                    listKategori={arrayKategoriRole()}
+                />
+
                 <JenisKelamin
                     name='jenisKelamin'
                     value={data.jenisKelamin}
@@ -181,13 +178,6 @@ const InputSosial = ({ initTahun, initSemester }) => {
                     handleChange={onHandleChange}
                 />
 
-                <Kategori
-                    name='role'
-                    value={data.role}
-                    message={errors.role}
-                    handleChange={onHandleChange}
-                    listKategori={listKategori}
-                />
 
                 <div className="col-span-4">
                     <InputArea

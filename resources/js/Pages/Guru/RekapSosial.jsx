@@ -104,7 +104,7 @@ const RekapSosial = ({ initTahun }) => {
                                         <td key={index} className="py-2 px-2 font-medium text-slate-600">
                                             {user.sosial_details
                                                 .filter(detail => detail.sosial_id == sosial.id)
-                                                .map(detail => namaKehadiran(detail.kehadiran_id))}
+                                                .map(detail => detail.kehadiran_id)}
                                         </td>
                                     ))
                                 }

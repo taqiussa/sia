@@ -23,13 +23,14 @@ class ImportNilaiProyek implements ToCollection, WithHeadingRow, SkipsEmptyRows,
     {
         foreach ($collection as $row) {
             PenilaianProyek::updateOrCreate(
-                ['id' => $row['id'] ?? null],
                 [
                     'tahun' => $row['tahun'],
                     'kelas_id' => $row['kelas_id'],
                     'proyek_id' => $row['proyek_id'],
                     'dimensi_id' => $row['dimensi_id'],
                     'nis' => $row['nis'],
+                ],
+                [
                     'nilai' => $row['nilai'] ?? null,
                 ]
             );

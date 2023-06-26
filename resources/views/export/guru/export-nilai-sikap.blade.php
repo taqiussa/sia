@@ -1,7 +1,6 @@
 <table>
     <thead>
         <tr>
-            <td>id</td>
             <td>tahun</td>
             <td>semester</td>
             <td>mata_pelajaran_id</td>
@@ -20,7 +19,6 @@
         @foreach ($listSiswa as $siswa)
             @foreach ($listJenis as $jenis)
                 <tr>
-                    <td>{{ $siswa->penilaianSikap->id ?? null }}</td>
                     <td>{{ $tahun }}</td>
                     <td>{{ $semester }}</td>
                     <td>{{ $mataPelajaranId }}</td>

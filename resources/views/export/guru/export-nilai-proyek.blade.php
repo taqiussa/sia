@@ -1,7 +1,6 @@
 <table>
     <thead>
         <tr>
-            <td>id</td>
             <td>tahun</td>
             <td>proyek_id</td>
             <td>dimensi_id</td>
@@ -17,7 +16,6 @@
         @foreach ($listSiswa as $siswa)
             @foreach ($listDimensi as $dimensi)
                 <tr>
-                    <td>{{ $siswa->penilaianProyeks->where('dimensi_id', $dimensi->dimensi_id)->first()->id ?? null }}</td>
                     <td>{{ $tahun }}</td>
                     <td>{{ $proyekId }}</td>
                     <td>{{ $dimensi->dimensi_id }}</td>

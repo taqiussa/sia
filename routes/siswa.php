@@ -10,7 +10,7 @@ use App\Http\Controllers\AlquranBinnadzorController;
 
 // Group Siswa
 Route::middleware([
-    'auth', 'role:Kurikulum'
+    'auth', 'role:Siswa'
 ])->group(function () {
     // Sidebar Siswa
 

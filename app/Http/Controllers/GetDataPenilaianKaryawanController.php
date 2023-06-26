@@ -31,7 +31,7 @@ class GetDataPenilaianKaryawanController extends Controller
         return response()->json([
             'listUser' => PenilaianGuru::whereTahun(request('tahun'))
                 ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                ->whereJenisPenilaianId(request('jeniPenilaianId'))
+                ->whereJenisPenilaianId(request('jenisPenilaianId'))
                 ->whereTimId(auth()->user()->id)
                 ->with('user')
                 ->get()

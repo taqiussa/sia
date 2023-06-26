@@ -462,3 +462,4 @@ require __DIR__ . '/data.php';
 require __DIR__ . '/ketenagaan.php';
 require __DIR__ . '/kurikulum.php';
 require __DIR__ . '/siswa.php';
+require __DIR__ . '/tim.php';

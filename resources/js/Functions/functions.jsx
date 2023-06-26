@@ -19,6 +19,15 @@ export function arrayGunabayar() {
     return bulan
 }
 
+export function arrayKehadiranKaryawan() {
+    const kehadiran = [
+        { id: 1, nama: 'Hadir' },
+        { id: 2, nama: 'Izin' },
+        { id: 3, nama: 'Alpha' },
+    ]
+    return kehadiran
+}
+
 export function gunabayar(id) {
     switch (id) {
         case '1':

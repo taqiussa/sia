@@ -14,6 +14,7 @@ use App\Http\Controllers\GetDataBendaharaController;
 use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\GetDataAbsensiKaryawanController;
+use App\Http\Controllers\GetDataPenilaianKaryawanController;
 use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
 
 // Group Data
@@ -149,6 +150,11 @@ Route::middleware('auth')->group(function () {
         Route::post('get-siswa-with-nilai-alquran', 'get_siswa_with_nilai_alquran')->name('get-siswa-with-nilai-alquran');
         Route::post('get-siswa-with-nilai-proyek', 'get_siswa_with_nilai_proyek')->name('get-siswa-with-nilai-proyek');
         Route::post('get-siswa-with-nilai-sikap', 'get_siswa_with_nilai_sikap')->name('get-siswa-with-nilai-sikap');
+    });
+
+    // Route Get Data Penilaian Karyawan
+    Route::controller(GetDataPenilaianKaryawanController::class)->group(function () {
+        Route::post('get-absensi-sosial', 'get_absensi_sosial')->name('get-absensi-sosial');
     });
 
     // Route Get Data Siswa

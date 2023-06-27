@@ -6,6 +6,7 @@ use App\Http\Controllers\AturPulangAwalController;
 use App\Http\Controllers\RekapJamKosongController;
 use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\PermintaanBadalController;
+use App\Http\Controllers\RekapHarianAbsensiKaryawanController;
 
 // Group Ketenagaan
 Route::middleware([
@@ -35,6 +36,12 @@ Route::middleware([
     Route::controller(PermintaanBadalController::class)->group(function () {
         Route::get('permintaan-badal', 'index')->name('permintaan-badal');
         Route::post('permintaan-badal', 'simpan')->name('permintaan-badal.simpan');
+    });
+
+    // Route Rekap Harian Absensi Karyawan
+    Route::controller(RekapHarianAbsensiKaryawanController::class)->group(function () {
+        Route::get('rekap-harian-absensi-karyawan', 'index')->name('rekap-harian-absensi-karyawan');
+        Route::delete('rekap-harian-absensi-karyawan', 'hapus')->name('rekap-harian-absensi-karyawan.hapus');
     });
 
     // Route Rekap Jam Kosong

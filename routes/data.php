@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(GetDataAbsensiKaryawanController::class)->group(function () {
         Route::post('get-list-aturan-pulang-awal', 'get_list_aturan_pulang_awal')->name('get-list-aturan-pulang-awal');
         Route::post('get-rekap-absensi-karyawan', 'get_rekap_absensi_karyawan')->name('get-rekap-absensi-karyawan');
+        Route::post('get-absensi-harian-karyawan', 'get_absensi_harian_karyawan')->name('get-absensi-harian-karyawan');
     });
 
     // Route Get Data Bendahara

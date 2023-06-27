@@ -24,4 +24,15 @@ class GetDataAbsensiKaryawanController extends Controller
                 ->get()
         ]);
     }
+
+    public function get_absensi_harian_karyawan()
+    {
+        return response()->json([
+            'listAbsensi' => AbsensiKaryawan::whereTanggal('tanggal', request('tanggal'))
+                ->with([
+                    'user'
+                ])
+                ->get()
+        ]);
+    }
 }

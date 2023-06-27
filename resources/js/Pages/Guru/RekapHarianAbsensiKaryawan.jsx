@@ -1,3 +1,4 @@
+import InputText from '@/Components/Sia/InputText'
 import Tanggal from '@/Components/Sia/Tanggal'
 import getAbsensiHarianKaryawan from '@/Functions/getAbsensiHarianKaryawan'
 import AppLayout from '@/Layouts/AppLayout'
@@ -9,10 +10,20 @@ import { trackPromise } from 'react-promise-tracker'
 const RekapHarianAbsensiKaryawan = () => {
 
     const { data, setData } = useForm({
-        tanggal: moment(new Date()).format('YYYY-MM-DD')
+        tanggal: moment(new Date()).format('YYYY-MM-DD'),
+        search: ''
     })
 
     const [listAbsensi, setListAbsensi] = useState([])
+
+    const filteredData = listAbsensi?.filter((list) => {
+        const searchTerm = data.search.toLowerCase();
+        const user = list.user?.name?.toLowerCase();
+
+        return (
+            (user && user.includes(searchTerm))// Filter by name
+        );
+    });
 
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
@@ -35,9 +46,19 @@ const RekapHarianAbsensiKaryawan = () => {
             <div className='lg:grid lg:grid-cols-3 lg:gap-2 lg:space-y-0 py-2'>
                 <Tanggal
                     name='tanggal'
+                    label='tanggal'
                     value={data.tanggal}
                     handleChange={onHandleChange}
                 />
+
+                <InputText
+                    id='search'
+                    name='search'
+                    value={data.search}
+                    label='search'
+                    handleChange={onHandleChange}
+                />
+
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-slate-600">
@@ -58,7 +79,7 @@ const RekapHarianAbsensiKaryawan = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listAbsensi && listAbsensi
+                        {listAbsensi && filteredData
                             .map((absensi, index) => (
                                 <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                     <td className="py-2 px-2 font-medium text-slate-600">

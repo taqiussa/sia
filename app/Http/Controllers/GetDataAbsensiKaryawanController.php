@@ -33,6 +33,8 @@ class GetDataAbsensiKaryawanController extends Controller
                     'user'
                 ])
                 ->get()
+                ->sortBy('user.name')
+                ->values()
         ]);
     }
 }

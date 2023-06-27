@@ -145,7 +145,7 @@ const InputSosial = ({ initTahun, initSemester }) => {
         <>
             <Head title='Input Sosial' />
             <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">input sosial</div>
-            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 pb-2'>
                 <Tahun
                     id='tahun'
                     name='tahun'

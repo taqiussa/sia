@@ -13,7 +13,9 @@ use App\Models\SiswaEkstra;
 use App\Models\JenisAlquran;
 use App\Models\RemidiDetail;
 use App\Models\JenisPenilaian;
+use App\Models\JenisSikap;
 use App\Models\KurikulumMapel;
+use App\Models\PenilaianSikap;
 
 class GetDataPenilaianController extends Controller
 {
@@ -44,6 +46,25 @@ class GetDataPenilaianController extends Controller
                 ])
                 ->get(),
             'listPenilaian' => Penilaian::whereTahun(request('tahun'))
+                ->whereSemester(request('semester'))
+                ->whereKelasId(request('kelasId'))
+                ->get(),
+        ]);
+    }
+
+    public function get_penilaian_sikap_per_kelas()
+    {
+        $tingkat = Kelas::find(request('kelasId'))?->tingkat;
+        return response()->json([
+            'listJenis' => JenisSikap::whereKategoriSikapId(3)
+                ->get(),
+            'listMapel' => KurikulumMapel::whereTahun(request('tahun'))
+                ->whereTingkat($tingkat)
+                ->with([
+                    'mapel' => fn ($q) => $q->select('id', 'nama'),
+                ])
+                ->get(),
+            'listPenilaian' => PenilaianSikap::whereTahun(request('tahun'))
                 ->whereSemester(request('semester'))
                 ->whereKelasId(request('kelasId'))
                 ->get(),

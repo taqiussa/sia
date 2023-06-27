@@ -8,6 +8,7 @@ use App\Http\Controllers\AturNamaDimensiController;
 use App\Http\Controllers\AturNamaSubElemenController;
 use App\Http\Controllers\CekPenilaianKelasController;
 use App\Http\Controllers\AturPenilaianProyekController;
+use App\Http\Controllers\CekPenilaianSikapController;
 
 // Group Kurikulum
 Route::middleware([
@@ -54,4 +55,7 @@ Route::middleware([
 
     // Route Cek Penilaian
     Route::get('cek-penilaian-kelas', CekPenilaianKelasController::class)->name('cek-penilaian-kelas');
+    
+    // Route Cek Penilaian Sikap
+    Route::get('cek-penilaian-sikap', CekPenilaianSikapController::class)->name('cek-penilaian-sikap');
 });

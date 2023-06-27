@@ -2,12 +2,13 @@ import Kelas from '@/Components/Sia/Kelas'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
 import getPenilaianPerKelas from '@/Functions/getPenilaianPerKelas'
+import getPenilaianSikapPerKelas from '@/Functions/getPenilaianSikapPerKelas'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const CekPenilaianKelas = ({ initTahun, initSemester, listKelas }) => {
+const CekPenilaianSikap = ({ initTahun, initSemester, listKelas }) => {
 
     const { data, setData } = useForm({
         tahun: initTahun,
@@ -23,7 +24,7 @@ const CekPenilaianKelas = ({ initTahun, initSemester, listKelas }) => {
     }
 
     async function getDataPenilaian() {
-        const res = await getPenilaianPerKelas(data.tahun, data.semester, data.kelasId)
+        const res = await getPenilaianSikapPerKelas(data.tahun, data.semester, data.kelasId)
         setData({
             ...data,
             listJenis: res.listJenis,
@@ -94,7 +95,7 @@ const CekPenilaianKelas = ({ initTahun, initSemester, listKelas }) => {
                                     data.listJenis && data.listJenis.map(jenis => (
                                         <td className="py-2 px-2 font-medium text-slate-600" key={jenis.id}>
                                             {
-                                                data.listPenilaian && data.listPenilaian.filter(nilai => nilai.mata_pelajaran_id == mapel.mata_pelajaran_id && nilai.jenis_penilaian_id == jenis.id).length
+                                                data.listPenilaian && data.listPenilaian.filter(nilai => nilai.mata_pelajaran_id == mapel.mata_pelajaran_id && nilai.jenis_sikap_id == jenis.id).length
                                             }
                                         </td>
                                     ))
@@ -108,5 +109,5 @@ const CekPenilaianKelas = ({ initTahun, initSemester, listKelas }) => {
     )
 }
 
-CekPenilaianKelas.layout = page => <AppLayout children={page} />
-export default CekPenilaianKelas
+CekPenilaianSikap.layout = page => <AppLayout children={page} />
+export default CekPenilaianSikap

@@ -9,6 +9,7 @@ const SidebarTataUsaha = ({ closeSide }) => {
             </div>
             <div>
                 <SidebarLink closeSide={closeSide} href={route('download-qr-code')} active={route().current('download-qr-code')} label='download qr code' />
+                <SidebarLink closeSide={closeSide} href={route('print-nilai-alquran-tata-usaha')} active={route().current('print-nilai-alquran-tata-usaha')} label="print nilai al qur'an" />
             </div>
         </div>
     )

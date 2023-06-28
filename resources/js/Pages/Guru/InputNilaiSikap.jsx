@@ -240,7 +240,7 @@ const InputNilaiSikap = ({ initTahun, initSemester, listMapel, listKategori, lis
                                             name='penilaianSikap'
                                             className='w-auto max-w-[60px]'
                                             value={siswa.penilaian_sikap.nilai ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, siswa.penilaian_sikap.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
+                                            handleChange={(e) => handleDynamic(e, index, siswa.penilaian_sikap?.id, siswa.nis, siswa.user.name, siswa.kelas_id)}
                                         />
 
                                         {data.arrayInput.length > 0 && data.arrayInput[index]?.penilaian_sikap.nilai > 100 && (

@@ -58,6 +58,7 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
+use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -335,6 +336,9 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-nilai-alquran/binnadzor-horizontal', 'binnadzor_horizontal')->name('print-nilai-alquran.binnadzor-horizontal');
         Route::get('print-nilai-alquran/binnadzor-per-siswa', 'binnadzor_per_siswa')->name('print-nilai-alquran.binnadzor-per-siswa');
     });
+
+    // Route Print Nilai Al Qur'an Tata Usaha
+    Route::get('print-nilai-alquran-tata-usaha', PrintNilaiAlquranTataUsahController::class)->name('print-nilai-alquran-tata-usaha');
 
     // Route Print Nilai Ekstrakurikuler
     Route::controller(PrintNilaiEkstrakurikulerController::class)->group(function () {

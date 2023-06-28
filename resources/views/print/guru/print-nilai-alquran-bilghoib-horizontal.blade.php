@@ -18,6 +18,7 @@
         <thead>
             <tr class="capitalize">
                 <th class="border border-collapse border-black w-[2%]">no</th>
+                <th class="border border-collapse border-black">nis</th>
                 <th class="border border-collapse border-black">nama</th>
                 @foreach ($listJenis as $jenis)
                     <th
@@ -33,6 +34,7 @@
             @foreach ($listSiswa as $siswa)
                 <tr>
                     <td class="text-center border border-collapse border-black">{{ $loop->iteration }}</td>
+                    <td class="pl-2 border border-collapse border-black whitespace-nowrap">{{ $siswa->user->nis }}</td>
                     <td class="pl-2 border border-collapse border-black whitespace-nowrap">{{ $siswa->user->name }}</td>
                     @foreach ($listJenis as $jenis)
                         <td class="text-center border border-collapse border-black uppercase">

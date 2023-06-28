@@ -72,7 +72,7 @@ export default function Sidebar({ open, closeSide, auth }) {
                                 <SidebarKesiswaan closeSide={closeSide} />
                             }
 
-                            {auth.roles.includes('Ketenagaan') &&
+                            {auth.roles.includes('Ketenagaan') && auth.user.name != 'ketenagaan' &&
                                 <SidebarKetenagaan closeSide={closeSide} />
                             }
 

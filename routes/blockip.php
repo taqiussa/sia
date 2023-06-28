@@ -14,7 +14,7 @@ Route::middleware(['auth', 'blockip'])->group(function () {
 });
 
 // Route Absensi Karyawan
-Route::middleware(['blockip'])->group(function () {
+Route::middleware(['blockip', 'role:Ketenagaan'])->group(function () {
 
     Route::controller(AbsensiKetenagaanController::class)->group(function () {
         Route::get('absensi-ketenagaan', 'index')->name('absensi-ketenagaan');

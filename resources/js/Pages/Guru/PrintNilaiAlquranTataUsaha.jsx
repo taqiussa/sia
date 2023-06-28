@@ -30,15 +30,6 @@ const PrintNilaiAlquranTataUsaha = ({ initTahun, listKelas }) => {
     }
 
     useEffect(() => {
-        if (data.tahun) {
-            trackPromise(
-                getDataKelas()
-            )
-        }
-
-    }, [data.tahun])
-
-    useEffect(() => {
         if (data.tahun && data.kelasId) {
             trackPromise(
                 getDataSiswa()

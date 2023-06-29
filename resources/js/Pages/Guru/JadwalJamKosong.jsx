@@ -6,7 +6,6 @@ import Jam from '@/Components/Sia/Jam'
 import Semester from '@/Components/Sia/Semester'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
-import { namaHari } from '@/Functions/functions'
 import getListJadwalJamKosong from '@/Functions/getListJadwalJamKosong'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
@@ -170,7 +169,7 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
                                     {jadwal.semester}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {namaHari(jadwal.hari)}
+                                    {jadwal.hari}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {jadwal.jam}

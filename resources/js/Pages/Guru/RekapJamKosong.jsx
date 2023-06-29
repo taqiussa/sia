@@ -2,10 +2,9 @@ import Hari from '@/Components/Sia/Hari'
 import Jam from '@/Components/Sia/Jam'
 import Semester from '@/Components/Sia/Semester'
 import Tahun from '@/Components/Sia/Tahun'
-import { namaHari } from '@/Functions/functions'
 import getRekapJamKosong from '@/Functions/getRekapJamKosong'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -99,7 +98,7 @@ const RekapJamKosong = ({ initTahun, initSemester }) => {
                                     {kosong.user?.name}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {namaHari(kosong.hari)}
+                                    {kosong.hari}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {kosong.jam}

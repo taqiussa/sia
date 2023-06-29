@@ -13,7 +13,7 @@ import Hari from '@/Components/Sia/Hari'
 import PrimaryButton from '@/Components/PrimaryButton'
 import JamTime from '@/Components/Sia/JamTime'
 import Hapus from '@/Components/Sia/Hapus'
-import { jamTime, namaHari } from '@/Functions/functions'
+import { jamTime } from '@/Functions/functions'
 
 const AturKhususPulang = ({ initTahun, listUser }) => {
 
@@ -147,12 +147,12 @@ const AturKhususPulang = ({ initTahun, listUser }) => {
                                     {aturan.user?.name}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {namaHari(aturan.hari)}
+                                    {aturan.hari}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {jamTime(aturan.jam)}
                                 </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">``
+                                <td className="py-2 px-2 font-medium text-slate-600">
                                     <Hapus onClick={() => handleDelete(aturan.id)} />
                                 </td>
                             </tr>

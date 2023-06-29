@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AturKhususPulangController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListBadalController;
 use App\Http\Controllers\AturPulangAwalController;
@@ -12,6 +13,13 @@ use App\Http\Controllers\RekapHarianAbsensiKaryawanController;
 Route::middleware([
     'auth', 'role:Ketenagaan'
 ])->group(function () {
+
+    // Route Atur Khusus Pulang
+    Route::controller(AturKhususPulangController::class)->group(function() {
+        Route::get('atur-khusus-pulang', 'index')->name('atur-khusus-pulang');
+        Route::post('atur-khusus-pulang', 'simpan')->name('atur-khusus-pulang.simpan');
+        Route::delete('atur-khusus-pulang', 'hapus')->name('atur-khusus-pulang.hapus');
+    });
 
     // Route Atur Pulang Awal
     Route::controller(AturPulangAwalController::class)->group(function () {

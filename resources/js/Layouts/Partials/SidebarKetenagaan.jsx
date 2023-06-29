@@ -8,6 +8,7 @@ const SidebarKetenagaan = ({ closeSide }) => {
                 Ketenagaan
             </div>
             <div>
+                <SidebarLink closeSide={closeSide} href={route('atur-khusus-pulang')} active={route().current('atur-khusus-pulang')} label='atur khusus pulang' />
                 <SidebarLink closeSide={closeSide} href={route('atur-pulang-awal')} active={route().current('atur-pulang-awal')} label='atur pulang awal' />
                 <SidebarLink closeSide={closeSide} href={route('jadwal-jam-kosong')} active={route().current('jadwal-jam-kosong')} label='jadwal jam kosong' />
                 <SidebarLink closeSide={closeSide} href={route('list-badal')} active={route().current('list-badal')} label='list badal' />

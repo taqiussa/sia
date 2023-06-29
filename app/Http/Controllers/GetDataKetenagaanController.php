@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AturanKhususPulang;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Badalan;
@@ -11,6 +12,17 @@ use App\Traits\InitTrait;
 class GetDataKetenagaanController extends Controller
 {
     use InitTrait;
+
+    public function get_aturan_khusus_pulang()
+    {
+        return response()->json([
+            'listAturan' => AturanKhususPulang::whereTahun(request('tahun'))
+                ->with('user')
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
 
     public function get_permintaan_badal()
     {

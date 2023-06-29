@@ -183,7 +183,7 @@ const AturPulangAwal = ({ initTahun }) => {
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     {aturan.masuk ? jamTime(aturan.pulang) : null}
                                 </td>
-                                <td className="py-2 px-2 font-medium text-slate-600">``
+                                <td className="py-2 px-2 font-medium text-slate-600">
                                     <Hapus onClick={() => handleDelete(aturan.id)} />
                                 </td>
                             </tr>

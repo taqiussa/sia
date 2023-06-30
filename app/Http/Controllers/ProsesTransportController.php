@@ -16,26 +16,28 @@ class ProsesTransportController extends Controller
 {
     use InitTrait;
 
+    public $transport = 0;
+
     public function index()
     {
         return inertia('Guru/ProsesTransport', [
             'initTahun' => $this->data_tahun(),
-            'listUser' => User::whereNotNull('username')
-                ->whereIsActive(true)
-                ->orderBy('name')
-                ->get()
+            // 'listUser' => User::whereNotNull('username')
+            //     ->whereIsActive(true)
+            //     ->orderBy('name')
+            //     ->get()
         ]);
     }
 
     public function simpan()
     {
-
         request()->validate([
             'tahun' => 'required',
             'bulan' => 'required',
             'tanggalAwal' => 'required',
             'tanggalAkhir' => 'required',
-            'userId' => 'required'
+            // 'userId' => 'required',
+            'pilihan' => 'required'
         ]);
 
         AturanTransport::updateOrCreate(
@@ -49,146 +51,178 @@ class ProsesTransportController extends Controller
             ]
         );
 
-        $listAbsensi = AbsensiKaryawan::whereUserId(request('userId'))
-            ->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
-            ->get();
-
-
-        $listUserKhusus = AturanKhususPulang::whereTahun(request('tahun'))
-            ->whereUserId(request('userId'))
-            ->get();
-
-        $aturanPulangAwal = AturanPulangAwal::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
-            ->get();
-
-
-        if (!blank(($listUserKhusus))) {
-
-            foreach ($listAbsensi as $absensi) {
-
-                $transport = 1;
-
-                $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
-
-                $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
-
-
-                $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
-
-                $masuk = Carbon::parse($absensi->masuk);
-
-                $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
-
-                $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
-
-                $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
-
-                $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
-
-                $hariTanggalIni = Carbon::parse($listAbsensi->where('tanggal', $absensi->tanggal)->first()->tanggal)->dayOfWeek;
-
-                if (in_array($hariTanggalIni, $listUserKhusus->pluck('hari')->toArray())) {
-
-                    $jamPulangKhusus = Carbon::parse($absensi->tanggal .  $listUserKhusus->first()->jam);
-
-                    if ($masuk->greaterThan($jamMasuk) || (!$jamPulangAwal && $pulang->lessThan($jamPulangKhusus)) || ($jamPulangAwal && $pulang->lessThan($aturanPulang))) {
-                        $transport = 0;
-                    }
-                } else {
-                    if ($isJumat) {
-                        if ($masuk->greaterThan($jamMasuk) || $pulang->lessThan($jamPulangJumat) || ($jamPulangAwal && $pulang->lessThan($aturanPulang))) {
-                            $transport = 0;
-                        }
-                    } else {
-                        if ($masuk->greaterThan($jamMasuk) || $pulang->lessThan($jamPulang) || ($jamPulangAwal && $pulang->lessThan($aturanPulang))) {
-                            $transport = 0;
-                        }
-                    }
-                }
-
-
-                RekapTransport::updateOrCreate(
-                    [
-                        'tanggal' => $absensi->tanggal,
-                    ],
-                    [
-                        'user_id' => request('userId'),
-                        'tahun' => request('tahun'),
-                        'bulan' => request('bulan'),
-                        'hadir' => 1,
-                        'transport' => $transport
-                    ]
-                );
-            }
+        if (request('pilihan') == 'Satpam') {
+            $listUser = User::role('Satpam')
+                ->get();
         } else {
-            foreach ($listAbsensi as $absensi) {
+            $listUser = User::role(['Tata Usaha', 'Guru', 'Kepala Sekolah', 'Bendahara'])
+                ->get();
+        }
 
-                $transport = 1;
+        set_time_limit(0);
 
-                $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
+        foreach ($listUser as $user) {
 
-                $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
+            $listAbsensi = AbsensiKaryawan::whereUserId($user->id)
+                ->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+                ->get();
 
-                $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
+            $listUserKhusus = AturanKhususPulang::whereTahun(request('tahun'))
+                ->whereUserId($user->id)
+                ->get();
 
-                $masuk = Carbon::parse($absensi->masuk);
+            $aturanPulangAwal = AturanPulangAwal::whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+                ->get();
 
-                $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
+            if (!blank(($listUserKhusus))) {
 
-                $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
+                foreach ($listAbsensi as $absensi) {
 
-                $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
-
-                $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
-
-                if ($isJumat) {
-                    if ($jamPulangAwal && ($pulang->lessThan($aturanPulang) || $masuk->greaterThan($jamMasuk))) {
-                        $transport = 0;
-                    } else if ($masuk->greaterThan($jamMasuk) || $pulang->lessThan($jamPulangJumat)) {
-                        $transport = 0;
+                    if (request('pilihan') == 'Satpam') {
+                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 6:15:59');
                     } else {
-                        $transport = 1;
+                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
                     }
-                } else {
-                    if ($jamPulangAwal && ($pulang->lessThan($aturanPulang) || $masuk->greaterThan($jamMasuk))) {
-                        $transport = 0;
-                    } else if ($masuk->greaterThan($jamMasuk) || $pulang->lessThan($jamPulang)) {
-                        $transport = 0;
+
+                    if (request('pilihan') == 'Satpam') {
+                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:30:00');
                     } else {
-                        $transport = 1;
+
+                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
                     }
+
+                    $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
+
+                    $masuk = Carbon::parse($absensi->masuk);
+
+                    $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
+
+                    $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
+
+                    $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
+
+                    $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
+
+                    $hariTanggalIni = Carbon::parse($listAbsensi->where('tanggal', $absensi->tanggal)->first()->tanggal)->dayOfWeek;
+
+                    if (in_array($hariTanggalIni, $listUserKhusus->pluck('hari')->toArray())) {
+
+                        $jamPulangKhusus = Carbon::parse($absensi->tanggal .  $listUserKhusus->first()->jam);
+
+                        if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
+                            $this->transport = 0;
+                        } else {
+                            if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                                $this->transport = 0;
+                            } elseif ($pulang->lessThan($jamPulangKhusus)) {
+                                $this->transport = 0;
+                            } else {
+                                $this->transport = 1;
+                            }
+                        }
+                    } else {
+                        if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
+                            $this->transport = 0;
+                        } else {
+                            if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                                $this->transport = 0;
+                            } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
+                                $this->transport = 0;
+                            } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                                $this->transport = 0;
+                            } else if ($pulang->lessThan($jamPulang)) {
+                                $this->transport = 0;
+                            } else {
+                                $this->transport = 1;
+                            }
+                        }
+                    }
+
+                    RekapTransport::updateOrCreate(
+                        [
+                            'tanggal' => $absensi->tanggal,
+                            'user_id' => $user->id,
+                        ],
+                        [
+                            'tahun' => request('tahun'),
+                            'bulan' => request('bulan'),
+                            'hadir' => 1,
+                            'transport' => $this->transport
+                        ]
+                    );
                 }
+            } else {
+                foreach ($listAbsensi as $absensi) {
 
-                RekapTransport::updateOrCreate(
-                    [
-                        'tanggal' => $absensi->tanggal,
-                    ],
-                    [
-                        'user_id' => request('userId'),
-                        'tahun' => request('tahun'),
-                        'bulan' => request('bulan'),
-                        'hadir' => 1,
-                        'transport' => $transport
-                    ]
-                );
+                    if (request('pilihan') == 'Satpam') {
+                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 6:15:59');
+                    } else {
+                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
+                    }
+
+                    if (request('pilihan') == 'Satpam') {
+                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:30:00');
+                    } else {
+
+                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
+                    }
+
+                    $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
+
+                    $masuk = Carbon::parse($absensi->masuk);
+
+                    $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
+
+                    $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
+
+                    $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
+
+                    $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
+
+                    if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
+                        $this->transport = 0;
+                    } else {
+                        if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
+                            $this->transport = 0;
+                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if ($pulang->lessThan($jamPulang)) {
+                            $this->transport = 0;
+                        } else {
+                            $this->transport = 1;
+                        }
+                    }
+                    RekapTransport::updateOrCreate(
+                        [
+                            'tanggal' => $absensi->tanggal,
+                            'user_id' => $user->id,
+                        ],
+                        [
+                            'tahun' => request('tahun'),
+                            'bulan' => request('bulan'),
+                            'hadir' => 1,
+                            'transport' => $this->transport
+                        ]
+                    );
+                }
+            }
+
+            $listUserSpesial = AturanPulangSpesial::whereUserId($user->id)
+                ->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
+                ->get();
+
+            if (!blank($listUserSpesial)) {
+                foreach ($listUserSpesial as $spesial) {
+                    RekapTransport::whereTanggal($spesial->tanggal)
+                        ->whereUserId($user->id)
+                        ->update([
+                            'transport' => 1
+                        ]);
+                }
             }
         }
-
-        $listUserSpesial = AturanPulangSpesial::whereUserId(request('userId'))
-            ->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
-            ->get();
-
-        if (!blank($listUserSpesial)) {
-            foreach ($listUserSpesial as $spesial) {
-                RekapTransport::whereTanggal($spesial->tanggal)
-                    ->whereUserId(request('userId'))
-                    ->update([
-                        'transport' => 1
-                    ]);
-            }
-        }
-
-
 
         return to_route('proses-transport');
     }

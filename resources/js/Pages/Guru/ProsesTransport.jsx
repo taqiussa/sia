@@ -8,10 +8,11 @@ import moment from 'moment'
 import React from 'react'
 import { toast } from 'react-toastify'
 
-const ProsesTransport = ({ initTahun, listUser }) => {
+const ProsesTransport = ({ initTahun }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
+        pilihan: 'Guru',
         bulan: moment(new Date()).format('MM'),
         tanggalAwal: moment(new Date()).format('YYYY-MM-DD'),
         tanggalAkhir: moment(new Date()).format('YYYY-MM-DD')
@@ -21,15 +22,14 @@ const ProsesTransport = ({ initTahun, listUser }) => {
         setData(e.target.name, e.target.value)
     }
 
-    const submit = (e, id) => {
+    const submit = (e) => {
         e.preventDefault()
 
-        post(route('proses-transport.simpan', { userId: id }),
+        post(route('proses-transport.simpan'),
             {
                 onSuccess: () => {
                     toast.success('Berhasil Simpan')
                 },
-                preserveScroll:true
             })
     }
 
@@ -67,9 +67,33 @@ const ProsesTransport = ({ initTahun, listUser }) => {
                     message={errors.tanggalAkhir}
                     handleChange={onHandleChange}
                 />
-            </div>
 
-            <div className="overflow-x-auto pt-2">
+                <div className='flex flex-col text-slate-600'>
+                    <div>
+                        Pilihan
+                    </div>
+                    <div>
+
+                        <select
+                            name='pilihan'
+                            value={data.pilihan}
+                            className='border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm w-full text-slate-600'
+                            onChange={onHandleChange}
+                        >
+
+                            <option value="">Pilih</option>
+                            <option value="Guru">Guru</option>
+                            <option value="Satpam">Satpam</option>
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div className="py-3">
+                <PrimaryButton children='proses' disabled={processing} onClick={submit} />
+            </div>
+            {/* <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
@@ -100,7 +124,7 @@ const ProsesTransport = ({ initTahun, listUser }) => {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
         </>
     )
 }

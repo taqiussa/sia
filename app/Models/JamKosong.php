@@ -12,9 +12,9 @@ class JamKosong extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected $casts = [
-        'hari' => EnumHari::class
-    ];
+    // protected $casts = [
+    //     'hari' => EnumHari::class
+    // ];
 
     /**
      * Get the user that owns the JamKosong

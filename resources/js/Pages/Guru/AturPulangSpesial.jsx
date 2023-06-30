@@ -1,33 +1,34 @@
 import PrimaryButton from '@/Components/PrimaryButton'
 import Guru from '@/Components/Sia/Guru'
 import Hapus from '@/Components/Sia/Hapus'
-import Hari from '@/Components/Sia/Hari'
-import Jam from '@/Components/Sia/Jam'
-import Semester from '@/Components/Sia/Semester'
+import InputArea from '@/Components/Sia/InputArea'
+import JamDateTime from '@/Components/Sia/JamDateTime'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
-import { namaHari } from '@/Functions/functions'
-import getListJadwalJamKosong from '@/Functions/getListJadwalJamKosong'
+import Tanggal from '@/Components/Sia/Tanggal'
+import { hariTanggal, jamDate } from '@/Functions/functions'
+import getListAturanPulangAwal from '@/Functions/getListAturanPulangAwal'
+import getListAturanPulangSpesial from '@/Functions/getListAturanPulangSpesial'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
+import moment from 'moment'
 import React, { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
+const AturPulangSpesial = ({ initTahun, listUser }) => {
 
     const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
-        semester: initSemester,
-        userId: '',
-        hari: '',
-        jam: '',
-        listJadwal: []
+        tanggal: moment(new Date()).format('YYYY-MM-DD'),
+        user_id: '',
+        keterangan: '',
+        listSpesial: []
     })
 
-    async function getDataKosong() {
-        const response = await getListJadwalJamKosong(data.tahun, data.userId)
-        setData({ ...data, listJadwal: response.listJadwal })
+    async function getData() {
+        const res = await getListAturanPulangSpesial(data.tahun)
+        setData({ ...data, listSpesial: res.listSpesial })
     }
 
     const onHandleChange = (e) => {
@@ -38,13 +39,13 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
 
         e.preventDefault()
 
-        post(route('jadwal-jam-kosong.simpan'),
+        post(route('atur-pulang-spesial.simpan'),
 
             {
                 onSuccess: () => {
-                    toast.success('Berhasil Simpan Jam Kosong')
+                    toast.success('Berhasil Simpan Aturan')
                     setData({ ...data })
-                    getDataKosong()
+                    getData()
                 }
             }
         )
@@ -54,7 +55,7 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
 
         Sweet
             .fire({
-                title: 'Menghapus Jadwal Jam Kosong',
+                title: 'Menghapus Aturan',
                 text: 'Anda yakin menghapus ?',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
@@ -63,16 +64,15 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
             .then(result => {
                 if (result.isConfirmed)
                     destroy(
-                        route('jadwal-jam-kosong.hapus', {
+                        route('atur-pulang-spesial.hapus', {
                             id: id,
-                            userId: data.userId
                         }
                         ),
                         {
                             onSuccess: () => {
-                                toast.success('Berhasil Hapus Jadwal Jam Kosong')
+                                toast.success('Berhasil Hapus Aturan')
                                 setData({ ...data })
-                                getDataKosong()
+                                getData()
                             }
                         }
                     )
@@ -82,18 +82,18 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
 
     useEffect(() => {
 
-        if (data.userId)
-            trackPromise(getDataKosong())
+        if (data.tahun)
+            trackPromise(getData())
 
-    }, [data.userId])
+    }, [data.tahun])
 
     return (
         <>
-            <Head title='Jadwal Jam Kosong' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 mb-2 uppercase">
-                jadwal jam kosong
+            <Head title='Atur Pulang Spesial' />
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 mb-2 uppercase">
+                Atur Pulang Spesial
             </div>
-            <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
                     name='tahun'
@@ -102,40 +102,31 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
                     handleChange={onHandleChange}
                 />
 
-                <Semester
-                    id='semester'
-                    name='semester'
-                    value={data.semester}
-                    message={errors.semester}
+                <Tanggal
+                    name='tanggal'
+                    label='tanggal'
+                    value={data.tanggal}
+                    message={errors.tanggal}
                     handleChange={onHandleChange}
                 />
 
                 <Guru
-                    id='userId'
-                    name='userId'
-                    value={data.userId}
-                    message={errors.userId}
+                    name='user_id'
+                    value={data.user_id}
+                    message={errors.user_id}
                     handleChange={onHandleChange}
                     listUser={listUser}
                 />
 
-                <Hari
-                    id='hari'
-                    name='hari'
-                    value={data.hari}
-                    message={errors.hari}
-                    handleChange={onHandleChange}
-                />
-
-                <Jam
-                    id='jam'
-                    name='jam'
-                    value={data.jam}
-                    message={errors.jam}
-                    handleChange={onHandleChange}
-                />
-
             </div>
+
+            <InputArea
+                label='keterangan'
+                name='keterangan'
+                value={data.keterangan}
+                message={errors.keterangan}
+                handleChange={onHandleChange}
+            />
 
             <PrimaryButton onClick={submit} children='simpan' disabled={processing} />
 
@@ -147,13 +138,13 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
                                 No
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Semester
+                                Tahun
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Hari
+                                Tanggal
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Jam
+                                Nama
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
@@ -161,22 +152,22 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listJadwal && data.listJadwal.map((jadwal, index) => (
+                        {data.listSpesial && data.listSpesial.map((aturan, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {index + 1}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {jadwal.semester}
+                                    {aturan.tahun}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {namaHari(jadwal.hari)}
+                                    {hariTanggal(aturan.tanggal)}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {jadwal.jam}
+                                    {aturan.user?.name}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    <Hapus onClick={() => handleDelete(jadwal.id)} />
+                                    <Hapus onClick={() => handleDelete(aturan.id)} />
                                 </td>
                             </tr>
                         ))}
@@ -187,5 +178,5 @@ const JadwalJamKosong = ({ initTahun, initSemester, listUser }) => {
     )
 }
 
-JadwalJamKosong.layout = page => <AppLayout children={page} />
-export default JadwalJamKosong
+AturPulangSpesial.layout = page => <AppLayout children={page} />
+export default AturPulangSpesial

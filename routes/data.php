@@ -135,6 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-guru-izin', 'get_guru_izin')->name('get-guru-izin');
         Route::post('get-guru-kosong', 'get_guru_kosong')->name('get-guru-kosong');
         Route::post('get-guru-sudah-badal', 'get_guru_sudah_badal')->name('get-guru-sudah-badal');
+        Route::post('get-list-aturan-pulang-spesial', 'get_list_aturan_pulang_spesial')->name('get-list-aturan-pulang-spesial');
         Route::post('get-list-jadwal-kosong', 'get_list_jadwal_kosong')->name('get-list-jadwal-kosong');
         Route::post('get-permintaan-badal', 'get_permintaan_badal')->name('get-permintaan-badal');
         Route::post('get-rekap-jam-kosong', 'get_rekap_jam_kosong')->name('get-rekap-jam-kosong');

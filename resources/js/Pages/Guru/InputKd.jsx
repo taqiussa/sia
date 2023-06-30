@@ -183,6 +183,7 @@ const InputKd = ({ initTahun, initSemester, listMapel, listKategori, listJenis, 
                 name='deskripsi'
                 label='deskripsi KD/TP'
                 className='mb-2'
+                message={errors.deskripsi}
                 value={data.deskripsi}
                 handleChange={onHandleChange}
             />

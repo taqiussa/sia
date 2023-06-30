@@ -25,15 +25,21 @@ class InputKdController extends Controller
 
     public function simpan()
     {
-        request()->validate([
-            'tahun' => 'required',
-            'semester' => 'required',
-            'mataPelajaranId' => 'required',
-            'tingkat' => 'required',
-            'kategoriNilaiId' => 'required',
-            'jenisPenilaianId' => 'required',
-            'deskripsi' => 'required|string|min:100|max:120',
-        ]);
+        request()->validate(
+            [
+                'tahun' => 'required',
+                'semester' => 'required',
+                'mataPelajaranId' => 'required',
+                'tingkat' => 'required',
+                'kategoriNilaiId' => 'required',
+                'jenisPenilaianId' => 'required',
+                'deskripsi' => 'required|string|min:100|max:120',
+            ],
+            [
+                'deskripsi.min' => 'minimal 100 karakter (termasuk spasi)',
+                'deskripsi.max' => 'maksimal 120 karakter (termasuk spasi)'
+            ]
+        );
 
         Kd::updateOrCreate(
             [

@@ -1,10 +1,12 @@
 import PrimaryButton from '@/Components/PrimaryButton'
 import Hapus from '@/Components/Sia/Hapus'
+import InputArea from '@/Components/Sia/InputArea'
+import JamDateTime from '@/Components/Sia/JamDateTime'
 import JamTime from '@/Components/Sia/JamTime'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import Tanggal from '@/Components/Sia/Tanggal'
-import { hariTanggal, jamTime } from '@/Functions/functions'
+import { hariTanggal, jamDate, jamTime } from '@/Functions/functions'
 import getListAturanPulangAwal from '@/Functions/getListAturanPulangAwal'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, useForm } from '@inertiajs/react'
@@ -21,6 +23,7 @@ const AturPulangAwal = ({ initTahun }) => {
         hari: '',
         pilihan: 'Pulang',
         jam: '',
+        keterangan: '',
         listAturan: []
     })
 
@@ -88,10 +91,10 @@ const AturPulangAwal = ({ initTahun }) => {
     return (
         <>
             <Head title='Atur Pulang Awal' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 text-center text-lg text-slate-600 mb-2 uppercase">
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 mb-2 uppercase">
                 Atur Pulang Awal
             </div>
-            <div className='lg:grid lg:grid-cols-5 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
                     id='tahun'
                     name='tahun'
@@ -129,7 +132,7 @@ const AturPulangAwal = ({ initTahun }) => {
                     </div>
                 </div>
 
-                <JamTime
+                <JamDateTime
                     id='jam'
                     name='jam'
                     value={data.jam}
@@ -137,8 +140,18 @@ const AturPulangAwal = ({ initTahun }) => {
                     handleChange={onHandleChange}
                 />
 
-            </div>
 
+            </div>
+            <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
+                <div className="col-span-2">
+                    <InputArea
+                        name='keterangan'
+                        label='keterangan'
+                        value={data.keterangan}
+                        handleChange={onHandleChange}
+                    />
+                </div>
+            </div>
             <PrimaryButton onClick={submit} children='simpan' disabled={processing} />
 
             <div className="overflow-x-auto pt-2">
@@ -161,6 +174,9 @@ const AturPulangAwal = ({ initTahun }) => {
                                 Masuk Siang
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
+                                Keterangan
+                            </th>
+                            <th scope='col' className="py-3 px-2 text-left">
                                 Aksi
                             </th>
                         </tr>
@@ -178,10 +194,13 @@ const AturPulangAwal = ({ initTahun }) => {
                                     {hariTanggal(aturan.tanggal)}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {aturan.pulang ? jamTime(aturan.pulang) : null}
+                                    {aturan.pulang ? jamDate(aturan.pulang) : null}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
-                                    {aturan.masuk ? jamTime(aturan.pulang) : null}
+                                    {aturan.masuk ? jamDate(aturan.pulang) : null}
+                                </td>
+                                <td className="py-2 px-2 font-medium text-slate-600">
+                                    {aturan.keterangan}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600">
                                     <Hapus onClick={() => handleDelete(aturan.id)} />

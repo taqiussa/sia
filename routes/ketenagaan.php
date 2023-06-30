@@ -4,9 +4,11 @@ use App\Http\Controllers\AturKhususPulangController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListBadalController;
 use App\Http\Controllers\AturPulangAwalController;
+use App\Http\Controllers\AturPulangSpesialController;
 use App\Http\Controllers\RekapJamKosongController;
 use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\PermintaanBadalController;
+use App\Http\Controllers\ProsesTransportController;
 use App\Http\Controllers\RekapHarianAbsensiKaryawanController;
 
 // Group Ketenagaan
@@ -14,18 +16,26 @@ Route::middleware([
     'auth', 'role:Ketenagaan'
 ])->group(function () {
 
-    // Route Atur Khusus Pulang
+    
+    // Route Atur Pulang Awal
+    Route::controller(AturPulangAwalController::class)->group(function () {
+        Route::get('atur-pulang-awal', 'index')->name('atur-pulang-awal');
+        Route::post('atur-pulang-awal', 'simpan')->name('atur-pulang-awal.simpan');
+        Route::delete('atur-pulang-awal', 'hapus')->name('atur-pulang-awal.hapus');
+    });
+    
+    // Route Atur Pulang Khusus
     Route::controller(AturKhususPulangController::class)->group(function() {
         Route::get('atur-khusus-pulang', 'index')->name('atur-khusus-pulang');
         Route::post('atur-khusus-pulang', 'simpan')->name('atur-khusus-pulang.simpan');
         Route::delete('atur-khusus-pulang', 'hapus')->name('atur-khusus-pulang.hapus');
     });
 
-    // Route Atur Pulang Awal
-    Route::controller(AturPulangAwalController::class)->group(function () {
-        Route::get('atur-pulang-awal', 'index')->name('atur-pulang-awal');
-        Route::post('atur-pulang-awal', 'simpan')->name('atur-pulang-awal.simpan');
-        Route::delete('atur-pulang-awal', 'hapus')->name('atur-pulang-awal.hapus');
+    // Route Atur Pulang Spesial
+    Route::controller(AturPulangSpesialController::class)->group(function() {
+        Route::get('atur-pulang-spesial', 'index')->name('atur-pulang-spesial');
+        Route::post('atur-pulang-spesial', 'simpan')->name('atur-pulang-spesial.simpan');
+        Route::delete('atur-pulang-spesial', 'hapus')->name('atur-khusus-pulang.hapus');
     });
 
     // Route Jadwal Jam Kosong
@@ -44,6 +54,13 @@ Route::middleware([
     Route::controller(PermintaanBadalController::class)->group(function () {
         Route::get('permintaan-badal', 'index')->name('permintaan-badal');
         Route::post('permintaan-badal', 'simpan')->name('permintaan-badal.simpan');
+    });
+
+    // Route Proses Transport
+    Route::controller(ProsesTransportController::class)->group(function() {
+        Route::get('proses-transport', 'index')->name('proses-transport');
+        Route::post('proses-transport', 'simpan')->name('proses-transport.simpan');
+        Route::delete('proses-transport', 'hapus')->name('proses-transport.hapus');
     });
 
     // Route Rekap Harian Absensi Karyawan

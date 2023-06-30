@@ -5,13 +5,13 @@ use App\Http\Controllers\AbsensiKaryawanController;
 use App\Http\Controllers\AbsensiKetenagaanController;
 
 // Route Absensi Karyawan
-Route::middleware(['auth', 'blockip'])->group(function () {
+// Route::middleware(['auth', 'blockip'])->group(function () {
 
-    Route::controller(AbsensiKaryawanController::class)->group(function () {
-        Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
-        Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
-    });
-});
+//     Route::controller(AbsensiKaryawanController::class)->group(function () {
+//         Route::get('absensi-karyawan', 'index')->name('absensi-karyawan');
+//         Route::post('absensi-karyawan', 'simpan')->name('absensi-karyawan.simpan');
+//     });
+// });
 
 // Route Absensi Karyawan
 Route::middleware(['auth', 'blockip', 'role:Ketenagaan'])->group(function () {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AturanKhususPulang;
+use App\Models\AturanPulangSpesial;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Badalan;
@@ -17,6 +18,17 @@ class GetDataKetenagaanController extends Controller
     {
         return response()->json([
             'listAturan' => AturanKhususPulang::whereTahun(request('tahun'))
+                ->with('user')
+                ->get()
+                ->sortBy('user.name')
+                ->values()
+        ]);
+    }
+
+    public function get_list_aturan_pulang_spesial()
+    {
+        return response()->json([
+            'listSpesial' => AturanPulangSpesial::whereTahun(request('tahun'))
                 ->with('user')
                 ->get()
                 ->sortBy('user.name')

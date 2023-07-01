@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AbsensiKaryawan;
 use App\Models\AturanKhususPulang;
 use App\Models\AturanPulangSpesial;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Badalan;
 use App\Models\JamKosong;
+use App\Models\RekapTransport;
 use App\Traits\InitTrait;
 
 class GetDataKetenagaanController extends Controller
@@ -113,6 +115,17 @@ class GetDataKetenagaanController extends Controller
                 ->get()
                 ->sortBy('user.name')
                 ->values()
+        ]);
+    }
+
+    public function get_rekap_transport()
+    {
+        return response()->json([
+            'listAbsensi' => AbsensiKaryawan::whereUserId(auth()->user()->id)
+                ->get(),
+            'listTransport' => RekapTransport::whereBulan(request('bulan'))
+                ->whereTahun(request('tahun'))
+                ->get()
         ]);
     }
 }

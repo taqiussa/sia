@@ -111,30 +111,30 @@ class ProsesTransportController extends Controller
 
                         if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
                             $this->transport = 0;
+                        } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
+                            $this->transport = 0;
+                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if (!$isJumat && $pulang->lessThan($jamPulangKhusus)) {
+                            $this->transport = 0;
                         } else {
-                            if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                                $this->transport = 0;
-                            } elseif ($pulang->lessThan($jamPulangKhusus)) {
-                                $this->transport = 0;
-                            } else {
-                                $this->transport = 1;
-                            }
+                            $this->transport = 1;
                         }
                     } else {
                         if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
                             $this->transport = 0;
+                        } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
+                            $this->transport = 0;
+                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                            $this->transport = 0;
+                        } else if (!$isJumat && $pulang->lessThan($jamPulang)) {
+                            $this->transport = 0;
                         } else {
-                            if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                                $this->transport = 0;
-                            } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
-                                $this->transport = 0;
-                            } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                                $this->transport = 0;
-                            } else if ($pulang->lessThan($jamPulang)) {
-                                $this->transport = 0;
-                            } else {
-                                $this->transport = 1;
-                            }
+                            $this->transport = 1;
                         }
                     }
 
@@ -181,19 +181,18 @@ class ProsesTransportController extends Controller
 
                     if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
                         $this->transport = 0;
+                    } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                        $this->transport = 0;
+                    } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
+                        $this->transport = 0;
+                    } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
+                        $this->transport = 0;
+                    } else if (!$isJumat && $pulang->lessThan($jamPulang)) {
+                        $this->transport = 0;
                     } else {
-                        if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
-                            $this->transport = 0;
-                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if ($pulang->lessThan($jamPulang)) {
-                            $this->transport = 0;
-                        } else {
-                            $this->transport = 1;
-                        }
+                        $this->transport = 1;
                     }
+
                     RekapTransport::updateOrCreate(
                         [
                             'tanggal' => $absensi->tanggal,

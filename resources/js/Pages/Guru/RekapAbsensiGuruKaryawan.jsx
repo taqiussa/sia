@@ -3,15 +3,13 @@ import TahunNon from '@/Components/Sia/TahunNon'
 import { hariTanggal, namaBulan, waktu } from '@/Functions/functions'
 import getRekapAbsensiGuruKaryawan from '@/Functions/getRekapAbsensiGuruKaryawan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
 const RekapAbsensiGuruKaryawan = () => {
-
-    const { auth, roles } = usePage().props
 
     const { data, setData, errors } = useForm({
         tahun: moment(new Date()).format('YYYY'),
@@ -74,16 +72,33 @@ const RekapAbsensiGuruKaryawan = () => {
                             <th scope='col' className="py-3 px-2 ">
                                 Pulang
                             </th>
-                            <th scope='col' className="py-3 px-2 ">
+                            {/* <th scope='col' className="py-3 px-2 ">
                                 Kehadiran
                             </th>
                             <th scope='col' className="py-3 px-2 ">
                                 Transport
-                            </th>
+                            </th> */}
                         </tr>
                     </thead>
                     <tbody>
                         {data.listAbsensi &&
+                            data.listAbsensi.map((absensi, index) =>
+                                <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
+                                    <td className={`py-2 px-2 font-medium text-slate-600 `}>
+                                        {index + 1}
+                                    </td>
+                                    <td className={`py-2 px-2 font-medium text-slate-600 `}>
+                                        {absensi.tanggal ? hariTanggal(absensi.tanggal) : null}
+                                    </td>
+                                    <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
+                                        {absensi.masuk ? waktu(absensi.masuk) : null}
+                                    </td>
+                                    <td className={`py-2 px-2 font-medium text-slate-600 text-center`}>
+                                        {absensi.pulang ? waktu(absensi.pulang) : null}
+                                    </td>
+                                </tr>
+                            )}
+                        {/* {data.listAbsensi &&
                             data.listAbsensi.map((absensi, index) => {
                                 const isTerlambat = moment(absensi.masuk, 'YYYY-MM-DD HH:mm:ss').isAfter(moment(absensi.masuk).set({ hour: 7, minute: 0, second: 59 }), 'second')
                                 const isJumat = moment(absensi.tanggal).day() == 5
@@ -112,7 +127,7 @@ const RekapAbsensiGuruKaryawan = () => {
                                         </td>
                                     </tr>
                                 )
-                            })}
+                            })} */}
 
                     </tbody>
                 </table>

@@ -10,6 +10,7 @@ const SidebarGuruKaryawan = ({ closeSide }) => {
             <div>
                 {/* <SidebarLink closeSide={closeSide} href={route('absensi-karyawan')} active={route().current('absensi-karyawan')} label='absensi karyawan' /> */}
                 <SidebarLink closeSide={closeSide} href={route('rekap-absensi-karyawan')} active={route().current('rekap-absensi-karyawan')} label='rekap absensi karyawan' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-transport')} active={route().current('rekap-transport')} label='rekap transport' />
                 <SidebarLink closeSide={closeSide} href={route('slip-gaji')} active={route().current('slip-gaji')} label='slip gaji' />
             </div>
         </div>

@@ -16,6 +16,7 @@ use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\GetDataAbsensiKaryawanController;
 use App\Http\Controllers\GetDataPenilaianKaryawanController;
 use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
+use App\Http\Controllers\RekapTransportController;
 
 // Group Data
 Route::middleware('auth')->group(function () {
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
 
     //Route Rekap Absensi Guru & Karyawan
     Route::get('rekap-absensi-karyawan', RekapAbsensiGuruKaryawanController::class)->name('rekap-absensi-karyawan');
+
+    // Route Rekap Transport
+    Route::get('rekap-transport', RekapTransportController::class)->name('rekap-transport');
 
     // Route Slip Gaji
     Route::get('slip-gaji', SlipGajiController::class)->name('slip-gaji');
@@ -139,6 +143,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-list-jadwal-kosong', 'get_list_jadwal_kosong')->name('get-list-jadwal-kosong');
         Route::post('get-permintaan-badal', 'get_permintaan_badal')->name('get-permintaan-badal');
         Route::post('get-rekap-jam-kosong', 'get_rekap_jam_kosong')->name('get-rekap-jam-kosong');
+        Route::post('get-rekap-transport', 'get_rekap_transport')->name('get-rekap-transport');
     });
 
     // Route Get Data Penilaian

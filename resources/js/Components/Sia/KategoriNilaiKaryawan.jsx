@@ -39,7 +39,7 @@ export default forwardRef(function KategoriNilaiKaryawan(
                     <option value="">Pilih Kategori Nilai</option>
 
                     {listKategori.map((kategori, index) => (
-                        <option key={index} value={kategori.kategori_nilai_id}>{kategori.kategori?.nama}</option>
+                        <option key={index} value={kategori.kategori_nilai_id ?? kategori.id}>{kategori.kategori?.nama ?? kategori.nama}</option>
                     ))}
 
                 </select>

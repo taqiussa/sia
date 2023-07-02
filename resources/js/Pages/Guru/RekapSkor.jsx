@@ -1,6 +1,7 @@
 import Hapus from '@/Components/Sia/Hapus'
 import InputText from '@/Components/Sia/InputText'
 import Paginator from '@/Components/Sia/Paginator'
+import SpinnerNonPromise from '@/Components/Sia/SpinnerNonPromise'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal } from '@/Functions/functions'
@@ -9,11 +10,11 @@ import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-const RekapSkor = ({ initTahun, listRekapSkor }) => {
+const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
 
-    const { data, setData, errors, delete: destroy } = useForm({
+    const { data, setData, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
-        search: ''
+        search: filters.search
     })
 
     const onHandleChange = (e) => {
@@ -97,6 +98,7 @@ const RekapSkor = ({ initTahun, listRekapSkor }) => {
     }, [data.search])
     return (
         <>
+            {processing && <SpinnerNonPromise />}
             <Head title='Rekap Skor' />
             <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap skor</div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
@@ -179,7 +181,10 @@ const RekapSkor = ({ initTahun, listRekapSkor }) => {
                     </tbody>
                 </table>
             </div>
-            <Paginator lists={listRekapSkor} />
+            {
+                listRekapSkor &&
+                <Paginator lists={listRekapSkor} />
+            }
         </>
     )
 }

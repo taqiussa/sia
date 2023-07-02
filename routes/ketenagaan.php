@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListBadalController;
 use App\Http\Controllers\AturPulangAwalController;
 use App\Http\Controllers\AturPulangSpesialController;
+use App\Http\Controllers\HasilPenilaianGuruController;
 use App\Http\Controllers\RekapJamKosongController;
 use App\Http\Controllers\JadwalJamKosongController;
 use App\Http\Controllers\PermintaanBadalController;
@@ -39,6 +40,9 @@ Route::middleware([
         Route::post('atur-pulang-spesial', 'simpan')->name('atur-pulang-spesial.simpan');
         Route::delete('atur-pulang-spesial', 'hapus')->name('atur-khusus-pulang.hapus');
     });
+
+    // Route Hasil Penilaian Guru
+    Route::get('hasil-penilaian-guru', HasilPenilaianGuruController::class)->name('hasil-penilaian-guru');
 
     // Route Jadwal Jam Kosong
     Route::controller(JadwalJamKosongController::class)->group(function () {

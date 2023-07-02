@@ -39,6 +39,7 @@ class RekapSkorController extends Controller
             [
                 'initTahun' => $this->data_tahun(),
                 'listRekapSkor' => $skor,
+                'filters' => request()->only('search')
             ]
         );
     }

@@ -89,7 +89,9 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                                         <td key={index} className="py-2 px-2 font-medium text-slate-600">
                                             {
                                                 user.penilaians &&
-                                                (penjumlahan(user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id), 'nilai') / user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id).length)
+                                                    Number.isNaN(penjumlahan(user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id), 'nilai') / user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id).length)
+                                                    ? null
+                                                    : penjumlahan(user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id), 'nilai') / user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id).length
                                             }
                                         </td>
                                     )

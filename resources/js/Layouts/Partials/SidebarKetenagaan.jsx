@@ -11,7 +11,7 @@ const SidebarKetenagaan = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('atur-pulang-awal')} active={route().current('atur-pulang-awal')} label='atur pulang awal' />
                 <SidebarLink closeSide={closeSide} href={route('atur-khusus-pulang')} active={route().current('atur-khusus-pulang')} label='atur pulang khusus' />
                 <SidebarLink closeSide={closeSide} href={route('atur-pulang-spesial')} active={route().current('atur-pulang-spesial')} label='atur pulang spesial' />
-                {/* <SidebarLink closeSide={closeSide} href={route('hasil-penilaian-guru')} active={route().current('hasil-penilaian-guru')} label='hasil penilaian guru' /> */}
+                <SidebarLink closeSide={closeSide} href={route('hasil-penilaian-guru')} active={route().current('hasil-penilaian-guru')} label='hasil penilaian guru' />
                 <SidebarLink closeSide={closeSide} href={route('jadwal-jam-kosong')} active={route().current('jadwal-jam-kosong')} label='jadwal jam kosong' />
                 <SidebarLink closeSide={closeSide} href={route('list-badal')} active={route().current('list-badal')} label='list badal' />
                 <SidebarLink closeSide={closeSide} href={route('permintaan-badal')} active={route().current('permintaan-badal')} label='permintaan badal' />

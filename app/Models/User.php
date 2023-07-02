@@ -82,6 +82,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all of the penilaianGurus for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function penilaians(): HasMany
+    {
+        return $this->hasMany(PenilaianGuru::class);
+    }
+
+    /**
      * Get all of the rekapTransport for the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

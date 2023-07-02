@@ -11,6 +11,7 @@ use App\Models\RekapTransport;
 use App\Models\User;
 use App\Traits\InitTrait;
 use Carbon\Carbon;
+use DateTime;
 
 class ProsesTransportController extends Controller
 {
@@ -79,46 +80,46 @@ class ProsesTransportController extends Controller
                 foreach ($listAbsensi as $absensi) {
 
                     if (request('pilihan') == 'Satpam') {
-                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 6:15:59');
+                        $jamMasuk = new DateTime($absensi->tanggal . ' 6:15:59');
                     } else {
-                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
+                        $jamMasuk = new DateTime($absensi->tanggal . ' 7:00:59');
                     }
 
                     if (request('pilihan') == 'Satpam') {
-                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:30:00');
+                        $jamPulang = new DateTime($absensi->tanggal . ' 13:30:00');
                     } else {
 
-                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
+                        $jamPulang = new DateTime($absensi->tanggal . ' 13:00:00');
                     }
 
                     $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
 
-                    $masuk = Carbon::parse($absensi->masuk);
+                    $masuk = new DateTime($absensi->masuk);
 
-                    $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
+                    $pulang = $absensi->pulang ? new DateTime($absensi->pulang) : null;
 
-                    $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
+                    $aturanPulang = $jamPulangAwal ?  new DateTime($jamPulangAwal->pulang) : null;
 
                     $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
 
-                    $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
+                    $jamPulangJumat = new DateTime($absensi->tanggal . ' 10:30:00');
 
                     $hariTanggalIni = Carbon::parse($listAbsensi->where('tanggal', $absensi->tanggal)->first()->tanggal)->dayOfWeek;
 
                     if (in_array($hariTanggalIni, $listUserKhusus->pluck('hari')->toArray())) {
 
-                        $jamPulangKhusus = Carbon::parse($absensi->tanggal .  $listUserKhusus->first()->jam);
+                        $jamPulangKhusus = new DateTime($absensi->tanggal .  $listUserKhusus->first()->jam);
 
-                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
+                        if ($masuk <= $jamMasuk && $absensi->pulang != null) {
                             if ($isJumat) {
                                 if (!blank($jamPulangAwal)) {
-                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                    if ($pulang >= $aturanPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThanOrEqualTo($jamPulangJumat)) {
+                                    if ($pulang >= $jamPulangJumat) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -126,13 +127,13 @@ class ProsesTransportController extends Controller
                                 }
                             } else {
                                 if (!blank($jamPulangAwal)) {
-                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                    if ($pulang >= $aturanPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThanOrEqualTo($jamPulangKhusus)) {
+                                    if ($pulang >= $jamPulangKhusus) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -143,16 +144,16 @@ class ProsesTransportController extends Controller
                             $this->transport = 0;
                         }
                     } else {
-                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
+                        if ($masuk <= $jamMasuk && $absensi->pulang != null) {
                             if ($isJumat) {
                                 if (!blank($jamPulangAwal)) {
-                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                    if ($pulang >= $aturanPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThanOrEqualTo($jamPulang)) {
+                                    if ($pulang >= $jamPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -160,13 +161,13 @@ class ProsesTransportController extends Controller
                                 }
                             } else {
                                 if (!blank($jamPulangAwal)) {
-                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                    if ($pulang >= $aturanPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThanOrEqualTo($jamPulang)) {
+                                    if ($pulang >= $jamPulang) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -195,40 +196,40 @@ class ProsesTransportController extends Controller
                 foreach ($listAbsensi as $absensi) {
 
                     if (request('pilihan') == 'Satpam') {
-                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 6:15:59');
+                        $jamMasuk = new DateTime($absensi->tanggal . ' 6:15:59');
                     } else {
-                        $jamMasuk = Carbon::parse($absensi->tanggal . ' 7:00:59');
+                        $jamMasuk = new DateTime($absensi->tanggal . ' 7:00:59');
                     }
 
                     if (request('pilihan') == 'Satpam') {
-                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:30:00');
+                        $jamPulang = new DateTime($absensi->tanggal . ' 13:30:00');
                     } else {
 
-                        $jamPulang = Carbon::parse($absensi->tanggal . ' 13:00:00');
+                        $jamPulang = new DateTime($absensi->tanggal . ' 13:00:00');
                     }
 
                     $jamPulangAwal = $aturanPulangAwal->where('tanggal', $absensi->tanggal)->first();
 
-                    $masuk = Carbon::parse($absensi->masuk);
+                    $masuk = new DateTime($absensi->masuk);
 
-                    $pulang = $absensi->pulang ? Carbon::parse($absensi->pulang) : null;
+                    $pulang = $absensi->pulang ? new DateTime($absensi->pulang) : null;
 
-                    $aturanPulang = $jamPulangAwal ?  Carbon::parse($jamPulangAwal->pulang) : null;
+                    $aturanPulang = $jamPulangAwal ?  new DateTime($jamPulangAwal->pulang) : null;
 
                     $isJumat = Carbon::parse($absensi->tanggal)->isFriday();
 
-                    $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
+                    $jamPulangJumat = new DateTime($absensi->tanggal . ' 10:30:00');
 
-                    if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
+                    if ($masuk <= $jamMasuk && $absensi->pulang != null) {
                         if ($isJumat) {
                             if (!blank($jamPulangAwal)) {
-                                if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                if ($pulang >= $aturanPulang) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
                                 }
                             } else {
-                                if ($pulang->greaterThanOrEqualTo($jamPulangJumat)) {
+                                if ($pulang >= $jamPulangJumat) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
@@ -236,13 +237,13 @@ class ProsesTransportController extends Controller
                             }
                         } else {
                             if (!blank($jamPulangAwal)) {
-                                if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
+                                if ($pulang >= $aturanPulang) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
                                 }
                             } else {
-                                if ($pulang->greaterThanOrEqualTo($jamPulang)) {
+                                if ($pulang >= $jamPulang) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;

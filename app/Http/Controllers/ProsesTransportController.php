@@ -109,30 +109,30 @@ class ProsesTransportController extends Controller
 
                         $jamPulangKhusus = Carbon::parse($absensi->tanggal .  $listUserKhusus->first()->jam);
 
-                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
                             if ($isJumat) {
-                                if ($jamPulangAwal) {
-                                    if ($pulang->greaterThan($aturanPulang)) {
+                                if (!blank($jamPulangAwal)) {
+                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThan($jamPulangJumat)) {
+                                    if ($pulang->greaterThanOrEqualTo($jamPulangJumat)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 }
                             } else {
-                                if ($jamPulangAwal) {
-                                    if ($pulang->greaterThan($aturanPulang)) {
+                                if (!blank($jamPulangAwal)) {
+                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThan($jamPulangKhusus)) {
+                                    if ($pulang->greaterThanOrEqualTo($jamPulangKhusus)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -143,30 +143,30 @@ class ProsesTransportController extends Controller
                             $this->transport = 0;
                         }
                     } else {
-                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
                             if ($isJumat) {
-                                if ($jamPulangAwal) {
-                                    if ($pulang->greaterThan($aturanPulang)) {
+                                if (!blank($jamPulangAwal)) {
+                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThan($jamPulang)) {
+                                    if ($pulang->greaterThanOrEqualTo($jamPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 }
                             } else {
-                                if ($jamPulangAwal) {
-                                    if ($pulang->greaterThan($aturanPulang)) {
+                                if (!blank($jamPulangAwal)) {
+                                    if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang->greaterThan($jamPulang)) {
+                                    if ($pulang->greaterThanOrEqualTo($jamPulang)) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;
@@ -219,30 +219,30 @@ class ProsesTransportController extends Controller
 
                     $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
 
-                    if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                    if ($masuk->lessThan($jamMasuk) && $absensi->pulang != null) {
                         if ($isJumat) {
-                            if ($jamPulangAwal) {
-                                if ($pulang->greaterThan($aturanPulang)) {
+                            if (!blank($jamPulangAwal)) {
+                                if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
                                 }
                             } else {
-                                if ($pulang->greaterThan($jamPulangJumat)) {
+                                if ($pulang->greaterThanOrEqualTo($jamPulangJumat)) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
                                 }
                             }
                         } else {
-                            if ($jamPulangAwal) {
-                                if ($pulang->greaterThan($aturanPulang)) {
+                            if (!blank($jamPulangAwal)) {
+                                if ($pulang->greaterThanOrEqualTo($aturanPulang)) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;
                                 }
                             } else {
-                                if ($pulang->greaterThan($jamPulang)) {
+                                if ($pulang->greaterThanOrEqualTo($jamPulang)) {
                                     $this->transport = 1;
                                 } else {
                                     $this->transport = 0;

@@ -145,6 +145,13 @@ trait InitTrait
         return $tahunAjaran;
     }
 
+    public function data_tahun_lama()
+    {
+        $tahunIni = date('Y');
+        $tahunAjaran = (intval($tahunIni) - 1) . ' / ' . (intval($tahunIni));
+        return $tahunAjaran;
+    }
+
     public function get_list_mapel($tingkat, $kelompok)
     {
         $mataPelajaranId = MataPelajaran::whereKelompok($kelompok)

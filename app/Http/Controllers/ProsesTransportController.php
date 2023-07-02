@@ -60,6 +60,12 @@ class ProsesTransportController extends Controller
                 ->get();
         }
 
+        if (request('bulan') == '07') {
+            $tahun = $this->data_tahun_lama();
+        } else {
+            $tahun = request('tahun');
+        }
+
         set_time_limit(0);
 
         foreach ($listUser as $user) {
@@ -68,7 +74,7 @@ class ProsesTransportController extends Controller
                 ->whereBetween('tanggal', [request('tanggalAwal'), request('tanggalAkhir')])
                 ->get();
 
-            $listUserKhusus = AturanKhususPulang::whereTahun(request('tahun'))
+            $listUserKhusus = AturanKhususPulang::whereTahun($tahun)
                 ->whereUserId($user->id)
                 ->get();
 

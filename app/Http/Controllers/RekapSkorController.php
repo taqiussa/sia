@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\PenilaianSkor;
 use App\Models\User;
 use App\Traits\InitTrait;
-use Inertia\Inertia;
 
 class RekapSkorController extends Controller
 {
@@ -39,7 +38,7 @@ class RekapSkorController extends Controller
             'Guru/RekapSkor',
             [
                 'initTahun' => $this->data_tahun(),
-                'listRekapSkor' => Inertia::lazy(fn() => $skor),
+                'listRekapSkor' => $skor,
                 'filters' => request()->only('search')
             ]
         );

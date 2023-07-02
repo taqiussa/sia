@@ -126,7 +126,49 @@ class GetDataKetenagaanController extends Controller
             'listTransport' => RekapTransport::whereBulan(request('bulan'))
                 ->whereUserId(auth()->user()->id)
                 ->whereTahun(request('tahun'))
+                ->get(),
+            'maxHadir' => User::whereNotNull('username')
+                ->whereIsActive(true)
+                ->withCount([
+                    'rekapTransports as hitung' => fn ($q) => $q->whereBulan(request('bulan'))
+                        ->whereTahun(request('tahun'))
+                ])
+                ->orderBy('name')
                 ->get()
+                ->max('hitung')
+        ]);
+    }
+
+    public function get_rekap_transport_per_karyawan()
+    {
+        return response()->json([
+            'listAbsensi' => AbsensiKaryawan::whereUserId(request('userId'))
+                ->get(),
+            'listTransport' => RekapTransport::whereBulan(request('bulan'))
+                ->whereUserId(request('userId'))
+                ->whereTahun(request('tahun'))
+                ->get(),
+        ]);
+    }
+
+    public function get_rekap_transport_total()
+    {
+        $users = User::whereNotNull('username')
+            ->whereIsActive(true)
+            ->with([
+                'rekapTransports' => fn ($q) => $q->whereBulan(request('bulan'))
+                    ->whereTahun(request('tahun'))
+            ])
+            ->withCount([
+                'rekapTransports as hitung' => fn ($q) => $q->whereBulan(request('bulan'))
+                    ->whereTahun(request('tahun'))
+            ])
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'listUser' => $users,
+            'maxHadir' => $users->max('hitung')
         ]);
     }
 }

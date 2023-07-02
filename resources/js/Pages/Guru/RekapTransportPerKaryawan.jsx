@@ -1,31 +1,31 @@
 import Bulan from '@/Components/Sia/Bulan'
+import Guru from '@/Components/Sia/Guru'
 import Tahun from '@/Components/Sia/Tahun'
-import { hariTanggal, namaBulan, penjumlahan, waktu } from '@/Functions/functions'
-import getRekapTransport from '@/Functions/getRekapTransport'
+import { hariTanggal, namaBulan, waktu } from '@/Functions/functions'
+import getRekapTransportPerKaryawan from '@/Functions/getRekapTransportPerKaryawan'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const RekapTransport = ({ initTahun }) => {
+const RekapTransport = ({ initTahun, listUser }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
         bulan: moment(new Date()).format('MM'),
+        userId: '',
         listAbsensi: [],
-        listTransport: [],
-        maxHadir: '',
+        listTransport: []
     })
 
     async function getData() {
-        const response = await getRekapTransport(data.tahun, data.bulan)
+        const response = await getRekapTransportPerKaryawan(data.tahun, data.bulan, data.userId)
         setData({
             ...data,
             listAbsensi: response.listAbsensi,
-            listTransport: response.listTransport,
-            maxHadir: response.maxHadir
+            listTransport: response.listTransport
         })
     }
     const onHandleChange = (e) => {
@@ -34,11 +34,11 @@ const RekapTransport = ({ initTahun }) => {
 
     useEffect(() => {
 
-        if (data.tahun && data.bulan) {
+        if (data.tahun && data.bulan && data.userId) {
             trackPromise(getData())
         }
 
-    }, [data.tahun, data.bulan])
+    }, [data.tahun, data.bulan, data.userId])
     return (
         <>
             <Head title='Rekap Transport Karyawan' />
@@ -61,18 +61,16 @@ const RekapTransport = ({ initTahun }) => {
                     handleChange={onHandleChange}
                 />
 
+                <Guru
+                    name='userId'
+                    value={data.userId}
+                    message={errors.userId}
+                    handleChange={onHandleChange}
+                    listUser={listUser}
+                />
+
             </div>
-            <div className="text-slate-600 py-3 font-bold capitalize flex flex-col space-y-3">
-                <div>
-                    kehadiran terbanyak : {data.maxHadir}
-                </div>
-                <div>
-                    kehadiran : {penjumlahan(data.listTransport, 'hadir')} ({Number((penjumlahan(data.listTransport, 'hadir') / data.maxHadir) * 100).toFixed(2)} %)
-                </div>
-                <div>
-                    transport : {penjumlahan(data.listTransport, 'transport')} ({Number((penjumlahan(data.listTransport, 'transport') / data.maxHadir) * 100).toFixed(2)} %)
-                </div>
-            </div>
+
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">

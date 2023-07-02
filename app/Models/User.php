@@ -82,6 +82,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all of the rekapTransport for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function rekapTransports(): HasMany
+    {
+        return $this->hasMany(RekapTransport::class);
+    }
+
+    /**
      * Get the sosial_detail associated with the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

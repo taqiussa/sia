@@ -17,6 +17,8 @@ const SidebarKetenagaan = ({ closeSide }) => {
                 <SidebarLink closeSide={closeSide} href={route('proses-transport')} active={route().current('proses-transport')} label='proses transport' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-harian-absensi-karyawan')} active={route().current('rekap-harian-absensi-karyawan')} label='rekap harian absensi' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-jam-kosong')} active={route().current('rekap-jam-kosong')} label='rekap jam kosong' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-transport-total')} active={route().current('rekap-transport-total')} label='rekap total transport' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-transport-per-karyawan')} active={route().current('rekap-transport-per-karyawan')} label='rekap transport karyawan' />
             </div>
         </div>
     )

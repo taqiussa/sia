@@ -2,29 +2,28 @@ import Bulan from '@/Components/Sia/Bulan'
 import Tahun from '@/Components/Sia/Tahun'
 import { hariTanggal, namaBulan, penjumlahan, waktu } from '@/Functions/functions'
 import getRekapTransport from '@/Functions/getRekapTransport'
+import getRekapTransportTotal from '@/Functions/getRekapTransportTotal'
 import AppLayout from '@/Layouts/AppLayout'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import React from 'react'
 import { useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-const RekapTransport = ({ initTahun }) => {
+const RekapTransportTotal = ({ initTahun }) => {
 
     const { data, setData, errors } = useForm({
         tahun: initTahun,
         bulan: moment(new Date()).format('MM'),
-        listAbsensi: [],
-        listTransport: [],
+        listUser: [],
         maxHadir: '',
     })
 
     async function getData() {
-        const response = await getRekapTransport(data.tahun, data.bulan)
+        const response = await getRekapTransportTotal(data.bulan, data.tahun)
         setData({
             ...data,
-            listAbsensi: response.listAbsensi,
-            listTransport: response.listTransport,
+            listUser: response.listUser,
             maxHadir: response.maxHadir
         })
     }
@@ -41,8 +40,8 @@ const RekapTransport = ({ initTahun }) => {
     }, [data.tahun, data.bulan])
     return (
         <>
-            <Head title='Rekap Transport Karyawan' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap transport guru dan karyawan bulan {namaBulan(data.bulan)}</div>
+            <Head title='Rekap Total Transport' />
+            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">rekap total transport bulan {namaBulan(data.bulan)}</div>
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-2'>
 
                 <Tahun
@@ -62,16 +61,8 @@ const RekapTransport = ({ initTahun }) => {
                 />
 
             </div>
-            <div className="text-slate-600 py-3 font-bold capitalize flex flex-col space-y-3">
-                <div>
-                    kehadiran terbanyak : {data.maxHadir}
-                </div>
-                <div>
-                    kehadiran : {penjumlahan(data.listTransport, 'hadir')} ({Number((penjumlahan(data.listTransport, 'hadir') / data.maxHadir) * 100).toFixed(2)} %)
-                </div>
-                <div>
-                    transport : {penjumlahan(data.listTransport, 'transport')} ({Number((penjumlahan(data.listTransport, 'transport') / data.maxHadir) * 100).toFixed(2)} %)
-                </div>
+            <div className="text-slate-600 py-3 font-bold capitalize">
+                kehadiran terbanyak : {data.maxHadir}
             </div>
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
@@ -81,13 +72,7 @@ const RekapTransport = ({ initTahun }) => {
                                 No
                             </th>
                             <th scope='col' className="py-3 px-2 text-left">
-                                Hari, Tanggal
-                            </th>
-                            <th scope='col' className="py-3 px-2 ">
-                                Masuk
-                            </th>
-                            <th scope='col' className="py-3 px-2 ">
-                                Pulang
+                                Nama
                             </th>
                             <th scope='col' className="py-3 px-2 ">
                                 Kehadiran
@@ -95,36 +80,36 @@ const RekapTransport = ({ initTahun }) => {
                             <th scope='col' className="py-3 px-2 ">
                                 Transport
                             </th>
+                            <th scope='col' className="py-3 px-2 ">
+                                % Kehadiran
+                            </th>
+                            <th scope='col' className="py-3 px-2 ">
+                                % Transport
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listTransport &&
-                            data.listTransport
-                                .map((transport, index) =>
+                        {data.listUser &&
+                            data.listUser
+                                .map((user, index) =>
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className={`py-2 px-2 font-medium text-slate-600 `}>
                                             {index + 1}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600 `}>
-                                            {hariTanggal(transport.tanggal)}
+                                            {user.name}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
-                                            {data.listAbsensi && data.listAbsensi
-                                                .filter(absensi => absensi.tanggal == transport.tanggal)
-                                                .map(absensi => waktu(absensi.masuk))
-                                            }
+                                            {penjumlahan(user.rekap_transports, 'hadir')}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
-                                            {data.listAbsensi && data.listAbsensi
-                                                .filter(absensi => absensi.tanggal == transport.tanggal)
-                                                .map(absensi => absensi.pulang ? waktu(absensi.pulang) : null)
-                                            }
+                                            {penjumlahan(user.rekap_transports, 'transport')}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
-                                            {transport.hadir}
+                                            {Number((penjumlahan(user.rekap_transports, 'hadir') / data.maxHadir) * 100).toFixed(2)} %
                                         </td>
-                                        <td className={`py-2 px-2 font-medium text-slate-600 text-center `}>
-                                            {transport.transport}
+                                        <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
+                                            {Number((penjumlahan(user.rekap_transports, 'transport') / data.maxHadir) * 100).toFixed(2)} %
                                         </td>
                                     </tr>
                                 )}
@@ -136,5 +121,5 @@ const RekapTransport = ({ initTahun }) => {
     )
 }
 
-RekapTransport.layout = page => <AppLayout children={page} />
-export default RekapTransport
+RekapTransportTotal.layout = page => <AppLayout children={page} />
+export default RekapTransportTotal

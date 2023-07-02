@@ -124,6 +124,7 @@ class GetDataKetenagaanController extends Controller
             'listAbsensi' => AbsensiKaryawan::whereUserId(auth()->user()->id)
                 ->get(),
             'listTransport' => RekapTransport::whereBulan(request('bulan'))
+                ->whereUserId(auth()->user()->id)
                 ->whereTahun(request('tahun'))
                 ->get()
         ]);

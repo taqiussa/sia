@@ -92,7 +92,6 @@ const RekapTransport = ({ initTahun }) => {
                     <tbody>
                         {data.listTransport &&
                             data.listTransport
-                                .filter(transport => transport.user_id == auth.user.id)
                                 .map((transport, index) =>
                                     <tr key={index} className="bg-white border-b hover:bg-slate-300 odd:bg-slate-200">
                                         <td className={`py-2 px-2 font-medium text-slate-600 `}>

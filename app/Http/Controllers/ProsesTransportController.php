@@ -16,7 +16,7 @@ class ProsesTransportController extends Controller
 {
     use InitTrait;
 
-    public $transport = 0;
+    public $transport = 1;
 
     public function index()
     {
@@ -109,32 +109,72 @@ class ProsesTransportController extends Controller
 
                         $jamPulangKhusus = Carbon::parse($absensi->tanggal .  $listUserKhusus->first()->jam);
 
-                        if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
-                            $this->transport = 0;
-                        } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
-                            $this->transport = 0;
-                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if (!$isJumat && $pulang->lessThan($jamPulangKhusus)) {
-                            $this->transport = 0;
+                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                            if ($isJumat) {
+                                if ($jamPulangAwal) {
+                                    if ($pulang->greaterThan($aturanPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                } else {
+                                    if ($pulang->greaterThan($jamPulangJumat)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                }
+                            } else {
+                                if ($jamPulangAwal) {
+                                    if ($pulang->greaterThan($aturanPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                } else {
+                                    if ($pulang->greaterThan($jamPulangKhusus)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                }
+                            }
                         } else {
-                            $this->transport = 1;
+                            $this->transport = 0;
                         }
                     } else {
-                        if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
-                            $this->transport = 0;
-                        } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
-                            $this->transport = 0;
-                        } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                            $this->transport = 0;
-                        } else if (!$isJumat && $pulang->lessThan($jamPulang)) {
-                            $this->transport = 0;
+                        if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                            if ($isJumat) {
+                                if ($jamPulangAwal) {
+                                    if ($pulang->greaterThan($aturanPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                } else {
+                                    if ($pulang->greaterThan($jamPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                }
+                            } else {
+                                if ($jamPulangAwal) {
+                                    if ($pulang->greaterThan($aturanPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                } else {
+                                    if ($pulang->greaterThan($jamPulang)) {
+                                        $this->transport = 1;
+                                    } else {
+                                        $this->transport = 0;
+                                    }
+                                }
+                            }
                         } else {
-                            $this->transport = 1;
+                            $this->transport = 0;
                         }
                     }
 
@@ -179,18 +219,38 @@ class ProsesTransportController extends Controller
 
                     $jamPulangJumat = Carbon::parse($absensi->tanggal . ' 10:30:00');
 
-                    if (!$absensi->pulang || $masuk->greaterThan($jamMasuk)) {
-                        $this->transport = 0;
-                    } else if ($isJumat && $jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                        $this->transport = 0;
-                    } else if ($isJumat && $pulang->lessThan($jamPulangJumat)) {
-                        $this->transport = 0;
-                    } else if ($jamPulangAwal && $pulang->lessThan($aturanPulang)) {
-                        $this->transport = 0;
-                    } else if (!$isJumat && $pulang->lessThan($jamPulang)) {
-                        $this->transport = 0;
+                    if ($masuk->lessThan($jamMasuk) && $absensi->pulang) {
+                        if ($isJumat) {
+                            if ($jamPulangAwal) {
+                                if ($pulang->greaterThan($aturanPulang)) {
+                                    $this->transport = 1;
+                                } else {
+                                    $this->transport = 0;
+                                }
+                            } else {
+                                if ($pulang->greaterThan($jamPulangJumat)) {
+                                    $this->transport = 1;
+                                } else {
+                                    $this->transport = 0;
+                                }
+                            }
+                        } else {
+                            if ($jamPulangAwal) {
+                                if ($pulang->greaterThan($aturanPulang)) {
+                                    $this->transport = 1;
+                                } else {
+                                    $this->transport = 0;
+                                }
+                            } else {
+                                if ($pulang->greaterThan($jamPulang)) {
+                                    $this->transport = 1;
+                                } else {
+                                    $this->transport = 0;
+                                }
+                            }
+                        }
                     } else {
-                        $this->transport = 1;
+                        $this->transport = 0;
                     }
 
                     RekapTransport::updateOrCreate(

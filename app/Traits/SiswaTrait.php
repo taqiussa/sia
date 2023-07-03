@@ -435,6 +435,20 @@ trait SiswaTrait
             ->values();
     }
 
+    public function data_siswa_with_penilaian_sikap_wali_kelas()
+    {
+        return Siswa::whereTahun(request('tahun'))
+            ->whereKelasId(request('kelasId'))
+            ->with([
+                'penilaianSikaps' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereSemester(request('semester')),
+                'user' => fn ($q) => $q->select('nis', 'name')
+            ])
+            ->get()
+            ->sortBy('user.name')
+            ->values();
+    }
+
     public function data_siswa_with_skors()
     {
         return Siswa::whereTahun(request('tahun'))

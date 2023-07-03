@@ -58,6 +58,7 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
+use App\Http\Controllers\PrintLedgerSikapController;
 use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
 use App\Http\Controllers\RekapTotalTransportController;
 
@@ -328,6 +329,14 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
         Route::get('print-ledger-rapor/print', 'print')->name('print-ledger-rapor.print');
         Route::get('print-ledger-rapor/download', 'download')->name('print-ledger-rapor.download');
         Route::get('print-ledger-rapor/print-ranking', 'print_ranking')->name('print-ledger-rapor.print-ranking');
+    });
+
+    // Route Print Ledger Rapor
+    Route::controller(PrintLedgerSikapController::class)->group(function () {
+        Route::get('print-ledger-sikap', 'index')->name('print-ledger-sikap');
+        Route::get('print-ledger-sikap/print', 'print')->name('print-ledger-sikap.print');
+        Route::get('print-ledger-sikap/download', 'download')->name('print-ledger-sikap.download');
+        Route::get('print-ledger-sikap/print-ranking', 'print_ranking')->name('print-ledger-sikap.print-ranking');
     });
 
     // Route Print Nilai Al Qur'an

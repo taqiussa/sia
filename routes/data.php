@@ -145,6 +145,7 @@ Route::middleware('auth')->group(function () {
         Route::post('get-rekap-jam-kosong', 'get_rekap_jam_kosong')->name('get-rekap-jam-kosong');
         Route::post('get-rekap-transport', 'get_rekap_transport')->name('get-rekap-transport');
         Route::post('get-rekap-transport-per-karyawan', 'get_rekap_transport_per_karyawan')->name('get-rekap-transport-per-karyawan');
+        Route::post('get-rekap-transport-total', 'get_rekap_transport_total')->name('get-rekap-transport-total');
     });
 
     // Route Get Data Penilaian

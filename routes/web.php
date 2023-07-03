@@ -35,7 +35,6 @@ use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintRaporProyekController;
 use App\Http\Controllers\UploadNilaiSikapController;
 use App\Http\Controllers\BimbinganIndividuController;
-use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\InputCatatanRaporController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\PrintAbsensiKelasController;
@@ -45,7 +44,6 @@ use App\Http\Controllers\UploadNilaiProyekController;
 use App\Http\Controllers\InputAnalisisNilaiController;
 use App\Http\Controllers\InputNilaiPengayaanController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
-use App\Http\Controllers\RekapTransportTotalController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
@@ -53,7 +51,6 @@ use App\Http\Controllers\AbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputSkorBirrulWalidainController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
-use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
@@ -61,6 +58,8 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
+use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
+use App\Http\Controllers\RekapTotalTransportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,14 +85,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Rekap Total Transport
-Route::get('rekap-total-transport', RekapTransportTotalController::class)->name('rekap-total-transport');
-
-// Route Get Data Ketenagaan
-Route::controller(GetDataKetenagaanController::class)->group(function () {
-    Route::post('get-rekap-transport-total', 'get_rekap_transport_total')->name('get-rekap-transport-total');
-});
-
-
+Route::get('rekap-total-transport', RekapTotalTransportController::class)->name('rekap-total-transport');
 
 // Group Guru dan Karyawan
 Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {

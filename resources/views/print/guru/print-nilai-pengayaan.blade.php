@@ -155,8 +155,8 @@
                         <td class="px-2 py-1 border border-collapse border-black text-center">{{ $loop->iteration }}</td>
                         <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->user->name }}</td>
                         <td class="px-2 py-1 border border-collapse border-black text-center">{{ $siswa->nilai_awal }}</td>
-                        <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->bentuk_pelaksanaan }}</td>
-                        <td class="px-2 py-1 border border-collapse border-black">{{ $siswa->banyak_soal }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black">{{ $pengayaan->bentuk_pelaksanaan }}</td>
+                        <td class="px-2 py-1 border border-collapse border-black">{{ $pengayaan->banyak_soal }}</td>
                         <td class="px-2 py-1 border border-collapse border-black text-center">{{ $siswa->nilai_pengayaan }}
                         </td>
                         <td class="px-2 py-1 border border-collapse border-black text-center"></td>

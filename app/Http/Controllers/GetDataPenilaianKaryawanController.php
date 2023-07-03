@@ -12,6 +12,20 @@ class GetDataPenilaianKaryawanController extends Controller
 {
     use GuruTrait;
 
+    public function get_absensi_ibadah()
+    {
+        return response()->json([
+            'listUser' => $this->data_absensi_ibadah()
+        ]);
+    }
+
+    public function get_absensi_ibadahs()
+    {
+        return response()->json([
+            'listUser' => $this->data_absensi_ibadahs()
+        ]);
+    }
+
     public function get_absensi_sosial()
     {
         return response()->json([

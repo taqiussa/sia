@@ -62,6 +62,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the ibadah_detail associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ibadah_detail(): HasOne
+    {
+        return $this->hasOne(IbadahDetail::class)->withDefault();
+    }
+
+    /**
+     * Get all of the ibadah_details for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ibadah_details(): HasMany
+    {
+        return $this->hasMany(IbadahDetail::class);
+    }
+
+    /**
      * Get all of the jamKosong for the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -1,30 +1,32 @@
 import PrimaryButton from '@/Components/PrimaryButton'
-import InputArea from '@/Components/Sia/InputArea'
+import Bulan from '@/Components/Sia/Bulan'
+import JenisIbadah from '@/Components/Sia/JenisIbadah'
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import Kategori from '@/Components/Sia/Kategori'
 import Kehadiran from '@/Components/Sia/Kehadiran'
+import Minggu from '@/Components/Sia/Minggu'
 import Sweet from '@/Components/Sia/Sweet'
 import Tahun from '@/Components/Sia/Tahun'
-import Tanggal from '@/Components/Sia/Tanggal'
-import { arrayKategoriRole, arrayKehadiranKaryawan } from '@/Functions/functions'
-import getAbsensiSosial from '@/Functions/getAbsensiSosial'
+import { arrayJenisIbadah, arrayKategoriRole, arrayKehadiranKaryawan } from '@/Functions/functions'
+import getAbsensiIbadah from '@/Functions/getAbsensiIbadah'
 import AppLayout from '@/Layouts/AppLayout'
+import Header from '@/Layouts/Partials/Header'
 import { Head, useForm } from '@inertiajs/react'
 import axios from 'axios'
-import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { toast } from 'react-toastify'
 
-const InputSosial = ({ initTahun, initSemester }) => {
+const InputIbadah = ({ initTahun }) => {
 
-    const { data, setData, errors, processing } = useForm({
+    const { data, setData, post, errors, processing, delete: destroy } = useForm({
         tahun: initTahun,
-        semester: initSemester,
-        tanggal: moment(new Date()).format('YYYY-MM-DD'),
-        keterangan: '',
+        bulan: '',
+        minggu: '',
+        jenisIbadah: '',
         jenisKelamin: '',
-        role: '',
+        kategori: '',
         arrayInput: []
     })
 
@@ -33,8 +35,8 @@ const InputSosial = ({ initTahun, initSemester }) => {
     const [message, setMessage] = useState([])
     const [show, setShow] = useState(false)
 
-    async function getDataAbsensiSosial() {
-        const response = await getAbsensiSosial(data.tanggal, data.role, data.jenisKelamin)
+    async function getDataAbsensiIbadah() {
+        const response = await getAbsensiIbadah(data.tahun, data.bulan, data.minggu, data.jenisIbadah, data.kategori, data.jenisKelamin)
         setListUser(response.listUser)
     }
 
@@ -42,15 +44,15 @@ const InputSosial = ({ initTahun, initSemester }) => {
         setData(e.target.name, e.target.value)
     }
 
-    const handleDynamic = (e, index, id, name, sosialDetailId, sosialId) => {
+    const handleDynamic = (e, index, id, name, ibadahDetailId, ibadahId) => {
 
         const newList = [...listUser]
         newList.splice(index, 1, {
             id: id,
             name: name,
-            sosial_detail: {
-                id: sosialDetailId,
-                sosial_id: sosialId,
+            ibadah_detail: {
+                id: ibadahDetailId,
+                ibadah_id: ibadahId,
                 kehadiran_id: e.target.value,
             }
         })
@@ -58,22 +60,23 @@ const InputSosial = ({ initTahun, initSemester }) => {
         setListUser(newList)
         setCount(count + 1)
 
-        axios.post(route('input-sosial.simpan',
+        axios.post(route('input-ibadah.simpan',
             {
-                id: sosialDetailId,
-                sosialId: sosialId,
-                tahun: data.tahun,
-                semester: data.semester,
-                tanggal: data.tanggal,
+                id: ibadahDetailId,
                 userId: id,
+                ibadahId: ibadahId,
+                tahun: data.tahun,
+                bulan: data.bulan,
+                minggu: data.minggu,
+                jenisIbadah: data.jenisIbadah,
+                kategori: data.kategori,
                 jenisKelamin: data.jenisKelamin,
-                keterangan: data.keterangan,
-                kehadiranId: e.target.value
+                kehadiranId: e.target.value,
             }))
             .then(response => {
 
                 setData({ ...data })
-                trackPromise(getDataAbsensiSosial())
+                trackPromise(getDataAbsensiIbadah())
 
                 setMessage({
                     id: response.data.id,
@@ -94,43 +97,26 @@ const InputSosial = ({ initTahun, initSemester }) => {
 
         trackPromise(
             axios.post(
-                route('input-sosial.nihil',
+                route('input-ibadah.nihil',
                     {
                         tahun: data.tahun,
-                        semester: data.semester,
-                        tanggal: data.tanggal,
-                        keterangan: data.keterangan,
+                        bulan: data.bulan,
+                        minggu: data.minggu,
+                        jenisIbadah: data.jenisIbadah,
+                        kategori: data.kategori,
                         jenisKelamin: data.jenisKelamin,
-                        role: data.role
                     })
             )
                 .then(e => {
                     toast.success('Berhasil Set Kehadiran')
                     setData({ ...data })
-                    trackPromise(getDataAbsensiSosial())
+                    trackPromise(getDataAbsensiIbadah())
                 })
                 .catch(error => {
                     console.log(error)
                 })
         )
     }
-
-    useEffect(() => {
-
-        setShow(false)
-        setListUser([])
-        if (data.tanggal
-            && data.tahun
-            && data.role
-            && data.jenisKelamin
-        ) {
-            trackPromise(
-                getDataAbsensiSosial()
-            )
-
-            setShow(true)
-        }
-    }, [data.tanggal, data.tahun, data.role, data.jenisKelamin])
 
     useEffect(() => {
 
@@ -142,32 +128,63 @@ const InputSosial = ({ initTahun, initSemester }) => {
 
     }, [count])
 
+    useEffect(() => {
+
+        setShow(false)
+        setListUser([])
+
+        if (
+            data.tahun
+            && data.bulan
+            && data.minggu
+            && data.jenisIbadah
+            && data.kategori
+            && data.jenisKelamin) {
+            trackPromise(getDataAbsensiIbadah())
+            setShow(true)
+
+        }
+
+    }, [data.tahun, data.bulan, data.minggu, data.jenisIbadah, data.kategori, data.jenisKelamin])
+
     return (
         <>
-            <Head title='Input Sosial' />
-            <div className="font-bold text-lg text-center text-slate-600 uppercase border-b-2 border-emerald-500 mb-3 bg-emerald-200">input sosial</div>
+            <Head title='Input Ibadah' />
+            <Header title='input ibadah' />
             <div className='lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 grid grid-cols-2 gap-2 pb-2'>
                 <Tahun
-                    id='tahun'
                     name='tahun'
                     value={data.tahun}
                     message={errors.tahun}
                     handleChange={onHandleChange}
                 />
 
-                <Tanggal
-                    id='tanggal'
-                    name='tanggal'
-                    label='tanggal'
-                    value={data.tanggal}
-                    message={errors.tanggal}
+                <Bulan
+                    name='bulan'
+                    value={data.bulan}
+                    message={errors.bulan}
                     handleChange={onHandleChange}
                 />
 
+                <Minggu
+                    name='minggu'
+                    value={data.minggu}
+                    message={errors.minggu}
+                    handleChange={onHandleChange}
+                />
+
+                <JenisIbadah
+                    name='jenisIbadah'
+                    value={data.jenisIbadah}
+                    message={errors.jenisIbadah}
+                    handleChange={onHandleChange}
+                    listJenis={arrayJenisIbadah()}
+                />
+
                 <Kategori
-                    name='role'
-                    value={data.role}
-                    message={errors.role}
+                    name='kategori'
+                    value={data.kategori}
+                    message={errors.kategori}
                     handleChange={onHandleChange}
                     listKategori={arrayKategoriRole()}
                 />
@@ -178,18 +195,11 @@ const InputSosial = ({ initTahun, initSemester }) => {
                     message={errors.jenisKelamin}
                     handleChange={onHandleChange}
                 />
-
             </div>
-            <InputArea
-                name='keterangan'
-                label='keterangan'
-                value={data.keterangan}
-                handleChange={onHandleChange}
-            />
 
             {
                 show && (
-                    <PrimaryButton onClick={handleNihil} disabled={processing}>set hadir</PrimaryButton>
+                    <PrimaryButton onClick={handleNihil} disabled={processing} children='set hadir' />
                 )
             }
 
@@ -224,8 +234,8 @@ const InputSosial = ({ initTahun, initSemester }) => {
                                             id='kehadiranId'
                                             name='kehadiranId'
                                             message={errors.kehadiranId}
-                                            value={user.sosial_detail?.kehadiran_id ?? ''}
-                                            handleChange={(e) => handleDynamic(e, index, user.id, user.name, user.sosial_detail?.id, user.sosial_detail.sosial_id)}
+                                            value={user.ibadah_detail?.kehadiran_id ?? ''}
+                                            handleChange={(e) => handleDynamic(e, index, user.id, user.name, user.ibadah_detail?.id, user.ibadah_detail.ibadah_id)}
                                             listKehadiran={arrayKehadiranKaryawan()}
                                         />
 
@@ -245,5 +255,5 @@ const InputSosial = ({ initTahun, initSemester }) => {
     )
 }
 
-InputSosial.layout = page => <AppLayout children={page} />
-export default InputSosial
+InputIbadah.layout = page => <AppLayout children={page} />
+export default InputIbadah

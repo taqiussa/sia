@@ -6,6 +6,34 @@ use App\Models\User;
 
 trait GuruTrait
 {
+    public function data_absensi_ibadah()
+    {
+        return User::role(request('kategori'))
+            ->whereJenisKelamin(request('jenisKelamin'))
+            ->with([
+                'ibadah_detail' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereBulan(request('bulan'))
+                    ->whereMinggu(request('minggu'))
+                    ->whereJenisIbadah(request('jenisIbadah'))
+            ])
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function data_absensi_ibadahs()
+    {
+        return User::role(request('kategori'))
+            ->whereJenisKelamin(request('jenisKelamin'))
+            ->with([
+                'ibadah_details' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereBulan(request('bulan'))
+                    ->whereMinggu(request('minggu'))
+                    ->whereJenisIbadah(request('jenisIbadah'))
+            ])
+            ->orderBy('name')
+            ->get();
+    }
+
     public function data_absensi_sosial()
     {
         return User::role(request('role'))

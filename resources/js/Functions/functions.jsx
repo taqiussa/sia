@@ -19,6 +19,23 @@ export function arrayGunabayar() {
     return bulan
 }
 
+export function arrayJenisIbadah() {
+    const jenis = [
+        { id: 1, nama: 'Dhuha' },
+        { id: 2, nama: 'Dhuhur' },
+        { id: 3, nama: 'Tadarus' },
+    ]
+    return jenis
+}
+
+export function arrayKategoriIbadah() {
+    const jenis = [
+        { id: 1, nama: 'Guru' },
+        { id: 2, nama: 'Karyawan' },
+    ]
+    return jenis
+}
+
 export function arrayKehadiranKaryawan() {
     const kehadiran = [
         { id: 1, nama: 'Hadir' },

@@ -62,7 +62,7 @@ const PrintLedgerRapor = ({ initTahun, initSemester, listKelas }) => {
                     message={errors.kelasId}
                     handleChange={onHandleChange}
                     listKelas={listKelas}
-                    disabled={true}
+                    // disabled={true}
                 />
                 <div className="flex items-end space-x-3">
                     <PrintLink href={route('print-ledger-rapor.print', {

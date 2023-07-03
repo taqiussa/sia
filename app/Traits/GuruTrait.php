@@ -12,7 +12,7 @@ trait GuruTrait
             ->whereJenisKelamin(request('jenisKelamin'))
             ->with([
                 'ibadah_detail' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereBulan(request('bulan'))
+                    ->whereMonth('bulan', request('bulan'))
                     ->whereMinggu(request('minggu'))
                     ->whereJenisIbadah(request('jenisIbadah'))
             ])
@@ -26,7 +26,7 @@ trait GuruTrait
             ->whereJenisKelamin(request('jenisKelamin'))
             ->with([
                 'ibadah_details' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereBulan(request('bulan'))
+                    ->whereMonth('bulan', request('bulan'))
                     ->whereMinggu(request('minggu'))
                     ->whereJenisIbadah(request('jenisIbadah'))
             ])

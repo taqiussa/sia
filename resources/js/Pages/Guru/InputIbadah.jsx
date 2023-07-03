@@ -30,20 +30,22 @@ const InputIbadah = ({ initTahun }) => {
         arrayInput: []
     })
 
+    
     const [count, setCount] = useState(0)
     const [listUser, setListUser] = useState([])
     const [message, setMessage] = useState([])
     const [show, setShow] = useState(false)
-
+    
     async function getDataAbsensiIbadah() {
         const response = await getAbsensiIbadah(data.tahun, data.bulan, data.minggu, data.jenisIbadah, data.kategori, data.jenisKelamin)
         setListUser(response.listUser)
     }
-
+    
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
-
+    console.log(listUser)
+    
     const handleDynamic = (e, index, id, name, ibadahDetailId, ibadahId) => {
 
         const newList = [...listUser]
@@ -82,13 +84,6 @@ const InputIbadah = ({ initTahun }) => {
                     id: response.data.id,
                     message: response.data.message
                 })
-            })
-            .catch(error => {
-                Sweet
-                    .fire({
-                        text: 'Keterangan Belum di Isi',
-                        icon: 'error'
-                    })
             })
     }
 

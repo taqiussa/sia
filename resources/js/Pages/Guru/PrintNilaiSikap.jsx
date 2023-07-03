@@ -36,8 +36,8 @@ const PrintNilaiSikap = ({ initTahun, initSemester, listMapel }) => {
 
     return (
         <>
-            <Head title='Print Pencapaian Kompetensi' />
-            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">print pencapaian kompetensi</div>
+            <Head title='Print Nilai Sikap' />
+            <div className="bg-emerald-200 border-b-2 border-emerald-500 font-bold text-center text-lg text-slate-600 uppercase mb-2">print nilai sikap</div>
             <div className="lg:grid lg:grid-cols-4 lg:gap-2 lg:space-y-0 space-y-2 mb-2">
 
                 <Tahun

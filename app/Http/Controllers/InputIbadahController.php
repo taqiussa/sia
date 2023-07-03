@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ibadah;
+use App\Models\IbadahDetail;
 use App\Models\User;
+use App\Traits\GuruTrait;
 use App\Traits\InitTrait;
+use EnumKehadiranIbadah;
 
 class InputIbadahController extends Controller
 {
     use InitTrait;
+    use GuruTrait;
 
     public function index()
     {
@@ -24,45 +28,49 @@ class InputIbadahController extends Controller
     {
         request()->validate([
             'tahun' => 'required',
-            'semester' => 'required',
-            'tanggal' => 'required',
-            'keterangan' => 'required',
-            'jenisKelamin' => 'required'
+            'bulan' => 'required',
+            'minggu' => 'required',
+            'jenisIbadah' => 'required',
         ]);
 
         try {
-            
-            $sosial = Ibadah::updateOrCreate(
+
+            $ibadah = Ibadah::updateOrCreate(
                 [
-                  'tahun' => request('tahun'),
-                  'bulan' => request('bulan'),
-                  'minggu' => request('minggu'),
-                  'jenis_ibadah' => request('jenis_ibadah'),
-                  'tahun' => request('tahun'),
-                  'tahun' => request('tahun'),
+                    'tahun' => request('tahun'),
+                    'bulan' => date('Y-' . request('bulan') . '-d'),
+                    'minggu' => request('minggu'),
+                    'jenis_ibadah' => request('jenisIbadah'),
                 ]
             );
 
-            $userBelumAbseni = User::role(request('role'))
+            $userBelumAbsensi = User::role(request('kategori'))
                 ->whereJenisKelamin(request('jenisKelamin'))
-                ->whereDoesntHave('sosial_detail', fn ($q) => $q->whereTanggal(request('tanggal')))
+                ->whereDoesntHave(
+                    'ibadah_detail',
+                    fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereMonth('bulan', request('bulan'))
+                        ->whereMinggu(request('minggu'))
+                        ->whereJenisIbadah(request('jenisIbadah'))
+                )
                 ->get();
 
-            foreach ($userBelumAbseni as $user) {
-                $sosial->detail()->updateOrCreate(
-                    [
-                        'tanggal' => request('tanggal'),
-                        'user_id' => $user->id
-                    ],
+            foreach ($userBelumAbsensi as $user) {
+                $ibadah->detail()->updateOrCreate(
                     [
                         'tahun' => request('tahun'),
-                        'semester' => request('semester'),
+                        'bulan' => date('Y-' . request('bulan') . '-d'),
+                        'minggu' => request('minggu'),
+                        'jenis_ibadah' => request('jenisIbadah'),
+                        'user_id' => $user->id,
+                    ],
+                    [
                         'kehadiran_id' => EnumKehadiranIbadah::Hadir
                     ]
                 );
             }
 
-            return to_route('input-sosial');
+            return to_route('input-ibadah');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -73,26 +81,26 @@ class InputIbadahController extends Controller
 
         request()->validate([
             'tahun' => 'required',
-            'semester' => 'required',
-            'tanggal' => 'required',
-            'keterangan' => 'required',
-            'jenisKelamin' => 'required'
+            'bulan' => 'required',
+            'minggu' => 'required',
+            'jenisIbadah' => 'required',
         ]);
 
-        SosialDetail::updateOrCreate(
+        IbadahDetail::updateOrCreate(
             ['id' => request('id')],
             [
-                'sosial_id' => request('sosialId'),
+                'ibadah_id' => request('ibadahId'),
                 'tahun' => request('tahun'),
-                'semester' => request('semester'),
-                'tanggal' => request('tanggal'),
+                'bulan' => date('Y-' . request('bulan') . '-d'),
+                'minggu' => request('minggu'),
+                'jenis_ibadah' => request('jenisIbadah'),
                 'user_id' => request('userId'),
                 'kehadiran_id' => request('kehadiranId')
             ]
         );
 
         return response()->json([
-            'listUser' => $this->data_absensi_sosial(),
+            'listUser' => $this->data_absensi_ibadah(),
             'message' => 'Tersimpan',
             'id' => request('userId')
         ]);

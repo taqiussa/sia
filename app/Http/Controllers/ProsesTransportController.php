@@ -159,7 +159,7 @@ class ProsesTransportController extends Controller
                                         $this->transport = 0;
                                     }
                                 } else {
-                                    if ($pulang >= $jamPulang) {
+                                    if ($pulang >= $jamPulangJumat) {
                                         $this->transport = 1;
                                     } else {
                                         $this->transport = 0;

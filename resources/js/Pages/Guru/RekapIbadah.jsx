@@ -3,7 +3,7 @@ import JenisIbadah from '@/Components/Sia/JenisIbadah'
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import Kategori from '@/Components/Sia/Kategori'
 import Tahun from '@/Components/Sia/Tahun'
-import { arrayJenisIbadah, arrayKategoriRole, hariTanggal, namaKehadiran } from '@/Functions/functions'
+import { arrayJenisIbadah, arrayKategoriRole, namaKehadiran } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React from 'react'
@@ -16,6 +16,7 @@ const RekapIbadah = ({ initTahun, listUser }) => {
         bulan: '',
         jenisIbadah: '',
         kategori: '',
+        jenisKelamin: '',
     })
 
     const onHandleChange = (e) => {
@@ -26,6 +27,7 @@ const RekapIbadah = ({ initTahun, listUser }) => {
             && data.bulan
             && data.kategori
             && data.jenisIbadah
+            && data.jenisKelamin
         ) {
             router.reload({
                 only: ['listUser'],
@@ -33,11 +35,12 @@ const RekapIbadah = ({ initTahun, listUser }) => {
                     tahun: data.tahun,
                     bulan: data.bulan,
                     kategori: data.kategori,
-                    jenisIbadah: data.jenisIbadah
+                    jenisIbadah: data.jenisIbadah,
+                    jenisKelamin: data.jenisKelamin
                 }
             })
         }
-    }, [data.tahun, data.bulan, data.jenisIbadah, data.kategori])
+    }, [data.tahun, data.bulan, data.jenisIbadah, data.kategori, data.jenisKelamin])
 
     return (
         <>
@@ -68,6 +71,12 @@ const RekapIbadah = ({ initTahun, listUser }) => {
                     value={data.jenisIbadah}
                     handleChange={onHandleChange}
                     listJenis={arrayJenisIbadah()}
+                />
+
+                <JenisKelamin
+                    name="jenisKelamin"
+                    value={data.jenisKelamin}
+                    handleChange={onHandleChange}
                 />
 
             </div>

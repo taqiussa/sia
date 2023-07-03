@@ -44,7 +44,6 @@ const InputIbadah = ({ initTahun }) => {
     const onHandleChange = (e) => {
         setData(e.target.name, e.target.value)
     }
-    console.log(listUser)
     
     const handleDynamic = (e, index, id, name, ibadahDetailId, ibadahId) => {
 

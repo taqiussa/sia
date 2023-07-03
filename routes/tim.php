@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InputIbadahController;
 use App\Http\Controllers\InputSosialController;
+use App\Http\Controllers\RekapIbadahController;
 use App\Http\Controllers\RekapSosialController;
 use App\Http\Controllers\TotalSosialController;
 use App\Http\Controllers\UploadNilaiKaryawanController;
@@ -26,6 +27,9 @@ Route::middleware([
         Route::post('input-sosial/nihil', 'nihil')->name('input-sosial.nihil');
     });
 
+    // Route Rekap Ibadah
+    Route::get('rekap-ibadah', RekapIbadahController::class)->name('rekap-ibadah');
+
     // Route Rekap Sosial
     Route::get('rekap-sosial', RekapSosialController::class)->name('rekap-sosial');
 
@@ -33,7 +37,7 @@ Route::middleware([
     Route::get('total-sosial', TotalSosialController::class)->name('total-sosial');
 
     // Route Upload Nilai Karyawan
-    Route::controller(UploadNilaiKaryawanController::class)->group(function(){
+    Route::controller(UploadNilaiKaryawanController::class)->group(function () {
         Route::get('upload-nilai-karyawan', 'index')->name('upload-nilai-karyawan');
         Route::get('upload-nilai-karyawan/download', 'download')->name('upload-nilai-karyawan.download');
         Route::post('upload-nilai-karyawan', 'upload')->name('upload-nilai-karyawan.upload');

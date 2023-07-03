@@ -86,10 +86,19 @@ class InputIbadahController extends Controller
             'jenisIbadah' => 'required',
         ]);
 
+        $ibadah = Ibadah::updateOrCreate(
+            [
+                'tahun' => request('tahun'),
+                'bulan' => date('Y-' . request('bulan') . '-d'),
+                'minggu' => request('minggu'),
+                'jenis_ibadah' => request('jenisIbadah'),
+            ]
+        );
+
         IbadahDetail::updateOrCreate(
             ['id' => request('id')],
             [
-                'ibadah_id' => request('ibadahId'),
+                'ibadah_id' => request('ibadahId') ?? $ibadah->id,
                 'tahun' => request('tahun'),
                 'bulan' => date('Y-' . request('bulan') . '-d'),
                 'minggu' => request('minggu'),

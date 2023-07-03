@@ -81,10 +81,21 @@ class InputSosialController extends Controller
             'jenisKelamin' => 'required'
         ]);
 
+        $sosial = Sosial::updateOrCreate(
+            [
+                'tanggal' => request('tanggal')
+            ],
+            [
+                'tahun' => request('tahun'),
+                'semester' => request('semester'),
+                'keterangan' => request('keterangan'),
+            ]
+        );
+
         SosialDetail::updateOrCreate(
             ['id' => request('id')],
             [
-                'sosial_id' => request('sosialId'),
+                'sosial_id' => request('sosialId') ?? $sosial->id,
                 'tahun' => request('tahun'),
                 'semester' => request('semester'),
                 'tanggal' => request('tanggal'),

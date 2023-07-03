@@ -44,6 +44,7 @@ use App\Http\Controllers\UploadNilaiProyekController;
 use App\Http\Controllers\InputAnalisisNilaiController;
 use App\Http\Controllers\InputNilaiPengayaanController;
 use App\Http\Controllers\PrintNilaiPengayaanController;
+use App\Http\Controllers\RekapTransportTotalController;
 use App\Http\Controllers\UploadAnalisisNilaiController;
 use App\Http\Controllers\RekapPembayaranSiswaController;
 use App\Http\Controllers\UploadAnalisisAlquranController;
@@ -51,6 +52,7 @@ use App\Http\Controllers\AbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputSkorBirrulWalidainController;
 use App\Http\Controllers\DataSiswaEkstrakurikulerController;
 use App\Http\Controllers\InputNilaiEkstrakurikulerController;
+use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
 use App\Http\Controllers\PrintNilaiEkstrakurikulerController;
 use App\Http\Controllers\PrintPencapaianKompetensiController;
 use App\Http\Controllers\InputNilaiBilghoibPerKelasController;
@@ -58,7 +60,6 @@ use App\Http\Controllers\InputNilaiBinnadzorPerKelasController;
 use App\Http\Controllers\PrintAbsensiEkstrakurikulerController;
 use App\Http\Controllers\InputDeskripsiEkstrakurikulerController;
 use App\Http\Controllers\PendaftaranSiswaEkstrakurikulerController;
-use App\Http\Controllers\PrintNilaiAlquranTataUsahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,9 @@ Route::get('/privasi', function () {
 Route::get('/dashboard', function () {
     return inertia('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Route Rekap Total Transport
+Route::get('rekap-total-transport', RekapTransportTotalController::class)->name('rekap-total-transport');
 
 // Group Guru dan Karyawan
 Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {

@@ -1,7 +1,6 @@
 import Bulan from '@/Components/Sia/Bulan'
 import Tahun from '@/Components/Sia/Tahun'
 import { namaBulan, penjumlahan } from '@/Functions/functions'
-import AppLayout from '@/Layouts/AppLayout'
 import { Head, router, useForm } from '@inertiajs/react'
 import React from 'react'
 import { useEffect } from 'react'
@@ -100,10 +99,10 @@ const RekapTotalTransport = ({ initTahun, listUser, maxHadir }) => {
                                             {penjumlahan(user.rekap_transports, 'transport')}
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
-                                            {Number((penjumlahan(user.rekap_transports, 'hadir') / data.maxHadir) * 100).toFixed(2)} %
+                                            {Number((penjumlahan(user.rekap_transports, 'hadir') / maxHadir) * 100).toFixed(2)} %
                                         </td>
                                         <td className={`py-2 px-2 font-medium text-slate-600  text-center`}>
-                                            {Number((penjumlahan(user.rekap_transports, 'transport') / data.maxHadir) * 100).toFixed(2)} %
+                                            {Number((penjumlahan(user.rekap_transports, 'transport') / maxHadir) * 100).toFixed(2)} %
                                         </td>
                                     </tr>
                                 )}
@@ -115,5 +114,4 @@ const RekapTotalTransport = ({ initTahun, listUser, maxHadir }) => {
     )
 }
 
-RekapTotalTransport.layout = page => <AppLayout children={page} />
 export default RekapTotalTransport

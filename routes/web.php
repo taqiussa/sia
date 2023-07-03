@@ -35,6 +35,7 @@ use App\Http\Controllers\PrintNilaiRemidiController;
 use App\Http\Controllers\PrintRaporProyekController;
 use App\Http\Controllers\UploadNilaiSikapController;
 use App\Http\Controllers\BimbinganIndividuController;
+use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\InputCatatanRaporController;
 use App\Http\Controllers\InputNilaiAlquranController;
 use App\Http\Controllers\PrintAbsensiKelasController;
@@ -86,6 +87,13 @@ Route::get('/dashboard', function () {
 
 // Route Rekap Total Transport
 Route::get('rekap-total-transport', RekapTransportTotalController::class)->name('rekap-total-transport');
+
+// Route Get Data Ketenagaan
+Route::controller(GetDataKetenagaanController::class)->group(function () {
+    Route::post('get-rekap-transport-total', 'get_rekap_transport_total')->name('get-rekap-transport-total');
+});
+
+
 
 // Group Guru dan Karyawan
 Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Kesiswaan|Ketenagaan|Konseling|Kreator|Kurikulum|Pembina Ekstrakurikuler|Sarpras|Tata Usaha|Tim Penilai|PPL'])->group(function () {

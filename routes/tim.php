@@ -4,6 +4,7 @@ use App\Http\Controllers\InputIbadahController;
 use App\Http\Controllers\InputSosialController;
 use App\Http\Controllers\RekapIbadahController;
 use App\Http\Controllers\RekapSosialController;
+use App\Http\Controllers\TotalIbadahController;
 use App\Http\Controllers\TotalSosialController;
 use App\Http\Controllers\UploadNilaiKaryawanController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,9 @@ Route::middleware([
 
     // Route Total Sosial
     Route::get('total-sosial', TotalSosialController::class)->name('total-sosial');
+
+    // Route Total Sosial
+    Route::get('total-ibadah', TotalIbadahController::class)->name('total-ibadah');
 
     // Route Upload Nilai Karyawan
     Route::controller(UploadNilaiKaryawanController::class)->group(function () {

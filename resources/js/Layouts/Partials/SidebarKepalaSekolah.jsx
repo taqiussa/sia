@@ -9,7 +9,9 @@ const SidebarKepalaSekolah = ({ closeSide }) => {
             </div>
             <div>
                 <SidebarLink closeSide={closeSide} href={route('hasil-penilaian-guru')} active={route().current('hasil-penilaian-guru')} label='hasil penilaian guru' />
+                <SidebarLink closeSide={closeSide} href={route('rekap-ibadah')} active={route().current('rekap-ibadah')} label='rekap ibadah' />
                 <SidebarLink closeSide={closeSide} href={route('rekap-sosial')} active={route().current('rekap-sosial')} label='rekap sosial' />
+                <SidebarLink closeSide={closeSide} href={route('total-ibadah')} active={route().current('total-ibadah')} label='total ibadah' />
                 <SidebarLink closeSide={closeSide} href={route('total-sosial')} active={route().current('total-sosial')} label='total sosial' />
             </div>
         </div>

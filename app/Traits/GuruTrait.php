@@ -22,15 +22,28 @@ trait GuruTrait
 
     public function data_absensi_ibadahs()
     {
-        return User::role(request('kategori'))
-            ->whereJenisKelamin(request('jenisKelamin'))
-            ->with([
-                'ibadah_details' => fn ($q) => $q->whereTahun(request('tahun'))
-                    ->whereMonth('bulan', request('bulan'))
-                    ->whereJenisIbadah(request('jenisIbadah'))
-            ])
-            ->orderBy('name')
-            ->get();
+        if (request('bulan')) {
+            $user = User::role(request('kategori'))
+                ->whereJenisKelamin(request('jenisKelamin'))
+                ->with([
+                    'ibadah_details' => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereMonth('bulan', request('bulan'))
+                        ->whereJenisIbadah(request('jenisIbadah'))
+                ])
+                ->orderBy('name')
+                ->get();
+        } else {
+            $user = User::role(request('kategori'))
+                ->whereJenisKelamin(request('jenisKelamin'))
+                ->with([
+                    'ibadah_details' => fn ($q) => $q->whereTahun(request('tahun'))
+                        ->whereJenisIbadah(request('jenisIbadah'))
+                ])
+                ->orderBy('name')
+                ->get();
+        }
+        
+        return $user;
     }
 
     public function data_absensi_sosial()

@@ -314,12 +314,15 @@
         <tbody>
             <tr>
                 <td width="60%">Sakit</td>
-                <td width="40%" class="ctr"> {{ round($absensis->where('kehadiran_id', 2)->count() / 4) ?? '-' }}
+                <td width="40%" class="ctr">
+                    {{ round($absensis->where('kehadiran_id', 2)->count() / 4) >= 1 ? round($absensis->where('kehadiran_id', 2)->count() / 4) : '-' }}
                     hari</td>
             </tr>
             <tr>
                 <td>Izin</td>
-                <td class="ctr"> {{ round($absensis->where('kehadiran_id', 3)->count() / 4) ?? '-' }} hari</td>
+                <td class="ctr">
+                    {{ round($absensis->where('kehadiran_id', 3)->count() / 4) >= 1 ? round($absensis->where('kehadiran_id', 3)->count() / 4) : '-' }}
+                    hari</td>
             </tr>
             <tr>
                 <td>Tanpa Keterangan</td>

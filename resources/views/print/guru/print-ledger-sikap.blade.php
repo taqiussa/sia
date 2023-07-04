@@ -31,7 +31,7 @@
                 <th class="border border-collapse border-black" rowspan="2">NIS</th>
                 <th class="border border-collapse border-black" rowspan="2">Nama</th>
                 <th class="border border-collapse border-black" colspan="{{ $totalMapel }}">Mata Pelajaran</th>
-                <th class="border border-collapse border-black" rowspan="2">Total Nilai</th>
+                <th class="border border-collapse border-black" rowspan="2">Rata-rata</th>
             </tr>
             <tr>
                 @foreach ($listMapel as $mapel)
@@ -55,14 +55,14 @@
                                     ->avg('nilai'),
                             );
                         @endphp
-                        <td
-                            class="border border-collapse border-black text-center px-1">
+                        <td class="border border-collapse border-black text-center px-1">
                             {{ $avg }}
                         </td>
                     @endforeach
 
                     <td class="border border-collapse border-black text-center px-1">
-                        {{ floor(
+                        {{ floor($siswa->penilaianSikaps->avg('nilai')) }}
+                        {{-- {{ floor(
                             $siswa->penilaianSikaps->groupBy('mata_pelajaran_id')->map(function ($group, $key) {
                                     $avg = $group->avg('nilai');
                                     $floorAvg = floor($avg);
@@ -72,7 +72,7 @@
                                         'floor_avg' => $floorAvg,
                                     ];
                                 })->sum('avg'),
-                        ) }}
+                        ) }} --}}
                     </td>
                 </tr>
             @endforeach

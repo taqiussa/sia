@@ -62,4 +62,33 @@ class InputNilaiController extends Controller
 
         return to_route('input-nilai');
     }
+
+    public function ganda()
+    {
+        request()->validate([
+            'tahun' => 'required',
+            'semester' => 'required',
+            'mataPelajaranId' => 'required',
+            'kelasId' => 'required',
+            'jenisPenilaianId' => 'required'
+        ]);
+
+        $nilai = Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereKelasId(request('kelasId'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->groupBy('jenis_penilaian_id', 'nis')
+            ->get();
+
+        Penilaian::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereKelasId(request('kelasId'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereJenisPenilaianId(request('jenisPenilaianId'))
+            ->whereNotIn('id', $nilai->pluck('id'))
+            ->delete();
+
+        return to_route('input-nilai');
+    }
 }

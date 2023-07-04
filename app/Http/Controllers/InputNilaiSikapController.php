@@ -42,22 +42,22 @@ class InputNilaiSikapController extends Controller
 
         foreach ($listSiswa as $siswa) {
             $siswa['penilaian_sikap'] ?
-            PenilaianSikap::updateOrCreate(
-                ['id' => $siswa['penilaian_sikap']['id'] ?? null],
-                [
-                    'tahun' => request('tahun'),
-                    'semester' => request('semester'),
-                    'kelas_id' => request('kelasId'),
-                    'mata_pelajaran_id' => request('mataPelajaranId'),
-                    'nis' => $siswa['nis'],
-                    'kategori_sikap_id' => request('kategoriSikapId'),
-                    'jenis_sikap_id' => request('jenisSikapId'),
-                    'nilai' => $siswa['penilaian_sikap']['nilai'] ?? null,
-                    'user_id' => auth()->user()->id,
-                ]
-            )
-            :
-            null;
+                PenilaianSikap::updateOrCreate(
+                    ['id' => $siswa['penilaian_sikap']['id'] ?? null],
+                    [
+                        'tahun' => request('tahun'),
+                        'semester' => request('semester'),
+                        'kelas_id' => request('kelasId'),
+                        'mata_pelajaran_id' => request('mataPelajaranId'),
+                        'nis' => $siswa['nis'],
+                        'kategori_sikap_id' => request('kategoriSikapId'),
+                        'jenis_sikap_id' => request('jenisSikapId'),
+                        'nilai' => $siswa['penilaian_sikap']['nilai'] ?? null,
+                        'user_id' => auth()->user()->id,
+                    ]
+                )
+                :
+                null;
         }
 
         return to_route('input-nilai-sikap');
@@ -66,6 +66,32 @@ class InputNilaiSikapController extends Controller
     public function hapus()
     {
         PenilaianSikap::destroy(request('id'));
+
+        return to_route('input-nilai-sikap');
+    }
+
+    public function ganda()
+    {
+        request()->validate([
+            'tahun' => 'required',
+            'semester' => 'required',
+            'mataPelajaranId' => 'required',
+            'kelasId' => 'required',
+        ]);
+
+        $sikap = PenilaianSikap::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereKelasId(request('kelasId'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->groupBy('jenis_sikap_id', 'nis')
+            ->get();
+
+        PenilaianSikap::whereTahun(request('tahun'))
+            ->whereSemester(request('semester'))
+            ->whereKelasId(request('kelasId'))
+            ->whereMataPelajaranId(request('mataPelajaranId'))
+            ->whereNotIn('id', $sikap->pluck('id'))
+            ->delete();
 
         return to_route('input-nilai-sikap');
     }

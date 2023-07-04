@@ -108,6 +108,29 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
             })
     }
 
+    const handleDouble = (e) => {
+        e.preventDefault()
+
+        Sweet.fire({
+            title: 'Anda yakin menghapus?',
+            text: "Hapus Nilai Ganda!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        })
+            .then((hasil) => {
+                if (hasil.isConfirmed)
+                    post(route('input-nilai.ganda'), {
+                        onSuccess: () => {
+                            toast.success('Berhasil Hapus Data Ganda')
+                            setData({ ...data })
+                            getDataSiswa()
+                        }
+                    })
+            })
+    }
+
     const handleDynamic = (e, index, id, nis, namaSiswa, kelasId) => {
 
         const newList = [...listSiswa]
@@ -232,6 +255,11 @@ const InputNilai = ({ initTahun, initSemester, listMapel }) => {
                     handleChange={onHandleChange}
                     listJenis={data.listJenis}
                 />
+
+                <div className=' place-self-end'>
+                    <PrimaryButton children='hapus ganda' onClick={handleDouble} disabled={processing} />
+                </div>
+
             </div>
 
             <div className="overflow-x-auto pt-2">

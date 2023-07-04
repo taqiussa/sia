@@ -188,6 +188,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiController::class)->group(function () {
         Route::get('input-nilai', 'index')->name('input-nilai');
         Route::post('input-nilai', 'simpan')->name('input-nilai.simpan');
+        Route::post('input-nilai/ganda', 'ganda')->name('input-nilai.ganda');
         Route::delete('input-nilai', 'hapus')->name('input-nilai.hapus');
     });
 
@@ -248,6 +249,7 @@ Route::middleware(['auth', 'role:Bendahara|Guru|Humas|Karyawan|Kepala Sekolah|Ke
     Route::controller(InputNilaiSikapController::class)->group(function () {
         Route::get('input-nilai-sikap', 'index')->name('input-nilai-sikap');
         Route::post('input-nilai-sikap', 'simpan')->name('input-nilai-sikap.simpan');
+        Route::post('input-nilai-sikap/ganda', 'ganda')->name('input-nilai-sikap.ganda');
         Route::delete('input-nilai-sikap', 'hapus')->name('input-nilai-sikap.hapus');
     });
 

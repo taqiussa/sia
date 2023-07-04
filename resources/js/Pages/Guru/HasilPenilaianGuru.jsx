@@ -54,7 +54,7 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                     handleChange={onHandleChange}
                     listKategori={listKategori}
                 />
-                {data.kategoriNilaiId == 3 &&
+                {(data.kategoriNilaiId == 3 || data.kategoriNilaiId == 1) &&
                     <JenisKelamin
                         name='jenisKelamin'
                         value={data.jenisKelamin}

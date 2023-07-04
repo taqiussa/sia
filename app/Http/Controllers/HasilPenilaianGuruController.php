@@ -20,6 +20,7 @@ class HasilPenilaianGuruController extends Controller
         switch (request('kategoriNilaiId')) {
             case '1':
                 $user = User::role('Guru')
+                    ->whereJenisKelamin(request('jenisKelamin'))
                     ->with([
                         'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                             ->whereKategoriNilaiId(request('kategoriNilaiId'))

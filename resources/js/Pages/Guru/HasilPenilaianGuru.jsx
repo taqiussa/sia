@@ -1,3 +1,4 @@
+import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import KategoriNilaiKaryawan from '@/Components/Sia/KategoriNilaiKaryawan'
 import Tahun from '@/Components/Sia/Tahun'
 import { penjumlahan } from '@/Functions/functions'
@@ -12,6 +13,7 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
     const { data, setData } = useForm({
         tahun: initTahun,
         kategoriNilaiId: '',
+        jenisKelamin: ''
     })
 
     const onHandleChange = (e) => {
@@ -25,14 +27,15 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                 only: ['listJenis', 'listUser'],
                 data: {
                     tahun: data.tahun,
-                    kategoriNilaiId: data.kategoriNilaiId
+                    kategoriNilaiId: data.kategoriNilaiId,
+                    jenisKelamin: data.jenisKelamin
                 },
                 preserveState: true,
                 replace: true
             })
         }
 
-    }, [data.tahun, data.kategoriNilaiId])
+    }, [data.tahun, data.kategoriNilaiId, data.jenisKelamin])
 
     return (
         <>
@@ -51,7 +54,13 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                     handleChange={onHandleChange}
                     listKategori={listKategori}
                 />
-
+                {data.kategoriNilaiId == 3 &&
+                    <JenisKelamin
+                        name='jenisKelamin'
+                        value={data.jenisKelamin}
+                        handleChange={onHandleChange}
+                    />
+                }
             </div>
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">

@@ -48,6 +48,7 @@ class HasilPenilaianGuruController extends Controller
                 break;
             case '3':
                 $user = WaliKelas::whereTahun(request('tahun'))
+                    ->whereHas('user', fn($q) => $q->whereJenisKelamin(request('jenisKelamin')))
                     ->with([
                         'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                             ->whereKategoriNilaiId(request('kategoriNilaiId')),

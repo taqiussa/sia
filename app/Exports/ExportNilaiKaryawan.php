@@ -15,9 +15,13 @@ class ExportNilaiKaryawan implements FromView
         $kategori = KategoriPenilaianGuru::find(request('kategoriNilaiId'))?->nama;
 
         if ($kategori == 'Guru') {
-            $users = User::role('Guru')->orderBy('name')->get();
+            $users = User::role('Guru')->orderBy('name')
+                ->with(['penilaians'])
+                ->get();
         } elseif ($kategori == 'Karyawan') {
-            $users = User::role('Karyawan')->orderBy('name')->get();
+            $users = User::role('Karyawan')->orderBy('name')
+                ->with(['penilaians'])
+                ->get();
         } else {
             $waliKelas = WaliKelas::whereTahun(request('tahun'))->pluck('user_id');
             $users = User::whereIn('id', $waliKelas)->orderBy('name')->get();

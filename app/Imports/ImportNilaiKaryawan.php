@@ -19,18 +19,21 @@ class ImportNilaiKaryawan implements ToCollection, SkipsEmptyRows, WithHeadingRo
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            PenilaianGuru::updateOrCreate(
-                [
-                    'tahun' => $row['tahun'],
-                    'kategori_nilai_id' => $row['kategori_nilai_id'],
-                    'jenis_penilaian_id' => $row['jenis_penilaian_id'],
-                    'user_id' => $row['user_id'],
-                    'tim_id' => auth()->user()->id,
-                ],
-                [
-                    'nilai' => $row['nilai']
-                ]
-            );
+            $row['nilai'] ?
+                PenilaianGuru::updateOrCreate(
+                    [
+                        'tahun' => $row['tahun'],
+                        'kategori_nilai_id' => $row['kategori_nilai_id'],
+                        'jenis_penilaian_id' => $row['jenis_penilaian_id'],
+                        'user_id' => $row['user_id'],
+                        'tim_id' => auth()->user()->id,
+                    ],
+                    [
+                        'nilai' => $row['nilai']
+                    ]
+                )
+                :
+                null;
         }
     }
 }

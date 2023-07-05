@@ -19,7 +19,7 @@
                 <td>{{ $user->id }}</td>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
-                <td>{{ $user->penilaians->where('jenis_penilaian_id', $jenis_penilaian_id)->where('tim_id', auth()->user()->id)->first()?->nilai ?? '1' }}
+                <td>{{ $user->penilaians->where('jenis_penilaian_id', $jenis_penilaian_id)->where('tim_id', auth()->user()->id)->first()?->nilai ?? null }}
                 </td>
             </tr>
         @endforeach

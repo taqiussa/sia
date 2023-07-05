@@ -42,7 +42,10 @@ Route::middleware([
     });
 
     // Route Hasil Penilaian Guru
-    Route::get('hasil-penilaian-guru', HasilPenilaianGuruController::class)->name('hasil-penilaian-guru');
+    Route::controller(HasilPenilaianGuruController::class)->group(function () {
+        Route::get('hasil-penilaian-guru', 'index')->name('hasil-penilaian-guru');
+        Route::get('hasil-penilaian-guru/print', 'print')->name('hasil-penilaian-guru.print');
+    });
 
     // Route Jadwal Jam Kosong
     Route::controller(JadwalJamKosongController::class)->group(function () {

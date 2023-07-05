@@ -33,11 +33,11 @@ class InputKdController extends Controller
                 'tingkat' => 'required',
                 'kategoriNilaiId' => 'required',
                 'jenisPenilaianId' => 'required',
-                'deskripsi' => 'required|string|min:100|max:120',
+                'deskripsi' => 'required|string|min:65|max:100',
             ],
             [
-                'deskripsi.min' => 'minimal 100 karakter (termasuk spasi)',
-                'deskripsi.max' => 'maksimal 120 karakter (termasuk spasi)'
+                'deskripsi.min' => 'minimal 65 karakter (termasuk spasi)',
+                'deskripsi.max' => 'maksimal 100 karakter (termasuk spasi)'
             ]
         );
 

@@ -1,5 +1,6 @@
 import JenisKelamin from '@/Components/Sia/JenisKelamin'
 import KategoriNilaiKaryawan from '@/Components/Sia/KategoriNilaiKaryawan'
+import PrintLink from '@/Components/Sia/PrintLink'
 import Tahun from '@/Components/Sia/Tahun'
 import { penjumlahan } from '@/Functions/functions'
 import AppLayout from '@/Layouts/AppLayout'
@@ -62,26 +63,45 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                     />
                 }
             </div>
+            {((data.kategoriNilaiId == 2 &&
+                data.tahun) || (data.kategoriNilaiId != 2 && data.tahun && data.jenisKelamin)) &&
+                <PrintLink href={route('hasil-penilaian-guru.print', {
+                    tahun: data.tahun,
+                    kategoriNilaiId: data.kategoriNilaiId,
+                    jenisKelamin: data.jenisKelamin
+                })}
+                    label='print'
+                />
+            }
             <div className="overflow-x-auto pt-2">
                 <table className="w-full text-sm text-slate-600">
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
-                            <th scope='col' className="py-3 px-2">
+                            <th rowSpan={2} scope='col' className="py-3 px-2">
                                 Rank
                             </th>
-                            <th scope='col' className="py-3 px-2 text-left">
+                            <th rowSpan={2} scope='col' className="py-3 px-2 text-left">
                                 Nama
                             </th>
                             {
                                 listJenis && listJenis.map((jenis, index) =>
-                                    <th key={index} scope='col' className="py-3 px-2 text-left">
+                                    <th key={index} scope='col' className="py-3 px-2">
                                         {jenis.jenis?.nama}
                                     </th>
                                 )
                             }
-                            <th scope='col' className="py-3 px-2 text-left">
+                            <th rowSpan={2} scope='col' className="py-3 px-2">
                                 Rata-Rata
                             </th>
+                        </tr>
+                        <tr>
+                            {
+                                listJenis && listJenis.map((jenis, index) =>
+                                    <th key={index} scope='col' className="py-3 px-2">
+                                        {jenis.kkm?.kkm}
+                                    </th>
+                                )
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -95,7 +115,7 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                                 </td>
                                 {
                                     listJenis && listJenis.map((jenis, index) =>
-                                        <td key={index} className="py-2 px-2 font-medium text-slate-600">
+                                        <td key={index} className="py-2 px-2 font-medium text-slate-600 text-center">
                                             {
                                                 user.penilaians &&
                                                     Number.isNaN(penjumlahan(user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id), 'nilai') / user.penilaians.filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id).length)
@@ -105,7 +125,7 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                                         </td>
                                     )
                                 }
-                                <td className="py-2 px-2 font-medium text-slate-600">
+                                <td className="py-2 px-2 font-medium text-slate-600 text-center">
                                     {Number(user.penilaians_avg_nilai).toFixed(2)}
                                 </td>
                             </tr>

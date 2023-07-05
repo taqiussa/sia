@@ -6,20 +6,43 @@ use App\Models\KategoriPenilaianGuru;
 use App\Models\PenilaianRaporGuru;
 use App\Models\User;
 use App\Models\WaliKelas;
+use App\Traits\GuruTrait;
 use App\Traits\InitTrait;
 
 class HasilPenilaianGuruController extends Controller
 {
     use InitTrait;
+    use GuruTrait;
 
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke()
+    public function index()
+    {
+        return inertia(
+            'Guru/HasilPenilaianGuru',
+            [
+                'initTahun' => $this->data_tahun(),
+                'listKategori' =>  KategoriPenilaianGuru::orderBy('nama')->get(),
+                'listJenis' => $this->list_jenis_penilaian_guru(),
+                'listUser' => $this->kategori_tendik()
+            ]
+        );
+    }
+
+    public function print()
+    {
+        $data = [
+            'tahun' => request('tahun'),
+            'listJenis' => $this->list_jenis_penilaian_guru(),
+            'listUser' => $this->kategori_tendik(),
+        ];
+
+        return view('print.guru.print-hasil-penilaian-guru', $data);
+    }
+
+    private function kategori_tendik()
     {
         switch (request('kategoriNilaiId')) {
             case '1':
-                $user = User::role('Guru')
+                return User::role('Guru')
                     ->whereJenisKelamin(request('jenisKelamin'))
                     ->with([
                         'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
@@ -34,7 +57,7 @@ class HasilPenilaianGuruController extends Controller
                     ->values();
                 break;
             case '2':
-                $user = User::role('Karyawan')
+                return User::role('Karyawan')
                     ->with([
                         'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                             ->whereKategoriNilaiId(request('kategoriNilaiId'))
@@ -48,8 +71,8 @@ class HasilPenilaianGuruController extends Controller
                     ->values();
                 break;
             case '3':
-                $user = WaliKelas::whereTahun(request('tahun'))
-                    ->whereHas('user', fn($q) => $q->whereJenisKelamin(request('jenisKelamin')))
+                return WaliKelas::whereTahun(request('tahun'))
+                    ->whereHas('user', fn ($q) => $q->whereJenisKelamin(request('jenisKelamin')))
                     ->with([
                         'penilaians' => fn ($q) => $q->whereTahun(request('tahun'))
                             ->whereKategoriNilaiId(request('kategoriNilaiId')),
@@ -65,21 +88,8 @@ class HasilPenilaianGuruController extends Controller
                 break;
 
             default:
-                $user =[];
+                return [];
                 break;
         }
-
-        return inertia(
-            'Guru/HasilPenilaianGuru',
-            [
-                'initTahun' => $this->data_tahun(),
-                'listKategori' =>  KategoriPenilaianGuru::orderBy('nama')->get(),
-                'listJenis' => PenilaianRaporGuru::whereTahun(request('tahun'))
-                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
-                    ->with('jenis')
-                    ->get(),
-                'listUser' => $user
-            ]
-        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\User;
+use App\Models\PenilaianRaporGuru;
 
 trait GuruTrait
 {
@@ -42,7 +43,7 @@ trait GuruTrait
                 ->orderBy('name')
                 ->get();
         }
-        
+
         return $user;
     }
 
@@ -65,6 +66,18 @@ trait GuruTrait
                 'sosial_details' => fn ($q) => $q->whereTahun(request('tahun'))
             ])
             ->orderBy('name')
+            ->get();
+    }
+
+    public function list_jenis_penilaian_guru()
+    {
+        return PenilaianRaporGuru::whereTahun(request('tahun'))
+            ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ->with([
+                'jenis',
+                'kkm' => fn ($q) => $q->whereTahun(request('tahun'))
+                    ->whereKategoriNilaiId(request('kategoriNilaiId'))
+            ])
             ->get();
     }
 }

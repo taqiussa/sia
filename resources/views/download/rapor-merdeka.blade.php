@@ -215,7 +215,7 @@
                                 } elseif ($nilai->nilai < 80) {
                                     $predikat_a = 'Menunjukkan penguasaan yang baik';
                                 } else {
-                                    $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
+                                    $predikat_a = 'Menunjukkan penguasaan sangat baik';
                                 }
                             @endphp
                             @foreach ($listKd->where('mata_pelajaran_id', $mapelb->mata_pelajaran_id) as $kd)
@@ -245,7 +245,7 @@
                                 } elseif ($nilai->nilai < 80) {
                                     $predikat_a = 'Menunjukkan penguasaan yang baik';
                                 } else {
-                                    $predikat_a = 'Menunjukkan penguasaan yang sangat baik';
+                                    $predikat_a = 'Menunjukkan penguasaan sangat baik';
                                 }
                             @endphp
                             @foreach ($listKd->where('mata_pelajaran_id', $mapelc->mata_pelajaran_id) as $kd)

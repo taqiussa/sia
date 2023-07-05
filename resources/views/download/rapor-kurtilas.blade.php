@@ -369,7 +369,7 @@
             @if ($penilaianEkstrakurikuler->nilai != null)
                 <tr>
                     <td class="ctr" style=" vertical-align:middle;">1.</td>
-                    <td style=" vertical-align:middle;padding-left:10px;">{{ $penilaianEkstrakurikuler->nilai }}</td>
+                    <td style=" vertical-align:middle;padding-left:10px;">{{ $penilaianEkstrakurikuler->ekstrakurikuler->nama }}</td>
                     <td class="ctr" style="vertical-align: middle;">{{ $penilaianEkstrakurikuler->nilai }}</td>
                     <td style="padding: 10px;">
                         @if ($penilaianEkstrakurikuler->nilai > 90)

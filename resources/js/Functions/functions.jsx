@@ -143,11 +143,11 @@ export function namaHari(hari) {
 
 export function namaKehadiran(id) {
     switch (id) {
-        case 1:
+        case '1':
             return 'Hadir'
-        case 2:
+        case '2':
             return 'Izin'
-        case 3:
+        case '3':
             return 'Alpha'
         default:
             return ''

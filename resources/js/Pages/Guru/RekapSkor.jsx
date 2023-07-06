@@ -10,10 +10,10 @@ import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-const RekapSkor = ({ filterTahun, listRekapSkor, filters }) => {
+const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
 
     const { data, setData, errors, processing, delete: destroy } = useForm({
-        tahun: filterTahun.tahun,
+        tahun: initTahun,
         search: filters.search
     })
 

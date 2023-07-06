@@ -38,8 +38,7 @@ class RekapSkorController extends Controller
         return inertia(
             'Guru/RekapSkor',
             [
-                'filterTahun' => request()->only('tahun'),
-                // 'initTahun' => $this->data_tahun(),
+                'initTahun' => $this->data_tahun(),
                 'listRekapSkor' => Inertia::lazy(fn() => $skor),
                 'filters' => request()->only('search')
             ]

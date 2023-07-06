@@ -15,7 +15,7 @@ class RekapSkorController extends Controller
         $nis = User::when(request('search'), fn ($q) => $q->where('name', 'like', '%' . request('search') . '%'))
             ->pluck('nis');
 
-        $skor = PenilaianSkor::whereTahun(request('tahun'))
+        $skor = PenilaianSkor::when(request('tahun'), fn ($q) => $q->whereTahun(request('tahun')))
             ->whereIn('nis', $nis)
             ->with([
                 'kelas',
@@ -37,7 +37,8 @@ class RekapSkorController extends Controller
         return inertia(
             'Guru/RekapSkor',
             [
-                'initTahun' => $this->data_tahun(),
+                'filterTahun' => request()->only('tahun'),
+                // 'initTahun' => $this->data_tahun(),
                 'listRekapSkor' => $skor,
                 'filters' => request()->only('search')
             ]

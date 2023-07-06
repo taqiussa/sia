@@ -10,10 +10,10 @@ import { Head, router, useForm } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
+const RekapSkor = ({ filterTahun, listRekapSkor, filters }) => {
 
     const { data, setData, errors, processing, delete: destroy } = useForm({
-        tahun: initTahun,
+        tahun: filterTahun.tahun,
         search: filters.search
     })
 
@@ -50,8 +50,8 @@ const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
                                         tahun: data.tahun,
                                         search: data.search
                                     },
-                                    // replace: true,
-                                    // preserveState: true
+                                    replace: true,
+                                    preserveState: true
                                 })
                             }
                         }
@@ -69,8 +69,8 @@ const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
                     tahun: data.tahun,
                     search: data.search
                 },
-                // replace: true,
-                // preserveState: true
+                replace: true,
+                preserveState: true
             })
         }
     }, [data.tahun])
@@ -85,8 +85,8 @@ const RekapSkor = ({ initTahun, listRekapSkor, filters }) => {
                         tahun: data.tahun,
                         search: data.search
                     },
-                    // preserveState: true,
-                    // replace: true
+                    preserveState: true,
+                    replace: true
                 },
             )
         }, 1000)

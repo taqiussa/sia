@@ -121,7 +121,7 @@ const HasilPenilaianGuru = ({ initTahun, listKategori, listJenis, listUser }) =>
                                                 user.penilaians
                                                     .filter(nilai => nilai.jenis_penilaian_id == jenis.jenis_penilaian_id)
                                                     .map((nilai, index) =>
-                                                        <li key={index}>
+                                                        <li className='list-none' key={index}>
                                                             {nilai.nilai}
                                                         </li>
                                                     )

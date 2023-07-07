@@ -31,13 +31,13 @@
                                     <div
                                         class="{{ $user->penilaians->where('jenis_penilaian_id', $jenis->jenis_penilaian_id)->avg('nilai') < $jenis->kkm->kkm ? 'text-red-600 bg-yellow-400' : '' }}">
                                         {{ $user->penilaians->where('jenis_penilaian_id', $jenis->jenis_penilaian_id)->avg('nilai') }}
+                                        ({{ $user->nilai->nilai }})
                                     </div>
                                 @endif
                             @endforeach
                         </td>
                     @endforeach
-                    <td
-                        class="border border-collapse border-black text-center px-1">
+                    <td class="border border-collapse border-black text-center px-1">
                         {{ floor($user->penilaians->avg('nilai')) }}
                     </td>
                 </tr>

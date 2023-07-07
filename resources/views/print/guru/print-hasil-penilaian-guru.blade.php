@@ -29,8 +29,8 @@
                             @foreach ($user->penilaians as $nilai)
                                 @if ($nilai->jenis_penilaian_id == $jenis->jenis_penilaian_id)
                                     <div
-                                        class="{{ $user->penilaians->where('jenis_penilaian_id', $jenis->jenis_penilaian_id)->nilai < $jenis->kkm->kkm ? 'text-red-600 bg-yellow-400' : '' }}">
-                                        {{ $user->penilaians->where('jenis_penilaian_id', $jenis->jenis_penilaian_id)->nilai }}
+                                        class="{{ $nilai->nilai < $jenis->kkm->kkm ? 'text-red-600 bg-yellow-400' : '' }}">
+                                        {{ $nilai->nilai }}
                                         {{-- ({{ $user->nilai->nilai }}) --}}
                                     </div>
                                 @endif

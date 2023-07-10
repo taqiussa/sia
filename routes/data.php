@@ -15,12 +15,16 @@ use App\Http\Controllers\GetDataPenilaianController;
 use App\Http\Controllers\GetDataKetenagaanController;
 use App\Http\Controllers\GetDataAbsensiKaryawanController;
 use App\Http\Controllers\GetDataPenilaianKaryawanController;
+use App\Http\Controllers\RaporTendikController;
 use App\Http\Controllers\RekapAbsensiGuruKaryawanController;
 use App\Http\Controllers\RekapTransportController;
 
 // Group Data
 Route::middleware('auth')->group(function () {
     // Menu Guru & Karyawan 
+
+    // Route Rapor Tendik
+    Route::get('rapor-tendik', RaporTendikController::class)->name('rapor-tendik');
 
     //Route Rekap Absensi Guru & Karyawan
     Route::get('rekap-absensi-karyawan', RekapAbsensiGuruKaryawanController::class)->name('rekap-absensi-karyawan');

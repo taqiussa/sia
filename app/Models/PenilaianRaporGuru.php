@@ -23,6 +23,11 @@ class PenilaianRaporGuru extends Model
         return $this->hasMany(PenilaianGuru::class, 'jenis_penilaian_id', 'jenis_penilaian_id');
     }
 
+    public function penilaian()
+    {
+        return $this->belongsTo(PenilaianGuru::class, 'jenis_penilaian_id', 'jenis_penilaian_id')->withDefault();
+    }
+
     public function kkm()
     {
         return $this->belongsTo(KkmGuru::class, 'jenis_penilaian_id', 'jenis_penilaian_id')->withDefault();

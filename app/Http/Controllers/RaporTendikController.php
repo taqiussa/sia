@@ -28,7 +28,7 @@ class RaporTendikController extends Controller
                 ->whereKategoriNilaiId(EnumKategoriGuru::Guru)
                 ->with([
                     'jenis',
-                    'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    'nilai' => fn ($q) => $q->whereTahun(request('tahun'))
                         ->whereKategoriNilaiId(EnumKategoriGuru::Guru)
                         ->whereUserId(auth()->user()->id)
                 ])
@@ -38,7 +38,7 @@ class RaporTendikController extends Controller
                 ->whereKategoriNilaiId(EnumKategoriGuru::Karyawan)
                 ->with([
                     'jenis',
-                    'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    'nilai' => fn ($q) => $q->whereTahun(request('tahun'))
                         ->whereKategoriNilaiId(EnumKategoriGuru::Karyawan)
                         ->whereUserId(auth()->user()->id)
                 ])
@@ -53,7 +53,7 @@ class RaporTendikController extends Controller
                 ->whereKategoriNilaiId(EnumKategoriGuru::WaliKelas)
                 ->with([
                     'jenis',
-                    'penilaian' => fn ($q) => $q->whereTahun(request('tahun'))
+                    'nilai' => fn ($q) => $q->whereTahun(request('tahun'))
                         ->whereKategoriNilaiId(EnumKategoriGuru::WaliKelas)
                         ->whereUserId(auth()->user()->id)
                 ])

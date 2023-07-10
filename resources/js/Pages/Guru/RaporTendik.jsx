@@ -63,7 +63,11 @@ const RaporTendik = ({ initTahun, penilaian, cekWaliKelas, penilaianWaliKelas, a
                                     {user.jenis?.nama}
                                 </td>
                                 <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                    {user.penilaian?.nilai}
+                                    {user.nilai && user.nilai.map((nilai, index) => (
+                                        <li key={index} className=' list-none'>
+                                            {nilai.nilai}
+                                        </li>
+                                    ))}
                                 </td>
                             </tr>
                         ))}
@@ -109,7 +113,11 @@ const RaporTendik = ({ initTahun, penilaian, cekWaliKelas, penilaianWaliKelas, a
                                             {user.jenis?.nama}
                                         </td>
                                         <td className="py-2 px-2 font-medium text-slate-600 text-center">
-                                            {user.penilaian?.nilai}
+                                            {user.nilai && user.nilai.map((nilai, index) => (
+                                                <li key={index} className=' list-none'>
+                                                    {nilai.nilai}
+                                                </li>
+                                            ))}
                                         </td>
                                     </tr>
                                 ))}

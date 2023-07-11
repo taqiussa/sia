@@ -95,7 +95,7 @@ class ImportUserKelasTujuh implements ToCollection, WithHeadingRow, SkipsEmptyRo
                     'nama_wali' => $row['nama_wali'],
                     'telepon' => $row['telepon_wali'],
                     'pekerjaan' => $row['pekerjaan_wali'],
-                    'penghasilan' => $row['penghasilan_wali'],
+                    // 'penghasilan' => $row['penghasilan_wali'],
                     'alamat' => $row['alamat_wali'],
                 ])
                 :

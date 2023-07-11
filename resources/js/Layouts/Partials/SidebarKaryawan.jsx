@@ -9,7 +9,7 @@ const SidebarKaryawan = ({ closeSide }) => {
             </div>
             <div>
                 <SidebarLink closeSide={closeSide} href={route('input-skor')} active={route().current('input-skor')} label='input skor' />
-                <SidebarLink closeSide={closeSide} href={route('input-skor-kelas')} active={route().current('input-skor-kelas')} label='input skor 1 kelas' />
+                {/* <SidebarLink closeSide={closeSide} href={route('input-skor-kelas')} active={route().current('input-skor-kelas')} label='input skor 1 kelas' /> */}
             </div>
         </div>
     )

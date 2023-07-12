@@ -5,6 +5,12 @@ const SidebarBendahara = ({ closeSide }) => {
     return (
         <div className='py-1'>
             <div className='text-slate-600 font-bold'>
+                Transaksi
+            </div>
+            <SidebarLink closeSide={closeSide} href={route('input-pemasukan')} active={route().current('input-pemasukan')} label='input pemasukan' />
+            <SidebarLink closeSide={closeSide} href={route('input-pembayaran-siswa')} active={route().current('input-pembayaran-siswa')} label='input pembayaran siswa' />
+            <SidebarLink closeSide={closeSide} href={route('input-pengeluaran')} active={route().current('input-pengeluaran')} label='input pengeluaran' />
+            <div className='text-slate-600 font-bold'>
                 Kas
             </div>
             <SidebarLink closeSide={closeSide} href={route('kas-bulanan')} active={route().current('kas-bulanan')} label='kas bulanan' />
@@ -39,12 +45,6 @@ const SidebarBendahara = ({ closeSide }) => {
             </div>
             <SidebarLink closeSide={closeSide} href={route('rekap-per-siswa')} active={route().current('rekap-per-siswa')} label='rekap per siswa' />
             <SidebarLink closeSide={closeSide} href={route('tagihan-per-kelas')} active={route().current('tagihan-per-kelas')} label='tagihan per kelas' />
-            <div className='text-slate-600 font-bold'>
-                Transaksi
-            </div>
-            <SidebarLink closeSide={closeSide} href={route('input-pemasukan')} active={route().current('input-pemasukan')} label='input pemasukan' />
-            <SidebarLink closeSide={closeSide} href={route('input-pembayaran-siswa')} active={route().current('input-pembayaran-siswa')} label='input pembayaran siswa' />
-            <SidebarLink closeSide={closeSide} href={route('input-pengeluaran')} active={route().current('input-pengeluaran')} label='input pengeluaran' />
         </div>
     )
 }

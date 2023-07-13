@@ -16,7 +16,7 @@ class AturKhususPulangController extends Controller
             'Guru/AturKhususPulang',
             [
                 'initTahun' => $this->data_tahun(),
-                'listUser' => User::role('Guru')
+                'listUser' => User::role(['Guru', 'Karyawan'])
                     ->orderBy('name')
                     ->get()
             ]
